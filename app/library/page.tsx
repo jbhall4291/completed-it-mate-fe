@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { getUser, deleteGame, User } from '../../lib/api';
+import { useGameContext } from '../../lib/GameContext';
 
 export default function LibraryPage() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const hardcodedUserId = "687bd767e7f8c28253f33359"; // For now
+
+    const { setGameCount } = useGameContext();
 
     useEffect(() => {
         fetchUserDetails();
@@ -33,6 +36,7 @@ export default function LibraryPage() {
                 ...user,
                 gamesOwned: user.gamesOwned.filter((g) => g._id !== gameId),
             });
+            setGameCount((count) => count - 1); // update global badge
         } catch (err) {
             console.error('Failed to remove game:', err);
         }

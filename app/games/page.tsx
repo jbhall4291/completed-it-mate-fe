@@ -2,12 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { getAllGames, getUser, addGame, deleteGame, Game, User } from '../../lib/api';
+import { useGameContext } from '../../lib/GameContext';
+
 
 export default function GamesPage() {
     const [games, setGames] = useState<Game[]>([]);
     const [addedGames, setAddedGames] = useState<Set<string>>(new Set());
     const [loading, setLoading] = useState(true);
     const hardcodedUserId = '687bd767e7f8c28253f33359'; // for now
+
+    const { setGameCount } = useGameContext();
+
 
     useEffect(() => {
         async function fetchData() {
@@ -34,6 +39,7 @@ export default function GamesPage() {
         try {
             await addGame(hardcodedUserId, gameId);
             setAddedGames((prev) => new Set(prev).add(gameId));
+            setGameCount((count) => count + 1); // update global badge
         } catch (err) {
             console.error('Failed to add game:', err);
         }
@@ -47,6 +53,7 @@ export default function GamesPage() {
                 updated.delete(gameId);
                 return updated;
             });
+            setGameCount((count) => Math.max(0, count - 1)); // update global badge
         } catch (err) {
             console.error('Failed to remove game:', err);
         }
@@ -83,8 +90,8 @@ export default function GamesPage() {
                                     onClick={() => handleAddGame(g._id)}
                                     disabled={isAdded}
                                     className={`py-2 px-4 rounded font-semibold transition ${isAdded
-                                            ? 'bg-gray-400 text-white cursor-not-allowed'
-                                            : 'bg-green-500 hover:bg-green-600 text-white'
+                                        ? 'bg-gray-400 text-white cursor-not-allowed'
+                                        : 'bg-green-500 hover:bg-green-600 text-white'
                                         }`}
                                 >
                                     {isAdded ? 'Game Added' : 'Add to Library'}

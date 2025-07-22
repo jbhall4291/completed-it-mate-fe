@@ -1,25 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getUser } from '../lib/api';
+import { useGameContext } from '../lib/GameContext';
 
 export default function Navbar() {
-    const [gameCount, setGameCount] = useState<number>(0);
-    const hardcodedUserId = '687bd767e7f8c28253f33359'; // same user as before
-
-    useEffect(() => {
-        async function fetchUser() {
-            try {
-                const user = await getUser(hardcodedUserId);
-                setGameCount(user.gamesOwned.length);
-            } catch (err) {
-                console.error('Failed to fetch user for navbar badge:', err);
-            }
-        }
-
-        fetchUser();
-    }, []);
+    const { gameCount } = useGameContext();
 
     return (
         <nav className="bg-black text-white p-4 shadow">
