@@ -1,17 +1,11 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   use: {
-    headless: false,        // show the browser
+    headless: false, // we want to SEE the browser
     launchOptions: {
-      slowMo: 400,           // 400ms delay between actions
+      slowMo: 300, // 300ms delay between actions
     },
-    video: 'retain-on-failure',  // optional: record videos on failures
+    viewport: { width: 1280, height: 720 },
   },
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-  ],
 });

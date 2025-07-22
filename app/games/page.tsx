@@ -78,6 +78,7 @@ export default function GamesPage() {
                     return (
                         <div
                             key={g._id}
+                            data-testid="game-card"
                             className="text-black border border-gray-300 p-4 flex flex-col justify-between w-[300px] h-[400px] rounded-lg bg-white shadow"
                         >
                             <div>
@@ -89,9 +90,7 @@ export default function GamesPage() {
                                 <button
                                     onClick={() => handleAddGame(g._id)}
                                     disabled={isAdded}
-                                    className={`py-2 px-4 rounded font-semibold transition ${isAdded
-                                        ? 'bg-gray-400 text-white cursor-not-allowed'
-                                        : 'bg-green-500 hover:bg-green-600 text-white'
+                                    className={`py-2 px-4 rounded font-semibold transition ${isAdded ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 text-white'
                                         }`}
                                 >
                                     {isAdded ? 'Game Added' : 'Add to Library'}
@@ -107,6 +106,7 @@ export default function GamesPage() {
                                 )}
                             </div>
                         </div>
+
                     );
                 })}
             </div>
