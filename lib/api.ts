@@ -1,7 +1,5 @@
 //api.ts
-import axios from 'axios';
-
-const API_BASE = 'http://localhost:5000/api'; // adjust if your backend is on a different port
+import axiosInstance from './axiosInstance';
 
 export type User = {
   _id: string;
@@ -17,36 +15,36 @@ export type Game = {
 };
 
 export async function getUsers(): Promise<User[]> {
-  const res = await axios.get(`${API_BASE}/users`);
+  const res = await axiosInstance.get(`/users`);
   return res.data;
 }
 
 export async function getUser(userId: string): Promise<User> {
-  const res = await axios.get(`${API_BASE}/users/${userId}`);
+  const res = await axiosInstance.get(`/users/${userId}`);
   return res.data;
 }
 
 
 export async function getUserGames(userId: string): Promise<Game[]> {
-  const res = await axios.get(`${API_BASE}/users/${userId}/games`);
+  const res = await axiosInstance.get(`/users/${userId}/games`);
   return res.data;
 }
 
 export async function addGame(userId: string, gameId: string): Promise<void> {
-  await axios.post(`${API_BASE}/users/${userId}/games`,
+  await axiosInstance.post(`/users/${userId}/games`,
     { gameId });
 }
 
 
 
 export async function deleteGame(userId: string, gameId: string): Promise<void> {
-  await axios.delete(`${API_BASE}/users/${userId}/games`, {
+  await axiosInstance.delete(`/users/${userId}/games`, {
     data: { gameId },
   });
 }
 
 
 export async function getAllGames(): Promise<Game[]> {
-  const res = await axios.get(`${API_BASE}/games/`);
+  const res = await axiosInstance.get(`/games/`);
   return res.data;
 }
