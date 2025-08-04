@@ -1,6 +1,28 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../utils/playwright-fixtures';
 
-test.only('User can add a game, then remove it from their library', async ({ page }) => {
+test.beforeEach(async () => {
+  const res = await fetch('https://completed-it-mate-be.onrender.com/api/test/reset-library', {
+    method: 'DELETE',
+    headers: {
+      'x-api-key': process.env.NEXT_PUBLIC_API_KEY!,
+    },
+  });
+
+  expect(res.status).toBe(204);
+});
+
+test.afterAll(async () => {
+  const res = await fetch('https://completed-it-mate-be.onrender.com/api/test/reset-library', {
+    method: 'DELETE',
+    headers: {
+      'x-api-key': process.env.NEXT_PUBLIC_API_KEY!,
+    },
+  });
+
+  expect(res.status).toBe(204);
+});
+
+test('User can add a game, then remove it from their library', async ({ page }) => {
   await page.goto('http://localhost:3000/games');
 
   // Badge may or may not be visible initially
@@ -33,10 +55,10 @@ test.only('User can add a game, then remove it from their library', async ({ pag
   // Wait for the badge to increment
   await expect(badge).toHaveText(String(initialNum + 1), { timeout: 3000 });
 
-  console.log('Navigating to /library...');
+  console.log('Navigating to /user-library...');
   // Use a check for SPA navigation instead of a hard URL wait
   await page.click('text=My Library');
-  await expect(page).toHaveURL(/\/library$/);
+  await expect(page).toHaveURL(/\/user-library$/);
 
   console.log('Looking for game in library...');
   const gameCard = page.locator('div[data-testid="game-card"]').filter({ hasText: gameTitle }).first();
