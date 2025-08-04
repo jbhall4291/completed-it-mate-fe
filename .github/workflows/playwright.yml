@@ -25,6 +25,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
+      - name: Build frontend
+        run: npm run build
+
+      - name: Start frontend
+        run: npm run start &
+      
+      - name: Wait for frontend to be ready
+        run: npx wait-on http://localhost:3000
+
       - name: Run Playwright tests
         env:
           NEXT_PUBLIC_API_KEY: ${{ secrets.NEXT_PUBLIC_API_KEY }}
