@@ -15,7 +15,7 @@ export default function Navbar() {
 
                 <ul className="flex space-x-6">
                     <li className="relative">
-                        <Link href="/library" className="hover:underline flex items-center space-x-2">
+                        <Link href="/user-library" className="hover:underline flex items-center space-x-2">
                             <span>My Library</span>
                             {gameCount > 0 && (
                                 <span className="bg-blue-500 text-white text-xs font-bold rounded-full px-2 py-1">

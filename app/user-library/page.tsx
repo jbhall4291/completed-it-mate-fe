@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getUser, deleteGame, User } from '../../lib/api';
+import { getUser, deleteGame, User, deleteAllGamesFromTestUser } from '../../lib/api';
 import { useGameContext } from '../../lib/GameContext';
 
 export default function LibraryPage() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
-    const hardcodedUserId = "687bd767e7f8c28253f33359"; // For now
+    const hardcodedUserId = "6890a2561ffcdd030b19c08c"; // For now
 
     const { setGameCount } = useGameContext();
 
@@ -19,6 +19,7 @@ export default function LibraryPage() {
         try {
             const userDetails = await getUser(hardcodedUserId);
             setUser(userDetails);
+            setGameCount(userDetails.gamesOwned.length);
         } catch (err) {
             console.error('Error fetching user:', err);
         } finally {
@@ -41,6 +42,7 @@ export default function LibraryPage() {
             console.error('Failed to remove game:', err);
         }
     }
+
 
     if (loading) {
         return (
