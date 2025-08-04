@@ -48,3 +48,8 @@ export async function getAllGames(): Promise<Game[]> {
   const res = await axiosInstance.get(`/games/`);
   return res.data;
 }
+
+export async function deleteAllGamesFromTestUser(): Promise<void> {
+  const res = await axiosInstance.delete(`/test/reset-library`);
+  return res.data;
+}
