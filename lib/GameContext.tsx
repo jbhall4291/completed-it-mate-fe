@@ -13,7 +13,7 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export function GameProvider({ children }: { children: ReactNode }) {
     const [gameCount, setGameCount] = useState(0);
-    const hardcodedUserId = '687bd767e7f8c28253f33359';
+    const hardcodedUserId = '6890a2561ffcdd030b19c08c';
 
     // Fetch initial count on mount (after refresh)
     useEffect(() => {

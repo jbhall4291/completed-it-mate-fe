@@ -9,7 +9,7 @@ export default function GamesPage() {
     const [games, setGames] = useState<Game[]>([]);
     const [addedGames, setAddedGames] = useState<Set<string>>(new Set());
     const [loading, setLoading] = useState(true);
-    const hardcodedUserId = '687bd767e7f8c28253f33359'; // for now
+    const hardcodedUserId = '6890a2561ffcdd030b19c08c'; // for now
 
     const { setGameCount } = useGameContext();
 
