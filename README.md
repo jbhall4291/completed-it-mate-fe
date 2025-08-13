@@ -1,3 +1,11 @@
+# Completed It Mate - Frontend
+
+![CI](https://github.com/jbhall4291/completed-it-mate-fe/actions/workflows/playwright.yml/badge.svg?branch=master)
+![Node](https://img.shields.io/badge/node-18.x-339933)
+
+Next.js frontend built with React + Tailwind, with Playwright regression tests run via GitHub Actions CI.
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
