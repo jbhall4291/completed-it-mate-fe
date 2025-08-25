@@ -116,6 +116,7 @@ export default function GamesPage() {
                     return (
                         <div
                             key={g._id}
+                            data-testid="game-card"
                             className="text-black border border-gray-300 p-4 flex flex-col justify-between w-[300px] h-[400px] rounded-lg bg-white shadow"
                         >
                             <div>
