@@ -1,27 +1,31 @@
 'use client';
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getUser, User } from '../../../lib/api';
+import { useParams } from 'next/navigation';
+import { getUser, getUserGames, type User, type LibraryItem } from '../../../lib/api';
 
-export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = use(params); // unwrap the params Promise
+export default function UserDetailPage() {
+    const params = useParams();
+    const id = params?.id as string;
+
     const [user, setUser] = useState<User | null>(null);
+    const [library, setLibrary] = useState<LibraryItem[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchUser() {
+        if (!id) return;
+        (async () => {
             try {
-                const userData = await getUser(id);
-                setUser(userData);
+                const [u, lib] = await Promise.all([getUser(id), getUserGames(id)]);
+                setUser(u);
+                setLibrary(lib);
             } catch (err) {
                 console.error(`Error fetching user ${id}:`, err);
             } finally {
                 setLoading(false);
             }
-        }
-
-        fetchUser();
+        })();
     }, [id]);
 
     if (loading) {
@@ -43,26 +47,29 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
         );
     }
 
+    const gameCount = ('gameCount' in user && typeof (user as any).gameCount === 'number')
+        ? (user as any).gameCount
+        : library.length;
+
     return (
         <main className="p-6 font-sans bg-gray-50 min-h-screen">
             <Link href="/users" className="text-blue-500 underline mb-6 block">
                 ← Back to Users
             </Link>
 
-            <h1 className="text-3xl font-bold text-blue-600 mb-4">
+            <h1 className="text-3xl font-bold text-blue-600 mb-2">
                 {user.username}&apos;s Details
             </h1>
             <p className="text-gray-600 mb-6">Email: {user.email}</p>
 
-            <h2 className="text-xl font-semibold mb-4">Games Owned</h2>
-            {user.gamesOwned.length > 0 ? (
+            <h2 className="text-xl font-semibold mb-2">Games Owned ({gameCount})</h2>
+            {library.length ? (
                 <ul className="space-y-3">
-                    {user.gamesOwned.map((g) => (
-                        <li
-                            key={g._id}
-                            className="p-3 bg-white shadow rounded text-gray-700"
-                        >
-                            {g.title} <span className="text-gray-500">({g.platform})</span>
+                    {library.map((item) => (
+                        <li key={item._id} className="p-3 bg-white shadow rounded text-gray-700">
+                            {item.gameId.title}{' '}
+                            <span className="text-gray-500">({item.gameId.platform})</span>
+                            <span className="ml-2 text-sm text-gray-500">Status: {item.status}</span>
                         </li>
                     ))}
                 </ul>

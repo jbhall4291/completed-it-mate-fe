@@ -4,8 +4,8 @@ import axiosInstance from './axiosInstance';
 export type User = {
   _id: string;
   username: string;
-  gamesOwned: Game[];
   email: string;
+  gameCount: number;
 };
 
 export type Game = {
@@ -13,6 +13,34 @@ export type Game = {
   title: string;
   platform: string;
 };
+
+export type LibraryItem = {
+  _id: string;          // userGameId
+  userId: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  gameId: {
+    _id: string;
+    title: string;
+    platform: string;
+    releaseDate?: string;
+    avgCompletionTime?: number;
+  };
+};
+
+export type LibraryStatus = 'owned' | 'playing' | 'completed' | 'backlog' | 'wishlist';
+
+export type UserGameCreated = {
+  _id: string;
+  userId: string;
+  gameId: string;            // note: POST response is usually NOT populated
+  status: LibraryStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
+
 
 export async function getUsers(): Promise<User[]> {
   const res = await axiosInstance.get(`/users`);
@@ -24,22 +52,28 @@ export async function getUser(userId: string): Promise<User> {
   return res.data;
 }
 
-
-export async function getUserGames(userId: string): Promise<Game[]> {
-  const res = await axiosInstance.get(`/users/${userId}/games`);
+export async function getUserGames(userId: string): Promise<LibraryItem[]> {
+  const res = await axiosInstance.get(`/library?userId=${userId}`);
   return res.data;
 }
 
-export async function addGame(userId: string, gameId: string): Promise<void> {
-  await axiosInstance.post(`/users/${userId}/games`,
-    { gameId });
+export async function addGame(
+  userId: string,
+  gameId: string,
+  status: LibraryStatus = 'owned'
+): Promise<UserGameCreated> {
+  const { data } = await axiosInstance.post<UserGameCreated>('/library', {
+    userId,
+    gameId,
+    status,
+  });
+  return data;
 }
 
 
-
-export async function deleteGame(userId: string, gameId: string): Promise<void> {
-  await axiosInstance.delete(`/users/${userId}/games`, {
-    data: { gameId },
+export async function deleteGame(userGameId: string,): Promise<void> {
+  await axiosInstance.delete(`/library/${userGameId}`, {
+    // data: { gameId },
   });
 }
 

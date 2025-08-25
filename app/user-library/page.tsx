@@ -1,48 +1,42 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getUser, deleteGame, User, deleteAllGamesFromTestUser } from '../../lib/api';
+import { getUserGames, deleteGame } from '../../lib/api';
+import type { LibraryItem } from '../../lib/api';
 import { useGameContext } from '../../lib/GameContext';
 
 export default function LibraryPage() {
-    const [user, setUser] = useState<User | null>(null);
+    const [library, setLibrary] = useState<LibraryItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const hardcodedUserId = "6890a2561ffcdd030b19c08c"; // For now
+    const hardcodedUserId = '6890a2561ffcdd030b19c08c';
 
-    const { setGameCount } = useGameContext();
+    const { refreshGameCount } = useGameContext();
 
     useEffect(() => {
-        fetchUserDetails();
+        void fetchLibrary();
     }, []);
 
-    async function fetchUserDetails() {
+    async function fetchLibrary() {
         try {
-            const userDetails = await getUser(hardcodedUserId);
-            setUser(userDetails);
-            setGameCount(userDetails.gamesOwned.length);
+            const usersGames = await getUserGames(hardcodedUserId);
+            setLibrary(usersGames);
+            await refreshGameCount(hardcodedUserId); // keep badge in sync
         } catch (err) {
-            console.error('Error fetching user:', err);
+            console.error('Error fetching users library:', err);
         } finally {
             setLoading(false);
         }
     }
 
-    async function handleRemoveGame(gameId: string) {
-        if (!user) return;
-
+    async function handleRemoveGame(userGameId: string) {
         try {
-            await deleteGame(hardcodedUserId, gameId);
-            // Optimistically update UI by filtering the removed game
-            setUser({
-                ...user,
-                gamesOwned: user.gamesOwned.filter((g) => g._id !== gameId),
-            });
-            setGameCount((count) => count - 1); // update global badge
+            await deleteGame(userGameId);
+            setLibrary(prev => prev.filter(g => g._id !== userGameId));
+            await refreshGameCount(hardcodedUserId); // single source of truth
         } catch (err) {
             console.error('Failed to remove game:', err);
         }
     }
-
 
     if (loading) {
         return (
@@ -57,16 +51,17 @@ export default function LibraryPage() {
             <h1 className="text-3xl font-bold text-blue-600 mb-6">My Library</h1>
 
             <div className="flex flex-wrap text-black gap-4">
-                {user?.gamesOwned.length ? (
-                    user.gamesOwned.map((g) => (
+                {library.length ? (
+                    library.map((g) => (
                         <div
                             key={g._id}
                             data-testid="game-card"
                             className="border border-gray-300 flex flex-col justify-between w-[300px] h-[400px] rounded-lg p-4 bg-white shadow"
                         >
                             <div>
-                                <h2 className="text-lg font-semibold">{g.title}</h2>
-                                <p className="text-gray-600">{g.platform}</p>
+                                <h2 className="text-lg font-semibold">{g.gameId.title}</h2>
+                                <p className="text-gray-600">{g.gameId.platform}</p>
+                                <p className="text-sm text-gray-500">Status: {g.status}</p>
                             </div>
                             <button
                                 onClick={() => handleRemoveGame(g._id)}

@@ -1,59 +1,98 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAllGames, getUser, addGame, deleteGame, Game, User } from '../../lib/api';
+import {
+    getAllGames,
+    getUserGames,
+    addGame,
+    deleteGame,
+    type Game,
+    type UserGameCreated,
+} from '../../lib/api';
 import { useGameContext } from '../../lib/GameContext';
-
 
 export default function GamesPage() {
     const [games, setGames] = useState<Game[]>([]);
-    const [addedGames, setAddedGames] = useState<Set<string>>(new Set());
+    const [addedGames, setAddedGames] = useState<Set<string>>(new Set());         // gameIds the user owns
+    const [idByGameId, setIdByGameId] = useState<Map<string, string>>(new Map()); // gameId -> userGameId
     const [loading, setLoading] = useState(true);
-    const hardcodedUserId = '6890a2561ffcdd030b19c08c'; // for now
+    const hardcodedUserId = '6890a2561ffcdd030b19c08c';
 
-    const { setGameCount } = useGameContext();
-
+    const { refreshGameCount } = useGameContext();
 
     useEffect(() => {
-        async function fetchData() {
+        (async () => {
             try {
-                // Fetch all games
-                const gameList = await getAllGames();
+                const [gameList, library] = await Promise.all([
+                    getAllGames(),
+                    getUserGames(hardcodedUserId),
+                ] as const);
+
                 setGames(gameList);
 
-                // Fetch user to see which games they already own
-                const user: User = await getUser(hardcodedUserId);
-                const owned = new Set(user.gamesOwned.map((g) => g._id)); // Prepopulate
-                setAddedGames(owned);
+                // Build owned set + map
+                setAddedGames(new Set(library.map(i => i.gameId._id)));
+                setIdByGameId(new Map(library.map(i => [i.gameId._id, i._id])));
+
+                // Sync global badge from backend truth
+                await refreshGameCount(hardcodedUserId);
             } catch (err) {
-                console.error('Error loading games or user data:', err);
+                console.error('Error loading games/library:', err);
             } finally {
                 setLoading(false);
             }
-        }
-
-        fetchData();
-    }, []);
+        })();
+    }, [refreshGameCount]);
 
     async function handleAddGame(gameId: string) {
         try {
-            await addGame(hardcodedUserId, gameId);
-            setAddedGames((prev) => new Set(prev).add(gameId));
-            setGameCount((count) => count + 1); // update global badge
-        } catch (err) {
+            // Avoid duplicate POSTs if already added
+            if (addedGames.has(gameId)) return;
+
+            const created: UserGameCreated = await addGame(hardcodedUserId, gameId, 'owned');
+
+            // Update local sets/maps using the real userGameId
+            setAddedGames(prev => new Set(prev).add(gameId));
+            setIdByGameId(prev => {
+                const m = new Map(prev);
+                m.set(gameId, created._id);
+                return m;
+            });
+
+            await refreshGameCount(hardcodedUserId);
+        } catch (err: any) {
+            // If backend returns 409 for duplicates, treat as already-added
+            if (err?.response?.status === 409) {
+                setAddedGames(prev => new Set(prev).add(gameId));
+                await refreshGameCount(hardcodedUserId);
+                return;
+            }
             console.error('Failed to add game:', err);
         }
     }
 
     async function handleRemoveGame(gameId: string) {
         try {
-            await deleteGame(hardcodedUserId, gameId);
-            setAddedGames((prev) => {
-                const updated = new Set(prev);
-                updated.delete(gameId);
-                return updated;
+            const userGameId = idByGameId.get(gameId);
+            if (!userGameId) {
+                console.warn('No userGameId for', gameId);
+                return;
+            }
+
+            await deleteGame(userGameId); // DELETE /library/:userGameId
+
+            setAddedGames(prev => {
+                const s = new Set(prev);
+                s.delete(gameId);
+                return s;
             });
-            setGameCount((count) => Math.max(0, count - 1)); // update global badge
+            setIdByGameId(prev => {
+                const m = new Map(prev);
+                m.delete(gameId);
+                return m;
+            });
+
+            await refreshGameCount(hardcodedUserId);
         } catch (err) {
             console.error('Failed to remove game:', err);
         }
@@ -72,13 +111,11 @@ export default function GamesPage() {
             <h1 className="text-3xl font-bold text-blue-600 mb-6">All Games</h1>
 
             <div className="flex flex-wrap gap-4">
-                {games.map((g) => {
+                {games.map(g => {
                     const isAdded = addedGames.has(g._id);
-
                     return (
                         <div
                             key={g._id}
-                            data-testid="game-card"
                             className="text-black border border-gray-300 p-4 flex flex-col justify-between w-[300px] h-[400px] rounded-lg bg-white shadow"
                         >
                             <div>
@@ -106,7 +143,6 @@ export default function GamesPage() {
                                 )}
                             </div>
                         </div>
-
                     );
                 })}
             </div>
