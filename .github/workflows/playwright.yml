@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      CI_SKIP_E2E: ${{ vars.CI_SKIP_E2E }}
 
     steps:
       - name: Checkout repo
