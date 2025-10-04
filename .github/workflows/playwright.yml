@@ -42,8 +42,8 @@ jobs:
         run: npx wait-on http://localhost:3000
 
       - name: Run Playwright tests
+        if: ${{ env.CI_SKIP_E2E != '1' }}
         env:
           NEXT_PUBLIC_API_KEY: ${{ secrets.NEXT_PUBLIC_API_KEY }}
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
         run: npm run test
-
