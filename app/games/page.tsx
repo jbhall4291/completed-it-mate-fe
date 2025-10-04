@@ -114,17 +114,23 @@ export default function GamesPage() {
                 {games.map(g => {
                     const isAdded = addedGames.has(g._id);
                     return (
-                        <div
-                            key={g._id}
-                            data-testid="game-card"
-                            className="text-black border border-gray-300 p-4 flex flex-col justify-between w-[300px] h-[400px] rounded-lg bg-white shadow"
-                        >
-                            <div>
-                                <h2 className="text-lg font-semibold">{g.title}</h2>
-                                <p className="text-gray-500">{g.platform}</p>
-                            </div>
+                        <div key={g._id} className="relative rounded-lg overflow-hidden shadow-lg group w-[300px]">
+                            <img
+                                src={g.imageUrl ?? '/placeholder.png'}
+                                alt={g.title}
+                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform"
+                            />
 
-                            <div className="flex justify-between items-center mt-4">
+                            <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-3">
+                                <div className="flex items-center gap-2 mb-1 text-gray-300 text-sm">
+                                    <span>🖥️</span>
+                                    <span>{g.platform}</span>
+                                </div>
+
+                                <h2 className="text-white font-bold leading-tight truncate">
+                                    {g.title} 🎯
+                                </h2>
+
                                 <button
                                     onClick={() => handleAddGame(g._id)}
                                     disabled={isAdded}
@@ -132,20 +138,20 @@ export default function GamesPage() {
                                         }`}
                                 >
                                     {isAdded ? 'Game Added' : 'Add to Library'}
+
                                 </button>
 
-                                {isAdded && (
-                                    <button
-                                        onClick={() => handleRemoveGame(g._id)}
-                                        className="py-2 px-3 bg-red-500 hover:bg-red-600 text-white text-sm rounded"
-                                    >
-                                        Remove
-                                    </button>
-                                )}
+
+                                <div className="mt-2 flex items-center gap-2">
+                                    <span className="bg-gray-700 text-white text-xs font-semibold px-2 py-0.5 rounded">
+                                        15 users completed it mate
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     );
                 })}
+
             </div>
         </main>
     );
