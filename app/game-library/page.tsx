@@ -1,3 +1,4 @@
+// game-library.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,6 +7,7 @@ import {
     getUserGames,
     addGame,
     deleteGame,
+    DuplicateResourceError,
     type Game,
     type UserGameCreated,
 } from '../../lib/api';
@@ -46,12 +48,10 @@ export default function GamesPage() {
 
     async function handleAddGame(gameId: string) {
         try {
-            // Avoid duplicate POSTs if already added
             if (addedGames.has(gameId)) return;
 
-            const created: UserGameCreated = await addGame(hardcodedUserId, gameId, 'owned');
+            const created: UserGameCreated = await addGame(hardcodedUserId, gameId, "owned");
 
-            // Update local sets/maps using the real userGameId
             setAddedGames(prev => new Set(prev).add(gameId));
             setIdByGameId(prev => {
                 const m = new Map(prev);
@@ -60,14 +60,13 @@ export default function GamesPage() {
             });
 
             await refreshGameCount(hardcodedUserId);
-        } catch (err: any) {
-            // If backend returns 409 for duplicates, treat as already-added
-            if (err?.response?.status === 409) {
+        } catch (err: unknown) {
+            if (err instanceof DuplicateResourceError) {
                 setAddedGames(prev => new Set(prev).add(gameId));
                 await refreshGameCount(hardcodedUserId);
                 return;
             }
-            console.error('Failed to add game:', err);
+            console.error("Failed to add game:", err);
         }
     }
 

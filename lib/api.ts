@@ -42,7 +42,13 @@ export type UserGameCreated = {
   updatedAt: string;
 };
 
-
+export class DuplicateResourceError extends Error {
+  readonly status = 409 as const;
+  constructor(msg = "Game already in library") {
+    super(msg);
+    this.name = "DuplicateResourceError";
+  }
+}
 
 export async function getUsers(): Promise<User[]> {
   const res = await axiosInstance.get(`/users`);
@@ -62,14 +68,20 @@ export async function getUserGames(userId: string): Promise<LibraryItem[]> {
 export async function addGame(
   userId: string,
   gameId: string,
-  status: LibraryStatus = 'owned'
-): Promise<UserGameCreated> {
-  const { data } = await axiosInstance.post<UserGameCreated>('/library', {
-    userId,
-    gameId,
-    status,
-  });
-  return data;
+  status: "owned" | "playing" | "completed" | "backlog" | "wishlist" = "owned"
+) {
+  try {
+    const { data } = await axiosInstance.post("/library", { userId, gameId, status });
+    return data;
+  } catch (err: unknown) {
+    // swallow cancels if you ever pass AbortSignal here
+    if (err instanceof CanceledError) throw err;
+
+    if (axios.isAxiosError(err) && err.response?.status === 409) {
+      throw new DuplicateResourceError();
+    }
+    throw err as AxiosError;
+  }
 }
 
 

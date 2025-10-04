@@ -6,10 +6,13 @@ import { useParams } from 'next/navigation';
 import { getUser, getUserGames, type User, type LibraryItem } from '../../../lib/api';
 
 export default function UserDetailPage() {
-    const params = useParams();
-    const id = params?.id as string;
+    // ✅ type the route params instead of casting later
+    const { id } = useParams<{ id: string }>();
 
-    const [user, setUser] = useState<User | null>(null);
+    // ✅ if the API sometimes omits gameCount, reflect that in the local state type
+    type UserMaybeCount = Omit<User, 'gameCount'> & { gameCount?: number };
+    const [user, setUser] = useState<UserMaybeCount | null>(null);
+
     const [library, setLibrary] = useState<LibraryItem[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -18,7 +21,7 @@ export default function UserDetailPage() {
         (async () => {
             try {
                 const [u, lib] = await Promise.all([getUser(id), getUserGames(id)]);
-                setUser(u);
+                setUser(u);       // ok even if gameCount is missing at runtime
                 setLibrary(lib);
             } catch (err) {
                 console.error(`Error fetching user ${id}:`, err);
@@ -47,9 +50,8 @@ export default function UserDetailPage() {
         );
     }
 
-    const gameCount = ('gameCount' in user && typeof (user as any).gameCount === 'number')
-        ? (user as any).gameCount
-        : library.length;
+    // ✅ no `any`; simple fallback if API didn’t send gameCount
+    const gameCount = user.gameCount ?? library.length;
 
     return (
         <main className="p-6 font-sans bg-gray-50 min-h-screen">
@@ -65,7 +67,7 @@ export default function UserDetailPage() {
             <h2 className="text-xl font-semibold mb-2">Games Owned ({gameCount})</h2>
             {library.length ? (
                 <ul className="space-y-3">
-                    {library.map((item) => (
+                    {library.map(item => (
                         <li key={item._id} className="p-3 bg-white shadow rounded text-gray-700">
                             {item.gameId.title}{' '}
                             <span className="text-gray-500">({item.gameId.platform})</span>

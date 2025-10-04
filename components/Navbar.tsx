@@ -27,7 +27,7 @@ export default function Navbar() {
                     </li>
 
                     <li>
-                        <Link href="/games" className="hover:underline">
+                        <Link href="/game-library" className="hover:underline">
                             Browse Games
                         </Link>
                     </li>
