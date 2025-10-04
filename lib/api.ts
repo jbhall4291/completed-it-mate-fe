@@ -1,5 +1,6 @@
 //api.ts
 import axiosInstance from './axiosInstance';
+import axios, { CanceledError, AxiosError } from "axios";
 
 export type User = {
   _id: string;
@@ -12,6 +13,7 @@ export type Game = {
   _id: string;
   title: string;
   platform: string;
+  imageUrl: string;
 };
 
 export type LibraryItem = {
@@ -82,6 +84,24 @@ export async function getAllGames(): Promise<Game[]> {
   const res = await axiosInstance.get(`/games/`);
   return res.data;
 }
+
+export async function searchGames(titleQuery: string, signal?: AbortSignal): Promise<Game[]> {
+  try {
+    const { data } = await axiosInstance.get<Game[]>("/games", {
+      params: { titleQuery },
+      signal,
+    });
+    return data;
+  } catch (err: unknown) {
+    // axios v1 cancellation when using AbortController
+    if (err instanceof CanceledError || (axios.isCancel && axios.isCancel(err))) {
+      return []; // canceled: return empty to keep UI simple
+    }
+    throw err as AxiosError;
+  }
+}
+
+
 
 export async function deleteAllGamesFromTestUser(): Promise<void> {
   const res = await axiosInstance.delete(`/test/reset-library`);
