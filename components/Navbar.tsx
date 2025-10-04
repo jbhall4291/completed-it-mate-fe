@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { useGameContext } from '../lib/GameContext';
+// optional: import { useEffect } from 'react';
 
 export default function Navbar() {
     const { gameCount } = useGameContext();
 
     return (
         <nav className="bg-black text-white p-4 shadow">
-            <div className="max-w-8xl mx-auto flex items-center justify-between">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <Link href="/">
                     <img src="/logo-large.jpg" className="h-24" alt="Logo" />
                 </Link>
@@ -26,7 +27,7 @@ export default function Navbar() {
                     </li>
 
                     <li>
-                        <Link href="/games" className="hover:underline">
+                        <Link href="/game-library" className="hover:underline">
                             Browse Games
                         </Link>
                     </li>
