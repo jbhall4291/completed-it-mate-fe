@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getUsers, User } from '../../lib/api';
+import { getUsers, User } from '@/lib/api';
 
 export default function UsersPage() {
     const [users, setUsers] = useState<User[]>([]);

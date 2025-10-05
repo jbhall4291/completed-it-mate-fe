@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { getUser, getUserGames, type User, type LibraryItem } from '../../../lib/api';
+import { getUser, getUserGames, type User, type LibraryItem } from '@/lib/api';
 
 export default function UserDetailPage() {
     // ✅ type the route params instead of casting later

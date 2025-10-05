@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useGameContext } from '../lib/GameContext';
+import { useGameContext } from '@/lib/GameContext';
 // optional: import { useEffect } from 'react';
 
 export default function Navbar() {

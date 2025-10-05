@@ -1,4 +1,4 @@
-// game-library.tsx
+// app/game-library/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,19 +6,28 @@ import {
     getAllGames,
     getUserGames,
     addGame,
+    updateGameStatus,
     deleteGame,
     DuplicateResourceError,
     type Game,
     type UserGameCreated,
-} from '../../lib/api';
-import { useGameContext } from '../../lib/GameContext';
+    type LibraryStatus,
+} from '@/lib/api';
+import { useGameContext } from '@/lib/GameContext';
+import GameCard from '@/components/game/GameCard';
 
 export default function GamesPage() {
     const [games, setGames] = useState<Game[]>([]);
-    const [addedGames, setAddedGames] = useState<Set<string>>(new Set());         // gameIds the user owns
-    const [idByGameId, setIdByGameId] = useState<Map<string, string>>(new Map()); // gameId -> userGameId
+    const [addedGames, setAddedGames] = useState<Set<string>>(new Set());                 // gameId -> in library
+    const [idByGameId, setIdByGameId] = useState<Map<string, string>>(new Map());        // gameId -> userGameId
+    const [statusByGameId, setStatusByGameId] = useState<Map<string, LibraryStatus>>(    // gameId -> status
+        new Map()
+    );
     const [loading, setLoading] = useState(true);
     const hardcodedUserId = '6890a2561ffcdd030b19c08c';
+
+    const [openMenuGameId, setOpenMenuGameId] = useState<string | null>(null);
+
 
     const { refreshGameCount } = useGameContext();
 
@@ -31,12 +40,10 @@ export default function GamesPage() {
                 ] as const);
 
                 setGames(gameList);
-
-                // Build owned set + map
                 setAddedGames(new Set(library.map(i => i.gameId._id)));
                 setIdByGameId(new Map(library.map(i => [i.gameId._id, i._id])));
+                setStatusByGameId(new Map(library.map(i => [i.gameId._id, i.status as LibraryStatus])));
 
-                // Sync global badge from backend truth
                 await refreshGameCount(hardcodedUserId);
             } catch (err) {
                 console.error('Error loading games/library:', err);
@@ -46,54 +53,74 @@ export default function GamesPage() {
         })();
     }, [refreshGameCount]);
 
-    async function handleAddGame(gameId: string) {
-        try {
-            if (addedGames.has(gameId)) return;
-
-            const created: UserGameCreated = await addGame(hardcodedUserId, gameId, "owned");
-
+    // OPTIMISTIC add or status change
+    async function handleAddGame(gameId: string, status: LibraryStatus) {
+        if (!addedGames.has(gameId)) {
+            // optimistic add
             setAddedGames(prev => new Set(prev).add(gameId));
-            setIdByGameId(prev => {
-                const m = new Map(prev);
-                m.set(gameId, created._id);
-                return m;
-            });
+            setStatusByGameId(prev => new Map(prev).set(gameId, status));
 
-            await refreshGameCount(hardcodedUserId);
-        } catch (err: unknown) {
-            if (err instanceof DuplicateResourceError) {
-                setAddedGames(prev => new Set(prev).add(gameId));
+            try {
+                const created: UserGameCreated = await addGame(hardcodedUserId, gameId, status);
+                setIdByGameId(prev => new Map(prev).set(gameId, created._id));
                 await refreshGameCount(hardcodedUserId);
-                return;
+            } catch (err) {
+                console.error('Add failed:', err);
+                // no rollback by design
             }
-            console.error("Failed to add game:", err);
+            return;
+        }
+
+        // already added → optimistic status change
+        setStatusByGameId(prev => new Map(prev).set(gameId, status));
+        const userGameId = idByGameId.get(gameId);
+        if (userGameId) {
+            updateGameStatus(userGameId, status).catch(e => console.error('Update failed:', e));
         }
     }
 
-    async function handleRemoveGame(gameId: string) {
+    // OPTIMISTIC status change when already added (called from card)
+    async function handleUpdateFromBrowse(gameId: string, status: LibraryStatus) {
+        if (openMenuGameId === gameId) setOpenMenuGameId(null);
+        setStatusByGameId(prev => new Map(prev).set(gameId, status));
+        const userGameId = idByGameId.get(gameId);
+        if (!userGameId) return;
         try {
-            const userGameId = idByGameId.get(gameId);
-            if (!userGameId) {
-                console.warn('No userGameId for', gameId);
-                return;
-            }
+            await updateGameStatus(userGameId, status);
+        } catch (err) {
+            console.error('Failed to update status from browse:', err);
+        }
+    }
 
-            await deleteGame(userGameId); // DELETE /library/:userGameId
+    // OPTIMISTIC remove
+    async function handleRemoveFromBrowse(gameId: string) {
+        const userGameId = idByGameId.get(gameId);
 
-            setAddedGames(prev => {
-                const s = new Set(prev);
-                s.delete(gameId);
-                return s;
-            });
-            setIdByGameId(prev => {
-                const m = new Map(prev);
-                m.delete(gameId);
-                return m;
-            });
+        // optimistic state updates
+        setAddedGames(prev => {
+            const s = new Set(prev);
+            s.delete(gameId);
+            return s;
+        });
+        setIdByGameId(prev => {
+            const m = new Map(prev);
+            m.delete(gameId);
+            return m;
+        });
+        setStatusByGameId(prev => {
+            const m = new Map(prev);
+            m.delete(gameId);
+            return m;
+        });
 
+        if (!userGameId) return;
+
+        try {
+            await deleteGame(userGameId);
             await refreshGameCount(hardcodedUserId);
         } catch (err) {
             console.error('Failed to remove game:', err);
+            // no rollback by design
         }
     }
 
@@ -112,45 +139,23 @@ export default function GamesPage() {
             <div className="flex flex-wrap gap-4">
                 {games.map(g => {
                     const isAdded = addedGames.has(g._id);
+                    const currentStatus = statusByGameId.get(g._id);
+
                     return (
-                        <div key={g._id} className="relative rounded-lg overflow-hidden shadow-lg group w-[300px]">
-                            <img
-                                src={g.imageUrl ?? '/placeholder.png'}
-                                alt={g.title}
-                                className="w-full h-48 object-cover group-hover:scale-105 transition-transform"
-                            />
-
-                            <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-3">
-                                <div className="flex items-center gap-2 mb-1 text-gray-300 text-sm">
-                                    <span>🖥️</span>
-                                    <span>{g.platform}</span>
-                                </div>
-
-                                <h2 className="text-white font-bold leading-tight truncate">
-                                    {g.title} 🎯
-                                </h2>
-
-                                <button
-                                    onClick={() => handleAddGame(g._id)}
-                                    disabled={isAdded}
-                                    className={`py-2 px-4 rounded font-semibold transition ${isAdded ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 text-white'
-                                        }`}
-                                >
-                                    {isAdded ? 'Game Added' : 'Add to Library'}
-
-                                </button>
-
-
-                                <div className="mt-2 flex items-center gap-2">
-                                    <span className="bg-gray-700 text-white text-xs font-semibold px-2 py-0.5 rounded">
-                                        15 users completed it mate
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        <GameCard
+                            key={g._id}
+                            game={g}
+                            isAdded={isAdded}
+                            currentStatus={currentStatus}
+                            onAdd={(gameId, status) => handleAddGame(gameId, status)}
+                            onUpdate={isAdded ? (gameId, status) => handleUpdateFromBrowse(gameId, status) : undefined}
+                            onRemove={isAdded ? (gameId) => handleRemoveFromBrowse(gameId) : undefined}
+                            // NEW: control the dropdown
+                            open={openMenuGameId === g._id}
+                            onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
+                        />
                     );
                 })}
-
             </div>
         </main>
     );

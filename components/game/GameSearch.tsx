@@ -14,6 +14,27 @@ function useDebounced<T>(value: T, delay = 250): T {
     return debounced;
 }
 
+// small helper inside this file (or extract later)
+function PlatformChips({ slugs = [] as string[] }) {
+    const uniq = Array.from(new Set(slugs)); // dedupe just in case
+    if (!uniq.length) return null;
+
+    return (
+        <div className="flex items-center gap-1">
+            {uniq.map((p) => (
+                <span
+                    key={p}
+                    className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium bg-gray-100 text-gray-700"
+                    title={p}
+                >
+                    {p}
+                </span>
+            ))}
+        </div>
+    );
+}
+
+
 export default function GameSearch() {
     const [q, setQ] = useState('');
     const debouncedQ = useDebounced(q, 250); // or: const debouncedQ = q;
@@ -71,7 +92,11 @@ export default function GameSearch() {
                             <div>
                                 <div className="font-medium">{g.title}</div>
                                 <div className="text-xs text-gray-500">
-                                    {g.platform ?? '—'}
+
+
+                                    <PlatformChips slugs={g.parentPlatforms ?? []} />
+
+
                                 </div>
                             </div>
                         </li>
