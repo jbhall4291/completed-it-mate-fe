@@ -70,7 +70,9 @@ export default function UserDetailPage() {
                     {library.map(item => (
                         <li key={item._id} className="p-3 bg-white shadow rounded text-gray-700">
                             {item.gameId.title}{' '}
-                            <span className="text-gray-500">({item.gameId.platform})</span>
+                            <span className="text-gray-500">
+                                ({item.gameId.parentPlatforms?.join(', ') || '—'})
+                            </span>
                             <span className="ml-2 text-sm text-gray-500">Status: {item.status}</span>
                         </li>
                     ))}

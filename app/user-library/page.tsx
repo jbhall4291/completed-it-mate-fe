@@ -21,20 +21,23 @@ export default function LibraryPage() {
     const { refreshGameCount } = useGameContext();
 
     useEffect(() => {
-        void fetchLibrary();
-    }, []);
+        let cancelled = false;
 
-    async function fetchLibrary() {
-        try {
-            const usersGames = await getUserGames(hardcodedUserId);
-            setLibrary(usersGames);
-            await refreshGameCount(hardcodedUserId);
-        } catch (err) {
-            console.error('Error fetching users library:', err);
-        } finally {
-            setLoading(false);
-        }
-    }
+        (async () => {
+            try {
+                const usersGames = await getUserGames(hardcodedUserId);
+                if (!cancelled) setLibrary(usersGames);
+                await refreshGameCount(hardcodedUserId);
+            } catch (err) {
+                console.error('Error fetching users library:', err);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        })();
+
+        return () => { cancelled = true; };
+    }, [hardcodedUserId, refreshGameCount]);
+
 
     async function handleUpdateGame(userGameId: string, status: LibraryStatus) {
         try {

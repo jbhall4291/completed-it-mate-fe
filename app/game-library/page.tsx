@@ -8,7 +8,6 @@ import {
     addGame,
     updateGameStatus,
     deleteGame,
-    DuplicateResourceError,
     type Game,
     type UserGameCreated,
     type LibraryStatus,
