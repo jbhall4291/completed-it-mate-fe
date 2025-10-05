@@ -1,4 +1,4 @@
-import GameSearch from "@/components/GameSearch";
+import GameSearch from "@/components/game/GameSearch";
 
 export default function HomePage() {
   return (

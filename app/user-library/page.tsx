@@ -1,30 +1,53 @@
+// app/user-library/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getUserGames, deleteGame } from '../../lib/api';
-import type { LibraryItem } from '../../lib/api';
-import { useGameContext } from '../../lib/GameContext';
+import {
+    getUserGames,
+    deleteGame,
+    updateGameStatus,
+    type LibraryItem,
+    type LibraryStatus,
+} from '@/lib/api';
+import { useGameContext } from '@/lib/GameContext';
+import GameCard from '@/components/game/GameCard';
 
 export default function LibraryPage() {
     const [library, setLibrary] = useState<LibraryItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const hardcodedUserId = '6890a2561ffcdd030b19c08c';
+    const [openMenuGameId, setOpenMenuGameId] = useState<string | null>(null); // 👈 one-open-at-a-time
 
+    const hardcodedUserId = '6890a2561ffcdd030b19c08c';
     const { refreshGameCount } = useGameContext();
 
     useEffect(() => {
-        void fetchLibrary();
-    }, []);
+        let cancelled = false;
 
-    async function fetchLibrary() {
+        (async () => {
+            try {
+                const usersGames = await getUserGames(hardcodedUserId);
+                if (!cancelled) setLibrary(usersGames);
+                await refreshGameCount(hardcodedUserId);
+            } catch (err) {
+                console.error('Error fetching users library:', err);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        })();
+
+        return () => { cancelled = true; };
+    }, [hardcodedUserId, refreshGameCount]);
+
+
+    async function handleUpdateGame(userGameId: string, status: LibraryStatus) {
         try {
-            const usersGames = await getUserGames(hardcodedUserId);
-            setLibrary(usersGames);
-            await refreshGameCount(hardcodedUserId); // keep badge in sync
+            const updated = await updateGameStatus(userGameId, status);
+            setLibrary(prev =>
+                prev.map(i => (i._id === userGameId ? { ...i, status: updated.status } : i))
+            );
+            setOpenMenuGameId(null); // 👈 close menu after action
         } catch (err) {
-            console.error('Error fetching users library:', err);
-        } finally {
-            setLoading(false);
+            console.error('Failed to update status:', err);
         }
     }
 
@@ -32,7 +55,8 @@ export default function LibraryPage() {
         try {
             await deleteGame(userGameId);
             setLibrary(prev => prev.filter(g => g._id !== userGameId));
-            await refreshGameCount(hardcodedUserId); // single source of truth
+            setOpenMenuGameId(null); // 👈 close if it was open
+            await refreshGameCount(hardcodedUserId);
         } catch (err) {
             console.error('Failed to remove game:', err);
         }
@@ -53,23 +77,17 @@ export default function LibraryPage() {
             <div className="flex flex-wrap text-black gap-4">
                 {library.length ? (
                     library.map((g) => (
-                        <div
+                        <GameCard
                             key={g._id}
-                            data-testid="game-card"
-                            className="border border-gray-300 flex flex-col justify-between w-[300px] h-[400px] rounded-lg p-4 bg-white shadow"
-                        >
-                            <div>
-                                <h2 className="text-lg font-semibold">{g.gameId.title}</h2>
-                                <p className="text-gray-600">{g.gameId.platform}</p>
-                                <p className="text-sm text-gray-500">Status: {g.status}</p>
-                            </div>
-                            <button
-                                onClick={() => handleRemoveGame(g._id)}
-                                className="mt-4 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
-                            >
-                                Remove from Library
-                            </button>
-                        </div>
+                            game={g.gameId}                 // populated game doc
+                            isAdded
+                            currentStatus={g.status}
+                            onUpdate={(_, status) => handleUpdateGame(g._id, status)}
+                            onRemove={() => handleRemoveGame(g._id)}
+                            // 👇 control the dropdown & lift card z-index when open
+                            open={openMenuGameId === g.gameId._id}
+                            onOpenChange={(open) => setOpenMenuGameId(open ? g.gameId._id : null)}
+                        />
                     ))
                 ) : (
                     <p className="text-gray-500">No games in your library.</p>
