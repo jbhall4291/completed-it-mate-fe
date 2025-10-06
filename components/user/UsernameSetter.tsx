@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { getMe, patchMe } from '@/lib/api';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export default function UsernameSetter() {
     const [value, setValue] = useState('');
@@ -39,11 +39,15 @@ export default function UsernameSetter() {
             const res = await patchMe({ username: name });
             setOk(`Saved as “${res.username}”`);
             setInitial(res.username);
-        } catch (error: any) {
+        } catch (error) {
             if (axios.isAxiosError(error)) {
-                if (error.response?.status === 409) setErr('Username already taken, try another.');
-                else setErr('Failed to save, try again.');
-            } else setErr('Unexpected error, try again.');
+                if (error.response?.status === 409)
+                    setErr('Username already taken, try another.');
+                else
+                    setErr('Failed to save, try again.');
+            } else {
+                setErr('Unexpected error, try again.');
+            }
         } finally {
             setSaving(false);
         }
