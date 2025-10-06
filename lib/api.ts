@@ -1,8 +1,8 @@
 // lib/api.ts
 import axiosInstance from './axiosInstance';
 import axios, { CanceledError, AxiosError } from 'axios';
+import type { GameDetailDTO } from '@/types';
 
-// 👇 import shared DTOs with a simple relative path
 import type {
   GameCardDTO as Game,
   LibraryItemDTO as LibraryItem,
@@ -91,4 +91,20 @@ export async function searchGames(titleQuery: string, signal?: AbortSignal): Pro
 export async function deleteAllGamesFromTestUser(): Promise<void> {
   const res = await axiosInstance.delete(`/test/reset-library`);
   return res.data;
+}
+
+// lib/api.ts
+export async function getGameDetail(
+  idOrSlug: string,
+  userId?: string,
+): Promise<GameDetailDTO | null> {
+  try {
+    const { data } = await axiosInstance.get(`/games/${encodeURIComponent(idOrSlug)}`, {
+      params: userId ? { userId } : undefined,
+    });
+    return data as GameDetailDTO;
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response?.status === 404) return null;
+    throw e;
+  }
 }

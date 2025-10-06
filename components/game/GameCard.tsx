@@ -4,6 +4,20 @@
 import { memo, useMemo } from 'react';
 import AddToLibraryButton from './AddToLibraryButton';
 import type { Game, LibraryStatus } from '@/lib/api';
+import Link from 'next/link';
+
+function PlatformBadges({ slugs }: { slugs: string[] }) {
+    if (!slugs?.length) return null;
+    const names = slugs.join(', ');
+    return (
+        <div className="flex items-center gap-1 text-xs text-gray-200" title={names}>
+            {slugs.slice(0, 3).map(s => (
+                <span key={s} className="px-1.5 py-0.5 rounded bg-white/10 capitalize">{s}</span>
+            ))}
+            {slugs.length > 3 && <span className="px-1.5 py-0.5 rounded bg-white/10">+{slugs.length - 3}</span>}
+        </div>
+    );
+}
 
 type Props = {
     game: Game;
@@ -19,43 +33,48 @@ type Props = {
 function GameCard({
     game, isAdded, currentStatus, onAdd, onUpdate, onRemove, open, onOpenChange,
 }: Props) {
-    const platforms = useMemo(() => {
-        const p = game.parentPlatforms ?? [];
-        return p.length ? p.join(', ') : '—';
-    }, [game.parentPlatforms]);
+
+    const platforms = useMemo(() => game.parentPlatforms ?? [], [game]);
+    const cc = game.completedCount ?? 0;
 
     return (
-        <div className={`relative rounded-lg shadow-lg group w-[300px] overflow-visible ${open ? 'z-50 isolate' : 'z-0'}`}>
-            <div className="h-60 rounded-t-lg overflow-hidden">
-                <img
-                    src={game.imageUrl ?? '/placeholder.png'}
-                    alt={game.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
-            </div>
-
-            <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-3">
-                <div className="flex items-center gap-2 mb-1 text-gray-300 text-sm">
-                    <span className="truncate">{platforms}</span>
+        <div className={`relative rounded-lg shadow-lg group w-[300px] overflow-visible ${open ? 'z-50 isolate' : ''}`}>
+            {/* Clickable media/title area */}
+            <Link href={`/games/${game._id}`} className="block">
+                <div className="h-60 rounded-t-lg overflow-hidden relative">
+                    <img
+                        src={game.imageUrl ?? '/placeholder.png'}
+                        alt={game.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    />
+                    {/* gradient overlay for legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                 </div>
+            </Link>
 
-                <h2 className="text-white font-bold leading-tight truncate">{game.title}</h2>
+            {/* footer overlay */}
+            <div className="absolute bottom-0 left-0 right-0 p-3">
+                <PlatformBadges slugs={platforms} />
+                <Link href={`/games/${game._id}`} className="block">
+                    <h2 className="text-white font-bold leading-tight line-clamp-2">{game.title}</h2>
+                </Link>
 
-                {game.completedCount > 0 && (
-                    <div className="mt-2 flex items-center gap-2">
-                        <span className="bg-gray-700 text-white text-xs font-semibold px-2 py-0.5 rounded">
-                            {game.completedCount} users completed it mate
+                {cc > 0 && (
+                    <div className="mt-2">
+                        <span className="bg-black/60 text-white text-xs font-semibold px-2 py-0.5 rounded">
+                            {cc} {cc === 1 ? 'user' : 'users'} completed it mate
                         </span>
                     </div>
                 )}
 
-                <div className="mt-2">
+                {/* Actions – stop navigation when interacting */}
+                <div className="mt-2" onClick={(e) => e.stopPropagation()}>
                     {!isAdded ? (
                         <AddToLibraryButton
                             isAdded={false}
-                            onAdd={onAdd ? (status) => onAdd(game._id, status) : undefined} // guard
+                            onAdd={onAdd ? (status) => onAdd(game._id, status) : undefined}
                             open={open}
                             onOpenChange={onOpenChange}
                         />
@@ -75,16 +94,14 @@ function GameCard({
     );
 }
 
-// Memoize — include `open` so the controlled dropdown can update.
 export default memo(
     GameCard,
-    (prev, next) =>
-        prev.game._id === next.game._id &&
-        prev.isAdded === next.isAdded &&
-        prev.currentStatus === next.currentStatus &&
-        prev.open === next.open &&
-        prev.game.title === next.game.title &&
-        prev.game.imageUrl === next.game.imageUrl &&
-        prev.game.completedCount === next.game.completedCount &&
-        prev.game.parentPlatforms.join(',') === next.game.parentPlatforms.join(',')
+    (a, b) =>
+        a.game._id === b.game._id &&
+        a.isAdded === b.isAdded &&
+        a.currentStatus === b.currentStatus &&
+        a.open === b.open &&
+        a.game.imageUrl === b.game.imageUrl &&
+        a.game.title === b.game.title &&
+        a.game.completedCount === b.game.completedCount
 );
