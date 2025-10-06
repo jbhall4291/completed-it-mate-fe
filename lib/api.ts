@@ -2,12 +2,19 @@
 import axiosInstance from './axiosInstance';
 import axios, { CanceledError, AxiosError } from 'axios';
 import type { GameDetailDTO } from '@/types';
+import type { GameCardDTO as Game, LibraryItemDTO as LibraryItem, LibraryStatus } from '../types';
 
-import type {
-  GameCardDTO as Game,
-  LibraryItemDTO as LibraryItem,
-  LibraryStatus,
-} from '../types';
+// --- helper: get current user id from sessionStorage ---
+function currentUserId(): string | undefined {
+  if (typeof window === 'undefined') return undefined;
+  return sessionStorage.getItem('clm_user_id') || undefined;
+}
+
+function requireUserId(): string {
+  const id = typeof window !== 'undefined' ? sessionStorage.getItem('clm_user_id') || undefined : undefined;
+  if (!id) throw new Error('User not initialized yet');
+  return id;
+}
 
 // Keep User here (or move later if you want)
 export type User = {
@@ -16,14 +23,12 @@ export type User = {
   email: string;
   gameCount: number;
 };
-
-// Re-export so the rest of the app can keep `import type { Game, LibraryItem, LibraryStatus } from '@/lib/api'`
 export type { Game, LibraryItem, LibraryStatus };
 
 export type UserGameCreated = {
   _id: string;
   userId: string;
-  gameId: string;             // POST response not populated
+  gameId: string;
   status: LibraryStatus;
   createdAt: string;
   updatedAt: string;
@@ -38,30 +43,45 @@ export async function getUsers(): Promise<User[]> {
   const res = await axiosInstance.get(`/users`);
   return res.data;
 }
+
 export async function getUser(userId: string): Promise<User> {
   const res = await axiosInstance.get(`/users/${userId}`);
   return res.data;
 }
-export async function getUserGames(userId: string): Promise<LibraryItem[]> {
-  const res = await axiosInstance.get(`/library?userId=${userId}`);
+
+// ✅ if caller omits userId, use the one we bootstrapped this tab with
+export async function getUserGames(userId?: string): Promise<LibraryItem[]> {
+  const uid = userId ?? currentUserId();
+  if (!uid) return [];                                 // ← guard
+  const res = await axiosInstance.get(`/library`, { params: { userId: uid } });
   return res.data;
 }
 
+
 export async function addGame(
-  userId: string,
-  gameId: string,
-  status: LibraryStatus = 'owned'           // ← don’t narrow to the literal type
+  a: string,                               // either gameId (new) or userId (old)
+  b?: string | LibraryStatus,              // either status (new) or gameId (old)
+  c?: LibraryStatus                        // status (old) — NOTE: no default here
 ) {
-  try {
-    const { data } = await axiosInstance.post('/library', { userId, gameId, status });
-    return data;
-  } catch (err: unknown) {
-    if (err instanceof CanceledError) throw err;
-    if (axios.isAxiosError(err) && err.response?.status === 409) {
-      throw new DuplicateResourceError();
-    }
-    throw err as AxiosError;
+  let userId: string;
+  let gameId: string;
+  let status: LibraryStatus;
+
+  if (typeof c !== 'undefined') {
+    // OLD CALL SHAPE: addGame(userId, gameId, status)
+    userId = a;
+    gameId = b as string;
+    status = c;
+  } else {
+    // NEW CALL SHAPE: addGame(gameId, status)
+    userId = requireUserId();
+    gameId = a;
+    status = (b as LibraryStatus) ?? 'owned';
   }
+
+  const body = { userId, gameId, status };
+  const { data } = await axiosInstance.post('/library', body);
+  return data;
 }
 
 export async function updateGameStatus(userGameId: string, status: LibraryStatus) {
@@ -93,14 +113,14 @@ export async function deleteAllGamesFromTestUser(): Promise<void> {
   return res.data;
 }
 
-// lib/api.ts
 export async function getGameDetail(
   idOrSlug: string,
   userId?: string,
 ): Promise<GameDetailDTO | null> {
   try {
+    const uid = userId ?? currentUserId();
     const { data } = await axiosInstance.get(`/games/${encodeURIComponent(idOrSlug)}`, {
-      params: userId ? { userId } : undefined,
+      params: uid ? { userId: uid } : undefined,
     });
     return data as GameDetailDTO;
   } catch (e) {
