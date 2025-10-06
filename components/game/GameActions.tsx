@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getUserGames, type LibraryStatus } from '@/lib/api';
 import AddToLibraryButton from './AddToLibraryButton';
 import {
     addGame,
     updateGameStatus,
     deleteGame,
+    getUserGames,
     type LibraryStatus,
 } from '@/lib/api';
 import { useGameContext } from '@/lib/GameContext';
