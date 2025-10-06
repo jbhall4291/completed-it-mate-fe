@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useGameContext } from '@/lib/GameContext';
 import { BETA_EVENT } from '@/components/BetaModal';
+import UsernameSetter from '../user/UsernameSetter';
 
 // optional: import { useEffect } from 'react';
 
@@ -22,12 +23,14 @@ export default function Navbar() {
                     BETA • In Development
                 </button>
 
+                <UsernameSetter />
+
                 <ul className="flex space-x-6">
                     <li className="relative">
                         <Link href="/user-library" className="hover:underline flex items-center space-x-2">
                             <span>My Library</span>
                             {gameCount > 0 && (
-                                <span className="bg-blue-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                                <span className="bg-green-500 text-white text-xs font-bold rounded-full px-2 py-1">
                                     {gameCount}
                                 </span>
                             )}
