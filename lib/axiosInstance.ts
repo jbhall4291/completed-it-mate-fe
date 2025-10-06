@@ -1,7 +1,7 @@
 // lib/axiosInstance.ts
 import axios, { AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE = 'http://localhost:5000/api'; // process.env.NEXT_PUBLIC_API_URL!   
+const API_BASE = process.env.NEXT_PUBLIC_API_URL!  // 'http://localhost:5000/api';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE,
