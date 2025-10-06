@@ -40,7 +40,7 @@ function GameCard({
     return (
         <div className={`relative rounded-lg shadow-lg group w-[300px] overflow-visible ${open ? 'z-50 isolate' : ''}`}>
             {/* Clickable media/title area */}
-            <Link prefetch={false} href={`/games/${game._id}`} className="block">
+            <Link href={`/games/${game._id}`} className="block">
                 <div className="h-60 rounded-t-lg overflow-hidden relative">
                     <img
                         src={game.imageUrl ?? '/placeholder.png'}
@@ -57,7 +57,7 @@ function GameCard({
             {/* footer overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-3">
                 <PlatformBadges slugs={platforms} />
-                <Link prefetch={false} href={`/games/${game._id}`} className="block">
+                <Link href={`/games/${game._id}`} className="block">
                     <h2 className="text-white font-bold leading-tight line-clamp-2">{game.title}</h2>
                 </Link>
 
@@ -74,7 +74,7 @@ function GameCard({
                     {!isAdded ? (
                         <AddToLibraryButton
                             isAdded={false}
-                            onAdd={(status) => onAdd(game._id, status)}
+                            onAdd={onAdd ? (status) => onAdd(game._id, status) : undefined}
                             open={open}
                             onOpenChange={onOpenChange}
                         />
