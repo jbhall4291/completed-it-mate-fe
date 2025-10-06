@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import { GameProvider } from '../lib/GameContext';
 import BootstrapUser from "@/components/BootstrapUser";
+import BetaModal from "@/components/BetaModal";
 
 
 const geistSans = Geist({
@@ -25,7 +26,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <BootstrapUser/>
+        <BootstrapUser />
+        <BetaModal />
         <GameProvider>
           <Navbar />
           {children}

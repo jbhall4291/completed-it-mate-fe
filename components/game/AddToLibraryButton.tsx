@@ -51,12 +51,12 @@ export default function AddToLibraryButton({
         { label: 'Completed it mate', status: 'completed' },
     ] as const;
 
-    const leftLabel = isAdded ? `Status: ${currentStatus ?? 'owned'}` : 'Add to Library';
+    const leftLabel = isAdded ? `${currentStatus ?? 'owned'}` : 'Add to Library';
     const leftOnClick = isAdded
         ? () => onUpdate?.(currentStatus ?? 'owned')
         : () => onAdd?.('owned');
 
-    const bgClasses = isAdded ? 'bg-blue-500 hover:bg-blue-600' : 'bg-green-500 hover:bg-green-600';
+    const bgClasses = isAdded ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600';
     const containerClasses = [
         'inline-flex w-full items-stretch rounded overflow-hidden',
         'motion-safe:transition-colors duration-150',
@@ -110,7 +110,7 @@ export default function AddToLibraryButton({
                             }}
                             className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
                         >
-                            Remove from Library
+                            Remove from library
                         </button>
                     )}
                 </div>
