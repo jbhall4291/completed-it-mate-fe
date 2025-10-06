@@ -1,3 +1,4 @@
+// GameActions.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -13,11 +14,11 @@ import { useGameContext } from '@/lib/GameContext';
 
 type Props = {
     gameId: string;
-    initialStatus?: LibraryStatus;   // from GET /games/:id?userId=...
-    initialUserGameId?: string;      // from GET /games/:id?userId=...
+    initialStatus?: LibraryStatus;   // optional SSR hint
+    initialUserGameId?: string;      // optional SSR hint
 };
 
-const hardcodedUserId = '6890a2561ffcdd030b19c08c';
+const USER_READY_EVENT = 'clm:user-ready';
 
 export default function GameActions({ gameId, initialStatus, initialUserGameId }: Props) {
     const [status, setStatus] = useState<LibraryStatus | undefined>(initialStatus);
@@ -27,43 +28,56 @@ export default function GameActions({ gameId, initialStatus, initialUserGameId }
 
     const { refreshGameCount } = useGameContext();
 
-    // re-check the user's library once on mount (handles "clicked really fast" race).
+    // Verify on mount (and when anon user becomes available on first visit)
     useEffect(() => {
-        if (userGameId || status) return; // already known
         let cancelled = false;
-        (async () => {
+
+        async function checkLibrary() {
             try {
-                const lib = await getUserGames(hardcodedUserId);
+                // already have info (SSR or optimistic) → skip
+                if (userGameId || status) return;
+
+                const lib = await getUserGames(); // auto-injects userId via session/header
                 if (cancelled) return;
+
                 const match = lib.find(i => i.gameId._id === gameId);
                 if (match) {
                     setUserGameId(match._id);
                     setStatus(match.status);
                 }
-            } catch (e) {
-                // ignore; UI will still work via optimistic flows
-                console.warn('verify-on-mount failed', e);
+            } catch {
+                /* ignore; UI still works via optimistic flows */
             }
-        })();
+        }
+
+        // if user already exists this session, check now; otherwise wait for bootstrap
+        const existing = typeof window !== 'undefined' ? sessionStorage.getItem('clm_user_id') : null;
+        if (existing) {
+            void checkLibrary();
+        } else {
+            const onReady = () => void checkLibrary();
+            window.addEventListener(USER_READY_EVENT, onReady);
+            return () => window.removeEventListener(USER_READY_EVENT, onReady);
+        }
+
         return () => { cancelled = true; };
     }, [gameId, userGameId, status]);
 
-
+    const userReady = () => typeof window !== 'undefined' && !!sessionStorage.getItem('clm_user_id');
     async function handleAdd(s: LibraryStatus) {
-        // optimistic UI
+        if (!userReady()) return;
+
         setDisabled(true);
-        setStatus(s);
-        // mark as added optimistically (so label flips immediately)
-        setUserGameId(prev => prev ?? 'pending');
+        setStatus(s);                          // optimistic
+        setUserGameId(prev => prev ?? 'pending'); // show "added" immediately
 
         try {
-            const created = await addGame(hardcodedUserId, gameId, s);
-            // backend must return {_id: <userGameId>} — verify this if it stays undefined
+            const created = await addGame(gameId, s); // userId auto
             setUserGameId(created._id);
-            await refreshGameCount(hardcodedUserId);
+            await refreshGameCount();
         } catch (e) {
             console.error('Add failed', e);
-            // (no rollback by design)
+            // no rollback by design
         } finally {
             setDisabled(false);
         }
@@ -90,7 +104,7 @@ export default function GameActions({ gameId, initialStatus, initialUserGameId }
         setStatus(undefined);
         try {
             await deleteGame(userGameId);
-            await refreshGameCount(hardcodedUserId);
+            await refreshGameCount();
         } catch (e) {
             console.error('Remove failed', e);
         } finally {

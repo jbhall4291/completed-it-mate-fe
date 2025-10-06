@@ -15,8 +15,7 @@ export default async function GameDetailPage(
 
     const { id } = await params;
 
-    const hardcodedUserId = '6890a2561ffcdd030b19c08c';
-    const game = await getGameDetail(id, hardcodedUserId);
+    const game = await getGameDetail(id);
     if (!game) notFound();
 
     const cc = game.completedCount ?? 0;

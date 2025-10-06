@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import { GameProvider } from '../lib/GameContext';
+import BootstrapUser from "@/components/BootstrapUser";
 
 
 const geistSans = Geist({
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <BootstrapUser/>
         <GameProvider>
           <Navbar />
           {children}

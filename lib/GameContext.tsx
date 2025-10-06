@@ -7,26 +7,28 @@ import { getUserGames } from './api';
 type GameContextType = {
     gameCount: number;
     setGameCount: React.Dispatch<React.SetStateAction<number>>;
-    refreshGameCount: (userId?: string) => Promise<void>;
+    refreshGameCount: () => Promise<void>;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export function GameProvider({ children }: { children: ReactNode }) {
     const [gameCount, setGameCount] = useState(0);
-    const hardcodedUserId = '6890a2561ffcdd030b19c08c';
 
-    const refreshGameCount = useCallback(async (userId = hardcodedUserId) => {
+    const refreshGameCount = useCallback(async () => {
         try {
-            const lib = await getUserGames(userId); // ← /library?userId=
+            const lib = await getUserGames(); // pulls userId from sessionStorage / header
             setGameCount(lib.length);
-        } catch (err) {
-            console.error('Failed to refresh game count:', err);
+        } catch {
+            /* bootstrap may not be done yet; ignore */
         }
     }, []);
 
     useEffect(() => {
-        void refreshGameCount();
+        void refreshGameCount(); // first attempt (no-op if user not ready)
+        const onReady = () => void refreshGameCount();
+        window.addEventListener('clm:user-ready', onReady);
+        return () => window.removeEventListener('clm:user-ready', onReady);
     }, [refreshGameCount]);
 
 
