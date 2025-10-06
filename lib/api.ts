@@ -57,6 +57,28 @@ export async function getUser(userId: string): Promise<User> {
   return res.data;
 }
 
+export async function getMe() {
+  const r = await axiosInstance.get('/users/me');
+  return r.data as { _id: string; username?: string };
+}
+
+
+export async function patchMe(body: { username: string }) {
+  const r = await axiosInstance.patch('/users/me', body);
+  return r.data as { userId?: string; username: string };
+}
+
+
+export async function getTopRatedGames(limit = 5): Promise<Game[]> {
+  const r = await axiosInstance.get('/games/top', { params: { limit } });
+  return r.data as Game[];
+}
+
+export async function getLatestReleases(limit = 5): Promise<Game[]> {
+  const r = await axiosInstance.get('/games/latest', { params: { limit } });
+  return r.data as Game[];
+}
+
 // ✅ if caller omits userId, use the one we bootstrapped this tab with
 export async function getUserGames(userId?: string): Promise<LibraryItem[]> {
   const uid = userId ?? currentUserId();
