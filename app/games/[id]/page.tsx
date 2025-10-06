@@ -9,9 +9,14 @@ import { normalizeRawg } from '@/lib/markdown';
 
 export const dynamic = 'force-dynamic';
 
-export default async function GameDetailPage({ params }: { params: { id: string } }) {
+export default async function GameDetailPage(
+    { params }: { params: Promise<{ id: string }> }
+) {
+
+    const { id } = await params;
+
     const hardcodedUserId = '6890a2561ffcdd030b19c08c';
-    const game = await getGameDetail(params.id, hardcodedUserId);
+    const game = await getGameDetail(id, hardcodedUserId);
     if (!game) notFound();
 
     const cc = game.completedCount ?? 0;
