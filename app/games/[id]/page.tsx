@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation';
 import { CalendarDays, Hourglass } from 'lucide-react';
 import GameActions from '@/components/game/GameActions';
 import { getGameDetail } from '@/lib/api';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { normalizeRawg } from '@/lib/markdown';
 
 export const dynamic = 'force-dynamic';
 
@@ -104,7 +107,19 @@ export default async function GameDetailPage({ params }: { params: { id: string 
                 {game.description ? (
                     <section className="mt-8">
                         <h2 className="text-xl font-semibold mb-2">About</h2>
-                        <p className="text-gray-200 leading-relaxed whitespace-pre-line">{game.description}</p>
+
+                        <article
+                            className="
+        prose prose-invert max-w-none
+        [&_:where(h3)]:mt-6 [&_:where(h3)]:mb-2 [&_:where(h3)]:font-semibold
+        [&_:where(p)]:my-0 [&_:where(p)]:leading-7
+        [&_:where(p+p)]:mt-2
+      "
+                        >
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {normalizeRawg(game.description)}
+                            </ReactMarkdown>
+                        </article>
                     </section>
                 ) : null}
 
