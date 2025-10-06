@@ -4,6 +4,14 @@ import axios, { CanceledError, AxiosError } from 'axios';
 import type { GameDetailDTO } from '@/types';
 import type { GameCardDTO as Game, LibraryItemDTO as LibraryItem, LibraryStatus } from '../types';
 
+export type Paged<T> = { items: T[]; total: number; page: number; pageSize: number };
+
+export async function fetchGamesPaged(params: { page?: number; pageSize?: number; titleQuery?: string } = {}) {
+  const { page = 1, pageSize = 24, titleQuery } = params;
+  const r = await axiosInstance.get('/games', { params: { page, pageSize, titleQuery } });
+  return r.data as Paged<Game>;
+}
+
 // --- helper: get current user id from sessionStorage ---
 function currentUserId(): string | undefined {
   if (typeof window === 'undefined') return undefined;
