@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getUsers, User } from '@/lib/api';
+import SkeletonUserCard from '@/components/user/SkeletonUserCard';
 
 export default function UsersPage() {
     const [users, setUsers] = useState<User[]>([]);
@@ -25,8 +26,13 @@ export default function UsersPage() {
 
     if (loading) {
         return (
-            <main className="p-6 font-sans">
-                <h1 className="text-3xl font-bold text-blue-600">Loading Users...</h1>
+            <main className="p-6 font-sans bg-gray-50 min-h-screen">
+                <h1 className="text-3xl font-bold text-blue-600 mb-6">My Library</h1>
+                <div className="flex flex-wrap gap-4">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                        <SkeletonUserCard key={i} />
+                    ))}
+                </div>
             </main>
         );
     }

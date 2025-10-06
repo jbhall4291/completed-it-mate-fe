@@ -1,23 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
-    getAllGames,
     getUserGames,
     addGame,
     updateGameStatus,
     deleteGame,
+    fetchGamesPaged,         // ⬅️ NEW: paged fetch
     type Game,
     type UserGameCreated,
     type LibraryStatus,
 } from '@/lib/api';
 import { useGameContext } from '@/lib/GameContext';
 import GameCard from '@/components/game/GameCard';
+import SkeletonCard from '@/components/game/SkeletonGameCard';
 
 const USER_READY_EVENT = 'clm:user-ready';
 
 export default function GamesPage() {
+    // --- games (paged) ---
     const [games, setGames] = useState<Game[]>([]);
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(24);
+    const totalPages = useMemo(() => Math.max(Math.ceil(total / pageSize), 1), [total, pageSize]);
+
+    // --- user library state (unchanged) ---
     const [addedGames, setAddedGames] = useState<Set<string>>(new Set());         // gameId -> in library
     const [idByGameId, setIdByGameId] = useState<Map<string, string>>(new Map()); // gameId -> userGameId
     const [statusByGameId, setStatusByGameId] = useState<Map<string, LibraryStatus>>(new Map());
@@ -26,19 +34,22 @@ export default function GamesPage() {
 
     const { refreshGameCount } = useGameContext();
 
-    // 1) Load the games list immediately
+    // 1) Load the games list whenever page/pageSize changes
     useEffect(() => {
         let cancelled = false;
         (async () => {
             try {
-                const gameList = await getAllGames();
-                if (!cancelled) setGames(gameList);
+                const data = await fetchGamesPaged({ page, pageSize });
+                if (!cancelled) {
+                    setGames(data.items);
+                    setTotal(data.total);
+                }
             } catch (err) {
                 console.error('Error loading games:', err);
             }
         })();
         return () => { cancelled = true; };
-    }, []);
+    }, [page, pageSize]);
 
     // 2) Load the user's library once the anon user is ready (or immediately if already set)
     useEffect(() => {
@@ -71,7 +82,6 @@ export default function GamesPage() {
 
         return () => { cancelled = true; };
     }, [refreshGameCount]);
-
 
     async function handleAddGame(gameId: string, status: LibraryStatus) {
         if (!addedGames.has(gameId)) {
@@ -134,15 +144,35 @@ export default function GamesPage() {
 
     if (loading) {
         return (
-            <main className="p-6 font-sans">
-                <h1 className="text-3xl font-bold text-blue-600">Loading Games...</h1>
+            <main className="p-6 font-sans bg-gray-50 min-h-screen">
+                <h1 className="text-3xl font-bold text-blue-600 mb-6">My Library</h1>
+                <div className="flex flex-wrap gap-4">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                        <SkeletonCard key={i} />
+                    ))}
+                </div>
             </main>
         );
     }
 
     return (
         <main className="p-6 font-sans bg-gray-50 min-h-screen">
-            <h1 className="text-3xl font-bold text-blue-600 mb-6">All Games</h1>
+            <div className="flex items-end justify-between mb-6 gap-3">
+                <h1 className="text-3xl font-bold text-blue-600">All Games</h1>
+
+                {/* Page size selector (minimal) */}
+                <label className="flex items-center gap-2 text-sm">
+                    <span className="text-gray-600">Per page</span>
+                    <select
+                        className="text-black bg-white border border-gray-300 rounded-md px-2 py-1"
+                        value={pageSize}
+                        onChange={e => { setPageSize(parseInt(e.target.value, 10)); setPage(1); }}
+                    >
+                        {[12, 24, 36, 48].map(v => <option key={v} value={v}>{v}</option>)}
+                    </select>
+                </label>
+            </div>
+
             <div className="flex flex-wrap gap-4">
                 {games.map(g => {
                     const isAdded = addedGames.has(g._id);
@@ -162,6 +192,89 @@ export default function GamesPage() {
                     );
                 })}
             </div>
+
+            {/* Empty state */}
+            {games.length === 0 && (
+                <div className="text-center text-gray-600 py-10">Nothing found.</div>
+            )}
+
+            {/* Pagination (compact, inline) */}
+            <Pagination
+                page={page}
+                totalPages={totalPages}
+                onPrev={() => setPage(p => Math.max(1, p - 1))}
+                onNext={() => setPage(p => Math.min(totalPages, p + 1))}
+                onJump={(p) => setPage(p)}
+            />
         </main>
     );
+}
+
+/* --- tiny local pagination helper --- */
+function Pagination({
+    page,
+    totalPages,
+    onPrev,
+    onNext,
+    onJump,
+}: {
+    page: number;
+    totalPages: number;
+    onPrev: () => void;
+    onNext: () => void;
+    onJump: (p: number) => void;
+}) {
+    if (totalPages <= 1) return null;
+    const range = calcRange(page, totalPages);
+
+    return (
+        <nav className="mt-8 flex items-center justify-center gap-1 " aria-label="Pagination">
+            <button
+                className="px-3 py-1.5 rounded-md bg-white border text-black border-gray-300 disabled:opacity-50"
+                onClick={onPrev}
+                disabled={page <= 1}
+            >
+                Prev
+            </button>
+
+            {range.map((item, i) =>
+                item === '…' ? (
+                    <span key={`e-${i}`} className="px-2 text-gray-500">…</span>
+                ) : (
+                    <button
+                        key={item}
+                        aria-current={item === page ? 'page' : undefined}
+                        className={`text-black px-3 py-1.5 rounded-md border ${item === page ? 'bg-gray-200 border-gray-300' : 'bg-white border-gray-300 hover:bg-gray-50'
+                            }`}
+                        onClick={() => onJump(item)}
+                    >
+                        {item}
+                    </button>
+                )
+            )}
+
+            <button
+                className="px-3 py-1.5 rounded-md bg-white border text-black border-gray-300 disabled:opacity-50"
+                onClick={onNext}
+                disabled={page >= totalPages}
+            >
+                Next
+            </button>
+        </nav>
+    );
+}
+
+function calcRange(page: number, total: number) {
+    const show = new Set<number>([1, total, page]);
+    for (let d = 1; d <= 2; d++) { show.add(page - d); show.add(page + d); }
+    const ordered = [...show].filter(p => p >= 1 && p <= total).sort((a, b) => a - b);
+
+    const withEllipses: (number | '…')[] = [];
+    for (let i = 0; i < ordered.length; i++) {
+        const curr = ordered[i];
+        const prev = ordered[i - 1];
+        if (i && curr - (prev ?? 0) > 1) withEllipses.push('…');
+        withEllipses.push(curr);
+    }
+    return withEllipses;
 }
