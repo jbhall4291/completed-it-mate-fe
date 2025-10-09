@@ -49,7 +49,6 @@ export default function UsersPage() {
                         className="p-4 bg-white rounded-lg shadow border border-gray-300 hover:shadow-lg transition block"
                     >
                         <h2 className="text-lg font-semibold">{u.username}</h2>
-                        <p className="text-gray-500 text-sm">{u.email}</p>
                         <p>DEBUG ID: {u._id}</p>
                         <p className="mt-2 text-gray-600">
                             Games Owned: {u.gameCount}
