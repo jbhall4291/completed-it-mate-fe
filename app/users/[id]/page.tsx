@@ -62,7 +62,6 @@ export default function UserDetailPage() {
             <h1 className="text-3xl font-bold text-blue-600 mb-2">
                 {user.username}&apos;s Details
             </h1>
-            <p className="text-gray-600 mb-6">Email: {user.email}</p>
 
             <h2 className="text-xl font-semibold mb-2">Games Owned ({gameCount})</h2>
             {library.length ? (
