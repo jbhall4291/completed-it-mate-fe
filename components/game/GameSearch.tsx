@@ -18,11 +18,11 @@ function PlatformChips({ slugs = [] as string[] }) {
     const uniq = Array.from(new Set(slugs));
     if (!uniq.length) return null;
     return (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 text-foreground">
             {uniq.map((p) => (
                 <span
                     key={p}
-                    className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium bg-gray-100 text-gray-700"
+                    className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium "
                     title={p}
                 >
                     {p}
@@ -60,27 +60,27 @@ export default function GameSearch() {
     }, [debouncedQ]);
 
     return (
-        <div className="w-full max-w-xl text-black">
+        <div className="w-full max-w-xl  ">
             <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Type at least 2 letters…"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border  px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 aria-label="Search games"
             />
 
-            {loading && <div className="mt-2 text-sm text-gray-500">Searching…</div>}
+            {loading && <div className="mt-2 text-sm ">Searching…</div>}
             {errorText && <div className="mt-2 text-sm text-red-600">{errorText}</div>}
 
             {!loading && !errorText && results.length > 0 && (
-                <ul className="mt-3 divide-y rounded-md border bg-white" role="listbox" aria-label="Search results">
+                <ul className="mt-3 divide-y rounded-md border " role="listbox" aria-label="Search results">
                     {results.slice(0, 10).map((g) => {
                         const href = `/games/${g.slug ?? g._id}`; // works with idOrSlug backend
                         return (
                             <li key={g._id} role="option">
                                 <Link
                                     href={href}
-                                    className="p-3 flex gap-3 items-center hover:bg-gray-50 focus:bg-gray-50 focus:outline-none block"
+                                    className="p-3 flex gap-3 items-center hover:bg-blue-400 focus:bg-blue-400 focus:outline-none"
                                 >
                                     {g.imageUrl && (
                                         <img
@@ -91,7 +91,7 @@ export default function GameSearch() {
                                     )}
                                     <div className="min-w-0">
                                         <div className="font-medium truncate">{g.title}</div>
-                                        <div className="mt-0.5 text-xs text-gray-500">
+                                        <div className="mt-0.5 text-xs ">
                                             <PlatformChips slugs={g.parentPlatforms ?? []} />
                                         </div>
                                     </div>
@@ -103,7 +103,7 @@ export default function GameSearch() {
             )}
 
             {!loading && !errorText && q.trim().length >= 2 && results.length === 0 && (
-                <div className="mt-3 text-sm text-gray-500">No matches.</div>
+                <div className="mt-3 text-sm ">No matches.</div>
             )}
 
         </div>

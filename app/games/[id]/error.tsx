@@ -11,7 +11,7 @@ export default function Error({
             <p className="mt-2 text-sm opacity-80">{error.message}</p>
             <button
                 onClick={() => reset()}
-                className="mt-4 rounded bg-red-600 px-3 py-1 text-white"
+                className="mt-4 rounded bg-red-600 px-3 py-1 "
             >
                 Try again
             </button>

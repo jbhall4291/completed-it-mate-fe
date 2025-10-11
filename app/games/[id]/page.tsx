@@ -27,25 +27,25 @@ export default async function GameDetailPage(
             {/* Full-page background: image + black fade after ~500px */}
             <div
                 aria-hidden
-                className="fixed inset-0 -z-10 bg-top bg-cover bg-no-repeat pointer-events-none"
+                className="fixed inset-0 -z-10 bg-top bg-cover bg-no-repeat pointer-events-none text-[#f5f5f7]"
                 style={{
                     backgroundImage: `
             linear-gradient(
               to bottom,
-              rgba(0,0,0,0) 0px,
-              rgba(0,0,0,0.55) 320px,
-              rgba(0,0,0,0.85) 420px,
-              #000 520px,
-              #000 100%
+              rgba(30,30,32,0) 0px,
+              rgba(30,30,32,0.55) 320px,
+              rgba(30,30,32,0.85) 420px,
+              #1e1e20 520px,
+              #1e1e20 100%
             ),
             url(${game.imageUrl ?? '/placeholder.png'})
           `,
                 }}
             />
 
-            <main className="p-6 max-w-5xl mx-auto text-white">
+            <main className="p-6 max-w-5xl mx-auto ">
                 {/* top meta row (release + playtime) */}
-                <div className="flex flex-wrap gap-4 text-sm text-gray-200">
+                <div className="flex flex-wrap gap-4 text-sm ">
                     {release && (
                         <div className="flex items-center gap-2">
                             <CalendarDays className="w-4 h-4 opacity-80" />
@@ -80,7 +80,7 @@ export default async function GameDetailPage(
                 <div className="relative w-full h-64 md:h-80 rounded-xl overflow-hidden mt-4">
                     <div className="absolute bottom-4 left-4 right-4">
                         <h1 className="text-3xl md:text-4xl font-extrabold">{game.title}</h1>
-                        <div className="mt-2 flex flex-col gap-2 text-xs text-gray-300">
+                        <div className="mt-2 flex flex-col gap-2 text-xs ">
                             {!!game.parentPlatforms?.length && (
                                 <div className="flex flex-wrap gap-2">
                                     {game.parentPlatforms.map((p) => (
@@ -152,7 +152,7 @@ export default async function GameDetailPage(
                         {game.developers?.length ? (
                             <InfoBlock title="Developer">
                                 {game.developers.map((d) => (
-                                    <span key={d} className="mr-2 text-gray-200">
+                                    <span key={d} className="mr-2 ">
                                         {d}
                                     </span>
                                 ))}
@@ -161,7 +161,7 @@ export default async function GameDetailPage(
                         {game.publishers?.length ? (
                             <InfoBlock title="Publisher">
                                 {game.publishers.map((p) => (
-                                    <span key={p} className="mr-2 text-gray-200">
+                                    <span key={p} className="mr-2 ">
                                         {p}
                                     </span>
                                 ))}
@@ -194,7 +194,7 @@ export default async function GameDetailPage(
 function Stat({ label, value }: { label: string; value: string }) {
     return (
         <div className="rounded-lg bg-white/10 px-3 py-2">
-            <div className="text-xs text-gray-300">{label}</div>
+            <div className="text-xs ">{label}</div>
             <div className="text-lg font-semibold">{value}</div>
         </div>
     );
@@ -205,7 +205,7 @@ function Chip({ label }: { label: string }) {
 function InfoBlock({ title, children }: { title: string; children: React.ReactNode }) {
     return (
         <div className="rounded-lg bg-white/5 p-4">
-            <div className="text-sm text-gray-400 mb-1">{title}</div>
+            <div className="text-sm  mb-1">{title}</div>
             <div>{children}</div>
         </div>
     );

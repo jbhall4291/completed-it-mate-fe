@@ -34,7 +34,7 @@ export default function UserDetailPage() {
     if (loading) {
         return (
             <main className="p-6 font-sans">
-                <h1 className="text-3xl font-bold text-blue-600">Loading User...</h1>
+                <h1 className="text-3xl font-bold ">Loading User...</h1>
             </main>
         );
     }
@@ -43,7 +43,7 @@ export default function UserDetailPage() {
         return (
             <main className="p-6 font-sans">
                 <h1 className="text-3xl font-bold text-red-600">User Not Found</h1>
-                <Link href="/users" className="text-blue-500 underline mt-4 block">
+                <Link href="/users" className=" underline mt-4 block">
                     Back to Users
                 </Link>
             </main>
@@ -55,7 +55,7 @@ export default function UserDetailPage() {
 
     return (
         <main className="p-6 font-sans bg-gray-50 min-h-screen">
-            <Link href="/users" className="text-blue-500 underline mb-6 block">
+            <Link href="/users" className=" underline mb-6 block">
                 ← Back to Users
             </Link>
 

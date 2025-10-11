@@ -144,8 +144,8 @@ export default function GamesPage() {
 
     if (loading) {
         return (
-            <main className="p-6 font-sans bg-gray-50 min-h-screen">
-                <h1 className="text-3xl font-bold text-blue-600 mb-6">My Library</h1>
+            <main className="p-6 font-sans  min-h-screen">
+                <h1 className="text-3xl font-bold  mb-6">My Library</h1>
                 <div className="flex flex-wrap gap-4">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonCard key={i} />
@@ -156,15 +156,15 @@ export default function GamesPage() {
     }
 
     return (
-        <main className="p-6 font-sans bg-gray-50 min-h-screen">
+        <main className="p-6 font-sans  min-h-screen">
             <div className="flex items-end justify-between mb-6 gap-3">
-                <h1 className="text-3xl font-bold text-blue-600">All Games</h1>
+                <h1 className="text-3xl font-bold ">All Games</h1>
 
                 {/* Page size selector (minimal) */}
                 <label className="flex items-center gap-2 text-sm">
-                    <span className="text-gray-600">Per page</span>
+                    <span className="">Per page</span>
                     <select
-                        className="text-black bg-white border border-gray-300 rounded-md px-2 py-1"
+                        className=" bg-white text-background border border-gray-300 rounded-md px-2 py-1"
                         value={pageSize}
                         onChange={e => { setPageSize(parseInt(e.target.value, 10)); setPage(1); }}
                     >
@@ -195,7 +195,7 @@ export default function GamesPage() {
 
             {/* Empty state */}
             {games.length === 0 && (
-                <div className="text-center text-gray-600 py-10">Nothing found.</div>
+                <div className="text-center  py-10">Nothing found.</div>
             )}
 
             {/* Pagination (compact, inline) */}
@@ -230,7 +230,7 @@ function Pagination({
     return (
         <nav className="mt-8 flex items-center justify-center gap-1 " aria-label="Pagination">
             <button
-                className="px-3 py-1.5 rounded-md bg-white border text-black border-gray-300 disabled:opacity-50"
+                className="px-3 py-1.5 rounded-md bg-white border  border-gray-300 disabled:opacity-50"
                 onClick={onPrev}
                 disabled={page <= 1}
             >
@@ -239,12 +239,12 @@ function Pagination({
 
             {range.map((item, i) =>
                 item === '…' ? (
-                    <span key={`e-${i}`} className="px-2 text-gray-500">…</span>
+                    <span key={`e-${i}`} className="px-2 ">…</span>
                 ) : (
                     <button
                         key={item}
                         aria-current={item === page ? 'page' : undefined}
-                        className={`text-black px-3 py-1.5 rounded-md border ${item === page ? 'bg-gray-200 border-gray-300' : 'bg-white border-gray-300 hover:bg-gray-50'
+                        className={` px-3 py-1.5 rounded-md border ${item === page ? 'bg-gray-200 border-gray-300' : 'bg-white border-gray-300 hover:bg-gray-50'
                             }`}
                         onClick={() => onJump(item)}
                     >
@@ -254,7 +254,7 @@ function Pagination({
             )}
 
             <button
-                className="px-3 py-1.5 rounded-md bg-white border text-black border-gray-300 disabled:opacity-50"
+                className="px-3 py-1.5 rounded-md bg-white border  border-gray-300 disabled:opacity-50"
                 onClick={onNext}
                 disabled={page >= totalPages}
             >

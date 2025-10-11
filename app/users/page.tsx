@@ -26,7 +26,7 @@ export default function UsersPage() {
 
     if (loading) {
         return (
-            <main className="p-6 font-sans bg-gray-50 min-h-screen">
+            <main className="p-6 font-sans  min-h-screen">
                 <h1 className="text-3xl font-bold text-blue-600 mb-6">My Library</h1>
                 <div className="flex flex-wrap gap-4">
                     {Array.from({ length: 8 }).map((_, i) => (
@@ -38,10 +38,10 @@ export default function UsersPage() {
     }
 
     return (
-        <main className="p-6 font-sans bg-gray-50 min-h-screen">
-            <h1 className="text-3xl font-bold text-blue-600 mb-6">All Users</h1>
+        <main className="p-6 font-sans  min-h-screen">
+            <h1 className="text-3xl font-bold  mb-6">All Users</h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-black">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-background">
                 {users.map((u) => (
                     <Link
                         key={u._id}
@@ -50,7 +50,7 @@ export default function UsersPage() {
                     >
                         <h2 className="text-lg font-semibold">{u.username}</h2>
                         <p>DEBUG ID: {u._id}</p>
-                        <p className="mt-2 text-gray-600">
+                        <p className="mt-2 ">
                             Games Owned: {u.gameCount}
                         </p>
                     </Link>
