@@ -32,7 +32,7 @@ export default function BetaModal() {
         <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4">
             <div className="w-full max-w-lg rounded-2xl bg-neutral-900 text-white border border-white/10 shadow-xl">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
-                    <h2 className="text-lg font-semibold">Completed It Mate - Beta</h2>
+                    <h2 className="text-lg font-semibold">Completed It Mate - In Development v0.9</h2>
                     <button
                         className="cursor-pointer rounded-md px-2 py-1 bg-white/10 hover:bg-white/20"
                         onClick={() => dismiss(false)}
@@ -42,7 +42,7 @@ export default function BetaModal() {
 
                 <div className="px-5 py-4 space-y-4 text-sm text-white/90">
                     <p>
-                        This is an early **beta**. It’s actively being developed and things may change or break.
+                        This app is under active development and things may change or break.
                         Your data is stored in an <strong>anonymous, per-browser account</strong>.
                     </p>
 
