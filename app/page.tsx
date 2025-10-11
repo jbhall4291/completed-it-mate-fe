@@ -18,6 +18,8 @@ import GameCard from '@/components/game/GameCard';
 import GameSearch from '@/components/game/GameSearch';
 import { useGameContext } from '@/lib/GameContext';
 import SkeletonGameCard from '@/components/game/SkeletonGameCard';
+import EmblaRow from '@/components/EmblaRow';
+
 
 
 export default function HomePage() {
@@ -116,17 +118,17 @@ export default function HomePage() {
   }
 
   return (
-    <main className="p-6 font-sans bg-gray-50 min-h-screen mb-20">
+    <main className="p-6 font-sans  min-h-screen mb-20">
       {/* Hero */}
       <section className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-blue-600 mb-4">Welcome to Completed It Mate!</h1>
-        <p className="text-gray-600 mb-6">Search for a game or browse the full library to get started.</p>
+        <h1 className="text-3xl font-bold ">Welcome to Completed It Mate!</h1>
+        <p className=" mb-6">Search for a game or browse the full library to get started.</p>
         <div className="flex justify-center mb-6">
           <GameSearch />
         </div>
         <Link
           href="/game-library"
-          className="inline-block mt-4 px-6 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-700 transition"
+          className="inline-block mt-4 px-6 py-2 bg-green-500 rounded-lg shadow hover:bg-green-700 transition"
         >
           Browse all games
         </Link>
@@ -134,68 +136,51 @@ export default function HomePage() {
 
       {/* Top Rated Section */}
       <section className="mb-12">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Top Rated (Metacritic)</h2>
-        </div>
 
-        <div className="flex gap-6  pb-2">
-          {loadingTop ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex-shrink-0 ">
-                <SkeletonGameCard />
-              </div>
-            ))
-          ) : (
-            topRated.map(g => (
-              <div key={g._id} className="flex-shrink-0">
-                <GameCard
-                  game={g}
-                  isAdded={addedGames.has(g._id)}
-                  currentStatus={statusByGameId.get(g._id)}
-                  onAdd={(id, status) => handleAdd(id, status)}
-                  onUpdate={addedGames.has(g._id) ? (id, status) => handleUpdate(id, status) : undefined}
-                  onRemove={addedGames.has(g._id) ? id => handleRemove(id) : undefined}
-                  open={openMenuGameId === g._id}
-                  onOpenChange={open => setOpenMenuGameId(open ? g._id : null)}
-                />
-              </div>
-            ))
+        <EmblaRow
+          options={{ align: "start", containScroll: "trimSnaps", loop: true, dragFree: false }}
+
+          title="Top Rated (Metacritic)"
+          items={topRated}
+          loading={loadingTop}
+          skeleton={<SkeletonGameCard />}
+          renderItem={(g) => (
+            <GameCard
+              game={g}
+              isAdded={addedGames.has(g._id)}
+              currentStatus={statusByGameId.get(g._id)}
+              onAdd={(id, status) => handleAdd(id, status)}
+              onUpdate={addedGames.has(g._id) ? (id, s) => handleUpdate(id, s) : undefined}
+              onRemove={addedGames.has(g._id) ? (id) => handleRemove(id) : undefined}
+              open={openMenuGameId === g._id}
+              onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
+            />
           )}
-        </div>
+        />
       </section>
 
 
       {/* Latest Releases Section */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Latest Releases</h2>
-        </div>
-
-        <div className="flex gap-6 pb-2">
-          {loadingLatest ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex-shrink-0">
-                <SkeletonGameCard />
-              </div>
-            ))
-          ) : (
-            latest.map(g => (
-              <div key={g._id} className="flex-shrink-0">
-                <GameCard
-                  game={g}
-                  isAdded={addedGames.has(g._id)}
-                  currentStatus={statusByGameId.get(g._id)}
-                  onAdd={(id, status) => handleAdd(id, status)}
-                  onUpdate={addedGames.has(g._id) ? (id, status) => handleUpdate(id, status) : undefined}
-                  onRemove={addedGames.has(g._id) ? id => handleRemove(id) : undefined}
-                  open={openMenuGameId === g._id}
-                  onOpenChange={open => setOpenMenuGameId(open ? g._id : null)}
-                />
-              </div>
-            ))
-          )}
-        </div>
-      </section>
+      <EmblaRow
+        options={{ align: "start", containScroll: "trimSnaps", loop: true, dragFree: false }}
+        title="Latest Releases"
+        items={latest}
+        loading={loadingLatest}
+        skeleton={<SkeletonGameCard />}
+        basisClass="basis-[16rem] md:basis-[18rem]" // a bit narrower if you want
+        renderItem={(g) => (
+          <GameCard
+            game={g}
+            isAdded={addedGames.has(g._id)}
+            currentStatus={statusByGameId.get(g._id)}
+            onAdd={(id, status) => handleAdd(id, status)}
+            onUpdate={addedGames.has(g._id) ? (id, s) => handleUpdate(id, s) : undefined}
+            onRemove={addedGames.has(g._id) ? (id) => handleRemove(id) : undefined}
+            open={openMenuGameId === g._id}
+            onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
+          />
+        )}
+      />
 
     </main>
   );
