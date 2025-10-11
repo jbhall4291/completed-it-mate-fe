@@ -68,12 +68,12 @@ export async function patchMe(body: { username: string }) {
 }
 
 
-export async function getTopRatedGames(limit = 5): Promise<Game[]> {
+export async function getTopRatedGames(limit = 20): Promise<Game[]> {
   const r = await axiosInstance.get('/games/top', { params: { limit } });
   return r.data as Game[];
 }
 
-export async function getLatestReleases(limit = 5): Promise<Game[]> {
+export async function getLatestReleases(limit = 20): Promise<Game[]> {
   const r = await axiosInstance.get('/games/latest', { params: { limit } });
   return r.data as Game[];
 }
