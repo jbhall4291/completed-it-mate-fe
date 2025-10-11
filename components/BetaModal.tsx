@@ -29,8 +29,8 @@ export default function BetaModal() {
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4">
-            <div className="w-full max-w-lg rounded-2xl bg-neutral-900 text-white border border-white/10 shadow-xl">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-background/60 p-4">
+            <div className="w-full max-w-lg rounded-2xl bg-background text-white border border-white/10 shadow-xl">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
                     <h2 className="text-lg font-semibold">Completed It Mate - In Development v0.9</h2>
                     <button
@@ -88,7 +88,7 @@ export default function BetaModal() {
                         Close
                     </button>
                     <button
-                        className="cursor-pointer px-3 py-1.5 rounded-lg bg-emerald-600/90 hover:bg-emerald-600"
+                        className="cursor-pointer px-3 py-1.5 rounded-lg bg-green-500 hover:bg-green-600"
                         onClick={() => dismiss(true)}
                     >
                         Don’t show again

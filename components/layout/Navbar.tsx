@@ -76,7 +76,7 @@ export default function Navbar() {
 
 
                         <button onClick={() => window.dispatchEvent(new CustomEvent(BETA_EVENT))} className="ml-6 cursor-pointer inline-flex items-center rounded-full border border-white bg-white/10
-             text-white text-xs px-2 py-0.5 font-medium mb-0.5 lg:mb-0">
+              text-xs px-2 py-0.5 font-medium mb-0.5 lg:mb-0">
                             In Dev · v0.9
                         </button>
 

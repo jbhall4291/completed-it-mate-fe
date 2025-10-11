@@ -43,27 +43,28 @@ function GameCard({
             <Link href={`/games/${game._id}`} className="block">
                 <div className="h-60 rounded-t-lg overflow-hidden relative">
                     <img
-                        src={game.imageUrl ?? '/placeholder.png'}
+                        src={game.imageUrl ?? "/placeholder.png"}
                         alt={game.title}
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        className="w-full h-full object-cover scale-[1.1] origin-center
+               transition-transform duration-300 group-hover:scale-[1.15]"
                     />
-                    {/* gradient overlay for legibility */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/30 to-transparent" />
                 </div>
+
             </Link>
 
             {/* footer overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-3">
                 <PlatformBadges slugs={platforms} />
                 <Link href={`/games/${game._id}`} className="block">
-                    <h2 className="text-white font-bold leading-tight line-clamp-2">{game.title}</h2>
+                    <h2 className=" font-bold leading-tight line-clamp-2">{game.title}</h2>
                 </Link>
 
                 {cc > 0 && (
                     <div className="mt-2">
-                        <span className="bg-black/60 text-white text-xs font-semibold px-2 py-0.5 rounded">
+                        <span className="bg-background/60  text-xs font-semibold px-2 py-0.5 rounded">
                             {cc} {cc === 1 ? 'user' : 'users'} completed it mate
                         </span>
                     </div>

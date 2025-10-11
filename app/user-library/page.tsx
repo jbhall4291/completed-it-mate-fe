@@ -23,7 +23,7 @@ function useConfirm() {
 
     const ui = !pending ? null : (
         <div
-            className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4"
+            className="fixed inset-0 z-50 grid place-items-center  p-4"
             role="dialog"
             aria-modal="true"
             aria-labelledby="clm-confirm-title"
@@ -32,11 +32,11 @@ function useConfirm() {
                 if (e.key === 'Enter') close(true);
             }}
         >
-            <div className="w-full max-w-md rounded-2xl bg-neutral-900 text-white border border-white/10 shadow-xl">
+            <div className="w-full max-w-md rounded-2xl   border border-white/10 shadow-xl">
                 <div className="px-5 py-4 border-b border-white/10">
                     <h2 id="clm-confirm-title" className="text-lg font-semibold">Remove from library?</h2>
                 </div>
-                <div className="px-5 py-4 text-sm text-white/90">
+                <div className="px-5 py-4 text-sm ">
                     {pending.message}
                 </div>
                 <div className="px-5 py-4 border-t border-white/10 flex items-center justify-end gap-2">
@@ -107,8 +107,8 @@ export default function LibraryPage() {
 
     if (loading) {
         return (
-            <main className="p-6 font-sans bg-gray-50 min-h-screen">
-                <h1 className="text-3xl font-bold text-blue-600 mb-6">My Library</h1>
+            <main className="p-6 font-sans  min-h-screen">
+                <h1 className="text-3xl font-bold  mb-6">My Library</h1>
                 <div className="flex flex-wrap gap-4">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonCard key={i} />
@@ -121,10 +121,10 @@ export default function LibraryPage() {
 
 
     return (
-        <main className="relative p-6 font-sans bg-gray-50 min-h-screen">
-            <h1 className="text-3xl font-bold text-blue-600 mb-6">My Library</h1>
+        <main className="relative p-6 font-sans  min-h-screen">
+            <h1 className="text-3xl font-bold  mb-6">My Library</h1>
 
-            <div className="flex flex-wrap text-black gap-4">
+            <div className="flex flex-wrap  gap-4">
                 {library.length ? library.map((g) => (
                     <GameCard
                         key={g._id}
@@ -137,7 +137,7 @@ export default function LibraryPage() {
                         onOpenChange={(open) => setOpenMenuGameId(open ? g.gameId._id : null)}
                     />
                 )) : (
-                    <p className="text-gray-500">No games in your library.</p>
+                    <p className="">No games in your library.</p>
                 )}
             </div>
 
