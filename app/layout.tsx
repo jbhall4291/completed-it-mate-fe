@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="mt-[96px] lg:mt-[116px] ">
+      <body className="mt-[96px] lg:mt-[116px] max-w-[1326px] mx-auto">
         <BootstrapUser />
         <BetaModal />
         <GameProvider>
