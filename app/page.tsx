@@ -19,6 +19,7 @@ import GameSearch from '@/components/game/GameSearch';
 import { useGameContext } from '@/lib/GameContext';
 import SkeletonGameCard from '@/components/game/SkeletonGameCard';
 import EmblaRow from '@/components/EmblaRow';
+import BrandLogo from '@/components/layout/BrandLogo';
 
 
 
@@ -119,20 +120,33 @@ export default function HomePage() {
 
   return (
     <main className="p-6 font-sans  min-h-screen mb-20">
+
       {/* Hero */}
-      <section className="text-center mb-12">
-        <h1 className="text-3xl font-bold ">Welcome to Completed It Mate!</h1>
-        <p className=" mb-6">Search for a game or browse the full library to get started.</p>
-        <div className="flex justify-center mb-6">
+      <section className=" mx-auto flex flex-col pt-10 pb-10 items-center text-center">
+
+        <div className="mb-12">
+          <BrandLogo />
+          <p className="mt-3 text-sm text-white/70 md:text-xl">
+            Keep track of the games you own, play, and complete.
+          </p>
+        </div>
+      </section>
+
+      <div className="flex flex-col ">
+        <h2 className="text-xl font-semibold mb-2">
+          Search for a game to add, or{" "}
+          <Link
+            href="/game-library"
+            className="underline underline-offset-2 hover:text-green-600 transition"
+          >
+            browse the full library
+          </Link>.
+        </h2>
+
+        <div className="mb-12 w-full ">
           <GameSearch />
         </div>
-        <Link
-          href="/game-library"
-          className="inline-block mt-4 px-6 py-2 bg-green-500 rounded-lg shadow hover:bg-green-700 transition"
-        >
-          Browse all games
-        </Link>
-      </section>
+      </div>
 
       {/* Top Rated Section */}
       <section className="mb-12">
@@ -140,7 +154,7 @@ export default function HomePage() {
         <EmblaRow
           options={{ align: "start", containScroll: "trimSnaps", loop: true, dragFree: false }}
 
-          title="Top Rated (Metacritic)"
+          title="Top Rated"
           items={topRated}
           loading={loadingTop}
           skeleton={<SkeletonGameCard />}

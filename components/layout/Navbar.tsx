@@ -10,12 +10,14 @@ import clsx from "clsx";
 import { cn } from "@/lib/utils";
 // import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { BETA_EVENT } from '@/components/BetaModal';
+import NavbarBrandLogo from "./NavbarBrandLogo";
 
 
 const nav = [
     { label: "My Games", href: "/user-library" },
     { label: "Browse Library", href: "/game-library" },
     { label: "Community", href: "/users" },
+    { label: "My Profile", href: "/profile" },
 
 ];
 
@@ -48,7 +50,7 @@ export default function Navbar() {
                 <motion.div
                     initial={false}
                     animate={{}}
-                    className="relative rounded-3xl overflow-hidden bg-zinc-700/50 backdrop-blur-sm pl-5 pr-3 md:pl-6 md:pr-6   py-2 "
+                    className="relative rounded-3xl overflow-hidden bg-zinc-700/50 backdrop-blur-sm pl-4 pr-2 md:pl-4 md:pr-4   py-2 "
                 >
 
 
@@ -58,27 +60,16 @@ export default function Navbar() {
 
                         <Link href="/" onClick={() => setOpen(false)} className="inline-flex items-center gap-1.5   hover:opacity-70 text-lg font-bold md:text-lg md:font-bold  ">
 
-                            <span
-                                className={clsx(
-                                    " ",
-                                    // reserve space + style always
-                                    "border-b-2 border-b-transparent border-solid",
-                                    // only show on desktop if you want that behavior:
-                                    pathname === "/" && "md:border-b-foreground"
-                                    // or show on all sizes: pathname === "/" && "border-b-black"
-                                )}
-                            >
-                                Completed It Mate
-                            </span>
+                            <NavbarBrandLogo shimmer={false} />
                         </Link>
 
 
 
 
-                        <button onClick={() => window.dispatchEvent(new CustomEvent(BETA_EVENT))} className="ml-6 cursor-pointer inline-flex items-center rounded-full border border-white bg-white/10
+                        {/* <button onClick={() => window.dispatchEvent(new CustomEvent(BETA_EVENT))} className="ml-6 cursor-pointer inline-flex items-center rounded-full border border-white bg-white/10
               text-xs px-2 py-0.5 font-medium mb-0.5 lg:mb-0">
                             In Dev · v0.9
-                        </button>
+                        </button> */}
 
 
 
@@ -107,12 +98,6 @@ export default function Navbar() {
                             ))}
 
 
-                            {/* theme icon (utility) */}
-                            {/* <li className="-mr-2 ">
-                                <div className="flex items-center h-9 mb-0.5">
-                                    <AnimatedThemeToggler aria-label="Toggle theme" />
-                                </div>
-                            </li> */}
 
                             <li className="rounded-full border-2 border-white p-4 h-6 w-6 flex items-center justify-center">
                                 <Link href="/profile" aria-label="profile">
@@ -126,11 +111,11 @@ export default function Navbar() {
 
                         <div className="ml-auto md:hidden flex items-center gap-1 h-9">
                             {/* <AnimatedThemeToggler aria-label="Toggle theme" /> */}
-                            <div className="rounded-full border-2 border-white p-4 h-6 w-6 flex items-center justify-center">
+                            {/* <div className="rounded-full border-2 border-white p-4 h-6 w-6 flex items-center justify-center">
                                 <Link href="/profile" aria-label="profile">
                                     <div className="text-base">JH</div>
                                 </Link>
-                            </div>
+                            </div> */}
 
                             {/* Mobile toggle control aka burger */}
                             <button
@@ -179,7 +164,7 @@ export default function Navbar() {
                             >
 
                                 <ul className="">
-                                    {nav.slice(0, 3).map((item) => (
+                                    {nav.slice(0, 4).map((item) => (
                                         <li key={item.label}>
                                             <Link
                                                 href={item.href}
@@ -191,13 +176,6 @@ export default function Navbar() {
                                         </li>
                                     ))}
 
-                                    <li className="py-2">
-                                        {/* <Button asChild size="lg" className="rounded-full w-full py-6">
-                                            <Link href="/contact" aria-label="Let's connect" onClick={() => setOpen(false)}>
-                                                <div className="text-lg font-semibold ">Let's connect</div>
-                                            </Link>
-                                        </Button> */}
-                                    </li>
                                 </ul>
 
 

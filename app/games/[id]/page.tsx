@@ -27,7 +27,7 @@ export default async function GameDetailPage(
             {/* Full-page background: image + black fade after ~500px */}
             <div
                 aria-hidden
-                className="fixed inset-0 -z-10 bg-top bg-cover bg-no-repeat pointer-events-none text-[#f5f5f7]"
+                className="fixed inset-0 -z-10 bg-top bg-cover bg-no-repeat pointer-events-none text-green-500"
                 style={{
                     backgroundImage: `
             linear-gradient(
