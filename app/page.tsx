@@ -20,6 +20,7 @@ import { useGameContext } from '@/lib/GameContext';
 import SkeletonGameCard from '@/components/game/SkeletonGameCard';
 import EmblaRow from '@/components/EmblaRow';
 import BrandLogo from '@/components/layout/BrandLogo';
+import DeveloperUpdateCard from '@/components/DeveloperUpdateCard';
 
 
 
@@ -167,7 +168,8 @@ export default function HomePage() {
         {/* Hero */}
         <section className="mx-auto flex flex-col pt-10 pb-10 items-center text-center">
           <div className="mb-6 md:mb-12">
-            <BrandLogo />
+            <BrandLogo /> <span className="ml-2 text-[16px] font-medium text-emerald-300/80">v0.9</span>
+
             <p className="px-10 mt-2 text-base text-white/70 md:text-xl">
               Keep track of the games you own, play, and complete.
             </p>
@@ -190,14 +192,22 @@ export default function HomePage() {
           </div>
         </div>
 
+        <div className="mb-12">
+          <h2 className="text-xl font-semibold mb-2">Latest News</h2>
+          <DeveloperUpdateCard />
+        </div>
+
         {/* Top Rated */}
         <section className="mb-12">
+
+          {/* Latest Releases */}
           <EmblaRow
             options={{ align: "start", containScroll: "trimSnaps", loop: true, dragFree: false }}
-            title="Top Rated"
-            items={topRated}
-            loading={loadingTop}
+            title="Latest Releases"
+            items={latest}
+            loading={loadingLatest}
             skeleton={<SkeletonGameCard />}
+            basisClass="basis-[16rem] md:basis-[18rem]"
             renderItem={(g) => (
               <GameCard
                 game={g}
@@ -213,14 +223,12 @@ export default function HomePage() {
           />
         </section>
 
-        {/* Latest Releases */}
         <EmblaRow
           options={{ align: "start", containScroll: "trimSnaps", loop: true, dragFree: false }}
-          title="Latest Releases"
-          items={latest}
-          loading={loadingLatest}
+          title="Top Rated"
+          items={topRated}
+          loading={loadingTop}
           skeleton={<SkeletonGameCard />}
-          basisClass="basis-[16rem] md:basis-[18rem]"
           renderItem={(g) => (
             <GameCard
               game={g}

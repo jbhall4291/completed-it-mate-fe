@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import { GameProvider } from '../lib/GameContext';
 import BootstrapUser from "@/components/BootstrapUser";
-import BetaModal from "@/components/BetaModal";
 import Footer from "@/components/layout/Footer";
 
 const SITE_URL =
@@ -57,7 +56,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${outfit.variable}`}>
       <body className="flex min-h-screen flex-col mt-[96px] lg:mt-[116px] max-w-[1326px] mx-auto">
         <BootstrapUser />
-        <BetaModal />
         <GameProvider>
           <Navbar />
           <main className="flex-1 w-full">{children}</main>

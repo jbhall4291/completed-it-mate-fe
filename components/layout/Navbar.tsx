@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { cn } from "@/lib/utils";
 // import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
-import { BETA_EVENT } from '@/components/BetaModal';
+
 import NavbarBrandLogo from "./NavbarBrandLogo";
 
 
@@ -66,10 +66,7 @@ export default function Navbar() {
 
 
 
-                        {/* <button onClick={() => window.dispatchEvent(new CustomEvent(BETA_EVENT))} className="ml-6 cursor-pointer inline-flex items-center rounded-full border border-white bg-white/10
-              text-xs px-2 py-0.5 font-medium mb-0.5 lg:mb-0">
-                            In Dev · v0.9
-                        </button> */}
+                  
 
 
 

@@ -1,18 +1,6 @@
 // components/Navbar.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-// import { Button } from "../ui/button";
-import { usePathname } from "next/navigation";
-import clsx from "clsx";
-import { cn } from "@/lib/utils";
-// import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
-import { BETA_EVENT } from '@/components/BetaModal';
-import NavbarBrandLogo from "./NavbarBrandLogo";
-
-
 export default function Footer() {
     return (
         <footer className="mt-20 border-t border-white/10 py-8 text-sm text-white/60">
