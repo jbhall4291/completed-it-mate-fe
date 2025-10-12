@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { searchGames, type Game as ApiGame } from '@/lib/api';
 
@@ -15,19 +15,27 @@ function useDebounced<T>(value: T, delay = 250): T {
 }
 
 function PlatformChips({ slugs = [] as string[] }) {
-    const uniq = Array.from(new Set(slugs));
+    const uniq = Array.from(new Set(slugs)); // remove duplicates
     if (!uniq.length) return null;
+
+    const visible = uniq.slice(0, 5);
+    const remaining = uniq.length - visible.length;
+
     return (
-        <div className="flex items-center gap-1 text-foreground">
-            {uniq.map((p) => (
+        <div className="flex items-center gap-1 text-foreground" title={uniq.join(', ')}>
+            {visible.map((p) => (
                 <span
                     key={p}
-                    className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium "
-                    title={p}
+                    className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium bg-white/10 capitalize"
                 >
                     {p}
                 </span>
             ))}
+            {remaining > 0 && (
+                <span className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium bg-white/10">
+                    +{remaining}
+                </span>
+            )}
         </div>
     );
 }
@@ -38,6 +46,17 @@ export default function GameSearch() {
     const [results, setResults] = useState<ApiGame[]>([]);
     const [loading, setLoading] = useState(false);
     const [errorText, setErrorText] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Close when clicking outside
+    useEffect(() => {
+        function handleClickOutside(e: MouseEvent) {
+            if (!containerRef.current?.contains(e.target as Node)) setOpen(false);
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         const term = debouncedQ.trim();
@@ -45,6 +64,7 @@ export default function GameSearch() {
             setResults([]);
             setLoading(false);
             setErrorText(null);
+            setOpen(false); // hide when query too short
             return;
         }
         const ctrl = new AbortController();
@@ -60,38 +80,48 @@ export default function GameSearch() {
     }, [debouncedQ]);
 
     return (
-        <div className="w-full max-w-xl  ">
+        <div ref={containerRef} className="relative w-full max-w-[640px]">
             <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
+                onFocus={() => setOpen(true)}
                 placeholder="Type at least 2 letters…"
-                className="w-full rounded-md border  px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border px-3 py-3 shadow-sm outline-none focus:border-green-400/60 focus:ring-2 focus:ring-green-400/60"
                 aria-label="Search games"
+                aria-expanded={open && results.length > 0}
+                aria-controls="game-search-results"
             />
 
-            {loading && <div className="mt-2 text-sm ">Searching…</div>}
+            {loading && <div className="mt-2 text-sm">Searching…</div>}
             {errorText && <div className="mt-2 text-sm text-red-600">{errorText}</div>}
 
-            {!loading && !errorText && results.length > 0 && (
-                <ul className="mt-3 divide-y rounded-md border " role="listbox" aria-label="Search results">
-                    {results.slice(0, 10).map((g) => {
-                        const href = `/games/${g.slug ?? g._id}`; // works with idOrSlug backend
+            {open && !loading && !errorText && results.length > 0 && (
+                <ul
+                    id="game-search-results"
+                    role="listbox"
+                    aria-label="Search results"
+                    className="
+            absolute left-0 right-0 top-full mt-2 z-50
+            max-h-96 overflow-auto
+            rounded-md border bg-background/95 backdrop-blur
+            shadow-xl divide-y
+          "
+                >
+                    {results.map((g) => {
+                        const href = `/games/${g.slug ?? g._id}`;
                         return (
                             <li key={g._id} role="option">
                                 <Link
                                     href={href}
-                                    className="p-3 flex gap-3 items-center hover:bg-blue-400 focus:bg-blue-400 focus:outline-none"
+                                    onClick={() => setOpen(false)}
+                                    className="p-3 flex gap-3 items-center hover:bg-green-500/70 focus:bg-green-500/70 focus:outline-none"
                                 >
                                     {g.imageUrl && (
-                                        <img
-                                            src={g.imageUrl}
-                                            alt=""
-                                            className="h-10 w-10 rounded object-cover flex-none"
-                                        />
+                                        <img src={g.imageUrl} alt="" className="h-10 w-10 rounded object-cover flex-none" />
                                     )}
                                     <div className="min-w-0">
                                         <div className="font-medium truncate">{g.title}</div>
-                                        <div className="mt-0.5 text-xs ">
+                                        <div className="mt-0.5 text-xs">
                                             <PlatformChips slugs={g.parentPlatforms ?? []} />
                                         </div>
                                     </div>
@@ -103,9 +133,8 @@ export default function GameSearch() {
             )}
 
             {!loading && !errorText && q.trim().length >= 2 && results.length === 0 && (
-                <div className="mt-3 text-sm ">No matches.</div>
+                <div className="mt-2 text-sm">No matches.</div>
             )}
-
         </div>
     );
 }
