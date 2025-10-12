@@ -122,7 +122,7 @@ export default function GameSearch() {
                                     <Link
                                         href={href}
                                         onClick={() => setOpen(false)}
-                                        className="p-3 flex gap-3 items-center hover:bg-green-500/70 focus:bg-green-500/70 focus:outline-none"
+                                        className="p-3 flex gap-3 items-center hover:bg-green-500/90 focus:bg-green-500/90 focus:outline-none"
                                     >
                                         {g.imageUrl && (
                                             <img src={g.imageUrl} alt="" className="h-10 w-10 rounded object-cover flex-none" />

@@ -37,7 +37,6 @@ export default function AboutPage() {
                 GitHub Actions, with automated code coverage reports to maintain quality before release.
             </p>
 
-
         </main>
     );
 }

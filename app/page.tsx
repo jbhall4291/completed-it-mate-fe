@@ -119,45 +119,108 @@ export default function HomePage() {
   }
 
   return (
-    <main className="p-4 font-sans  min-h-screen mb-20">
-
-      {/* Hero */}
-      <section className="mx-auto flex flex-col py-2 md:py-10 items-center text-center">
-
-        <div className="mb-6 md:mb-12">
-          <BrandLogo />
-          <p className="px-10 mt-2 text-base text-white/70 md:text-xl">
-            Keep track of the games you own, play, and complete.
-          </p>
-        </div>
-      </section>
-
-      <div className="flex flex-col ">
-        <h2 className="text-xl font-semibold mb-2">
-          Search for a game to add, or{" "}
-          <Link
-            href="/game-library"
-            className="underline underline-offset-2 hover:text-green-600 transition"
-          >
-            browse the full library
-          </Link>.
-        </h2>
-
-        <div className="mb-12 w-full ">
-          <GameSearch />
-        </div>
+    <>
+      {/* Full-page background: top glow + fade to base, just like detail page */}
+      <div className="absolute inset-x-0 top-0 -z-10 h-[600px] pointer-events-none">
+        {/* gradients */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+        linear-gradient(
+          to bottom,
+          rgba(30,30,32,0) 0px,
+          rgba(30,30,32,0.55) 320px,
+          rgba(30,30,32,0.85) 420px,
+          var(--background) 520px,
+          var(--background) 100%
+        ),
+        radial-gradient(
+          60% 40% at 50% 0%,
+          rgba(90,197,88,0.22) 0px,
+          rgba(90,197,88,0.18) 80px,
+          rgba(90,197,88,0.12) 160px,
+          rgba(90,197,88,0.08) 240px,
+          rgba(90,197,88,0.04) 320px,
+          rgba(90,197,88,0) 420px
+        )
+      `,
+          }}
+        />
+        {/* noise (prevents banding) */}
+        <div
+          className="absolute inset-0 opacity-[0.05] mix-blend-overlay"
+          style={{
+            backgroundRepeat: 'repeat',
+            backgroundSize: 'auto',
+          }}
+        />
       </div>
 
-      {/* Top Rated Section */}
-      <section className="mb-12">
 
+
+
+
+
+
+      <main className="p-4 font-sans min-h-screen mb-20">
+        {/* Hero */}
+        <section className="mx-auto flex flex-col pt-10 pb-10 items-center text-center">
+          <div className="mb-6 md:mb-12">
+            <BrandLogo />
+            <p className="px-10 mt-2 text-base text-white/70 md:text-xl">
+              Keep track of the games you own, play, and complete.
+            </p>
+          </div>
+        </section>
+
+        <div className="flex flex-col">
+          <h2 className="text-xl font-semibold mb-2">
+            Search for a game to add, or{" "}
+            <Link
+              href="/game-library"
+              className="underline underline-offset-2 hover:text-green-500 transition"
+            >
+              browse the full library
+            </Link>.
+          </h2>
+
+          <div className="mb-12 w-full">
+            <GameSearch />
+          </div>
+        </div>
+
+        {/* Top Rated */}
+        <section className="mb-12">
+          <EmblaRow
+            options={{ align: "start", containScroll: "trimSnaps", loop: true, dragFree: false }}
+            title="Top Rated"
+            items={topRated}
+            loading={loadingTop}
+            skeleton={<SkeletonGameCard />}
+            renderItem={(g) => (
+              <GameCard
+                game={g}
+                isAdded={addedGames.has(g._id)}
+                currentStatus={statusByGameId.get(g._id)}
+                onAdd={(id, status) => handleAdd(id, status)}
+                onUpdate={addedGames.has(g._id) ? (id, s) => handleUpdate(id, s) : undefined}
+                onRemove={addedGames.has(g._id) ? (id) => handleRemove(id) : undefined}
+                open={openMenuGameId === g._id}
+                onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
+              />
+            )}
+          />
+        </section>
+
+        {/* Latest Releases */}
         <EmblaRow
           options={{ align: "start", containScroll: "trimSnaps", loop: true, dragFree: false }}
-
-          title="Top Rated"
-          items={topRated}
-          loading={loadingTop}
+          title="Latest Releases"
+          items={latest}
+          loading={loadingLatest}
           skeleton={<SkeletonGameCard />}
+          basisClass="basis-[16rem] md:basis-[18rem]"
           renderItem={(g) => (
             <GameCard
               game={g}
@@ -171,31 +234,7 @@ export default function HomePage() {
             />
           )}
         />
-      </section>
-
-
-      {/* Latest Releases Section */}
-      <EmblaRow
-        options={{ align: "start", containScroll: "trimSnaps", loop: true, dragFree: false }}
-        title="Latest Releases"
-        items={latest}
-        loading={loadingLatest}
-        skeleton={<SkeletonGameCard />}
-        basisClass="basis-[16rem] md:basis-[18rem]" // a bit narrower if you want
-        renderItem={(g) => (
-          <GameCard
-            game={g}
-            isAdded={addedGames.has(g._id)}
-            currentStatus={statusByGameId.get(g._id)}
-            onAdd={(id, status) => handleAdd(id, status)}
-            onUpdate={addedGames.has(g._id) ? (id, s) => handleUpdate(id, s) : undefined}
-            onRemove={addedGames.has(g._id) ? (id) => handleRemove(id) : undefined}
-            open={openMenuGameId === g._id}
-            onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
-          />
-        )}
-      />
-
-    </main>
+      </main>
+    </>
   );
 }
