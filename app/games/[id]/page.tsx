@@ -28,25 +28,34 @@ export default async function GameDetailPage(
     return (
         <>
             {/* Full-page background: image + black fade after ~500px */}
-            <section className="relative h-[520px] w-screen left-[50%] right-[50%] -mx-[50vw] -mt-[96px] lg:-mt-[116px]">
-                <div
-                    className="absolute inset-0 bg-top bg-cover bg-no-repeat"
-                    style={{
-                        backgroundImage: `url(${game.imageUrl ?? "/placeholder.png"})`,
-                    }}
-                    aria-hidden
-                />
+            <section
+                className="
+    relative w-screen left-1/2 right-1/2 -mx-[50vw]
+    h-[clamp(240px,38vh,520px)] xl:h-[min(52vh,680px)] 2xl:h-[min(60vh,760px)]
+    -mt-[96px] lg:-mt-[116px]
+  "
+            >
+                {/* Background image container with max width */}
+                <div className="absolute inset-0 flex justify-center bg-[#1e1e20]" aria-hidden>
+                    <div
+                        className="w-full h-full max-w-[1360px] bg-top bg-cover bg-no-repeat"
+                        style={{
+                            backgroundImage: `url(${game.imageUrl ?? "/placeholder.png"})`,
+                        }}
+                    />
+                </div>
+
+                {/* Gradient overlay across full viewport width */}
                 <div
                     className="absolute inset-0"
                     style={{
                         background:
-                            "linear-gradient(to bottom, rgba(30,30,32,0) 0px, rgba(30,30,32,0.55) 320px, rgba(30,30,32,0.85) 420px, #1e1e20 520px, #1e1e20 100%)",
+                            "linear-gradient(to bottom, rgba(30,30,32,0) 0%, rgba(30,30,32,0.55) 55%, rgba(30,30,32,0.85) 75%, #1e1e20 92%, #1e1e20 100%)",
                     }}
                     aria-hidden
                 />
-
-
             </section>
+
 
 
             <main className="p-6 max-w-5xl mx-auto">
@@ -213,7 +222,7 @@ function Stat({
 
 
 function Chip({ label }: { label: string }) {
-    return <span className="px-2 py-0.5 rounded bg-white/10">{label}</span>;
+    return <span className="px-2 py-0.5 rounded bg-white/10 capitalize">{label}</span>;
 }
 function InfoBlock({ title, children }: { title: string; children: React.ReactNode }) {
     return (
