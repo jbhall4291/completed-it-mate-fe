@@ -38,7 +38,7 @@ function GameCard({
     const cc = game.completedCount ?? 0;
 
     return (
-        <div className={`relative rounded-lg shadow-lg group w-[300px] overflow-visible ${open ? 'z-50 isolate' : ''}`}>
+        <div className={`relative cursor-pointer select-none rounded-lg shadow-lg group w-[300px] overflow-visible ${open ? 'z-50 isolate' : ''}`}>
             {/* Clickable media/title area */}
             <Link href={`/games/${game._id}`} className="block">
                 <div className="h-60 rounded-t-lg overflow-hidden relative">

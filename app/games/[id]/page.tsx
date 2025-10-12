@@ -1,11 +1,14 @@
 // app/games/[id]/page.tsx
-import { notFound } from 'next/navigation';
-import { CalendarDays, Hourglass } from 'lucide-react';
-import GameActions from '@/components/game/GameActions';
-import { getGameDetail } from '@/lib/api';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { normalizeRawg } from '@/lib/markdown';
+import { notFound } from "next/navigation";
+import { CalendarDays, Crown, Hourglass } from "lucide-react";
+import MetacriticIcon from "@/components/icons/MetacriticIcon";
+import GameActions from "@/components/game/GameActions";
+import { getGameDetail } from "@/lib/api";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { normalizeRawg } from "@/lib/markdown";
+import GameScreenshots from '@/components/game/GameScreenshots';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -25,61 +28,45 @@ export default async function GameDetailPage(
     return (
         <>
             {/* Full-page background: image + black fade after ~500px */}
-            <div
-                aria-hidden
-                className="fixed inset-0 -z-10 bg-top bg-cover bg-no-repeat pointer-events-none text-green-500"
-                style={{
-                    backgroundImage: `
-            linear-gradient(
-              to bottom,
-              rgba(30,30,32,0) 0px,
-              rgba(30,30,32,0.55) 320px,
-              rgba(30,30,32,0.85) 420px,
-              #1e1e20 520px,
-              #1e1e20 100%
-            ),
-            url(${game.imageUrl ?? '/placeholder.png'})
-          `,
-                }}
-            />
-
-            <main className="p-6 max-w-5xl mx-auto ">
-                {/* top meta row (release + playtime) */}
-                <div className="flex flex-wrap gap-4 text-sm ">
-                    {release && (
-                        <div className="flex items-center gap-2">
-                            <CalendarDays className="w-4 h-4 opacity-80" />
-                            <div>
-                                {release.toLocaleDateString(undefined, {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                })}
-                            </div>
-                        </div>
-                    )}
-                    {playtime && (
-                        <div className="flex items-center gap-2">
-                            <Hourglass className="w-4 h-4 opacity-80" />
-                            <div>{playtime}h avg</div>
-                        </div>
-                    )}
-                </div>
-
-                {/* user actions (same control used on cards) */}
-                <div className="mt-4 relative z-10 w-[300px]">
-                    <GameActions
-                        gameId={game._id}
-                        initialStatus={game.userStatus}
-                        initialUserGameId={game.userGameId}
+            <section
+                className="
+    relative w-screen left-1/2 right-1/2 -mx-[50vw] 
+    h-[clamp(240px,38vh,520px)] xl:h-[min(52vh,680px)] 2xl:h-[min(60vh,760px)]
+    -mt-[96px] lg:-mt-[116px]
+  "
+            >
+                {/* Background image container with max width */}
+                <div className="absolute inset-0 flex justify-center bg-[#1e1e20]" aria-hidden>
+                    <div
+                        className="w-full h-full max-w-[1326px] bg-top bg-cover bg-no-repeat"
+                        style={{
+                            backgroundImage: `url(${game.imageUrl ?? "/placeholder.png"})`,
+                        }}
                     />
-
                 </div>
+
+                {/* Gradient overlay across full viewport width */}
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        background:
+                            "linear-gradient(to bottom, rgba(30,30,32,0) 0%, rgba(30,30,32,0.55) 55%, rgba(30,30,32,0.85) 75%, #1e1e20 92%, #1e1e20 100%)",
+                    }}
+                    aria-hidden
+                />
+            </section>
+
+
+
+            <main className="p-6 max-w-5xl mx-auto">
+
 
                 {/* Hero (title + chips) */}
-                <div className="relative w-full h-64 md:h-80 rounded-xl overflow-hidden mt-4">
-                    <div className="absolute bottom-4 left-4 right-4">
+                <div className="">
+                    <div className="">
                         <h1 className="text-3xl md:text-4xl font-extrabold">{game.title}</h1>
+
+
                         <div className="mt-2 flex flex-col gap-2 text-xs ">
                             {!!game.parentPlatforms?.length && (
                                 <div className="flex flex-wrap gap-2">
@@ -97,15 +84,42 @@ export default async function GameDetailPage(
                             )}
                         </div>
                     </div>
+
+                    {/* user actions (same control used on cards) */}
+                    <div className="mt-4 relative z-10 w-[300px]">
+                        <GameActions
+                            gameId={game._id}
+                            initialStatus={game.userStatus}
+                            initialUserGameId={game.userGameId}
+                        />
+
+                    </div>
+
                 </div>
 
                 {/* Stats */}
-                <section className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <Stat label="Completed" value={`${cc}`} />
-                    {playtime ? <Stat label="Avg Completion" value={`${playtime}h`} /> : null}
-                    {release ? <Stat label="Released" value={String(release.getFullYear())} /> : null}
-                    {game.metacritic?.score ? <Stat label="Metacritic" value={String(game.metacritic.score)} /> : null}
+                <section className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <Stat label="Users Completed" value={`${cc}`} icon={Crown} iconClassName="text-[#f5df0f]" />
+                    {playtime ? (
+                        <Stat label="Avg Completion" value={`${playtime}h`} icon={Hourglass} />
+                    ) : null}
+                    {release ? (
+                        <Stat
+                            label="Released"
+                            value={String(release.getFullYear())}
+                            icon={CalendarDays}
+                        />
+                    ) : null}
+                    {game.metacritic?.score ? (
+                        <Stat
+                            label="Metacritic"
+                            value={String(game.metacritic.score)}
+                            icon={MetacriticIcon}
+
+                        />
+                    ) : null}
                 </section>
+
 
                 {/* Description */}
                 {game.description ? (
@@ -127,27 +141,12 @@ export default async function GameDetailPage(
                     </section>
                 ) : null}
 
-                {/* Screenshots */}
-                {game.screenshots?.length ? (
-                    <section className="mt-8">
-                        <h2 className="text-xl font-semibold mb-3">Screenshots</h2>
-                        <div className="flex gap-3 overflow-x-auto pb-2">
-                            {game.screenshots.map((src, i) => (
-                                <img
-                                    key={`${src}-${i}`}
-                                    src={src}
-                                    alt={`${game.title} screenshot ${i + 1}`}
-                                    className="h-40 w-auto rounded-lg object-cover flex-none"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
-                            ))}
-                        </div>
-                    </section>
-                ) : null}
+                {game.screenshots?.length ? <GameScreenshots shots={game.screenshots} /> : null}
+
 
                 {/* Dev/Publisher */}
-                {(game.developers?.length || game.publishers?.length) && (
+                {!!(game.developers?.length || game.publishers?.length) && (
+
                     <section className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
                         {game.developers?.length ? (
                             <InfoBlock title="Developer">
@@ -171,7 +170,7 @@ export default async function GameDetailPage(
                 )}
 
                 {/* Store Links */}
-                {game.storeLinks?.length ? (
+                {/* {game.storeLinks?.length ? (
                     <section className="mt-8">
                         <h2 className="text-xl font-semibold mb-2">Where to get it</h2>
                         <ul className="list-disc list-inside text-blue-300">
@@ -184,23 +183,44 @@ export default async function GameDetailPage(
                             ))}
                         </ul>
                     </section>
-                ) : null}
+                ) : null} */}
+
             </main>
         </>
     );
 }
 
 /* small presentational helpers */
-function Stat({ label, value }: { label: string; value: string }) {
+
+
+
+function Stat({
+    label,
+    value,
+    icon: Icon,
+    iconClassName,
+}: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+    iconClassName?: string;
+}) {
     return (
-        <div className="rounded-lg bg-white/10 px-3 py-2">
-            <div className="text-xs ">{label}</div>
-            <div className="text-lg font-semibold">{value}</div>
+        <div className="rounded-lg bg-white/10 px-3 py-2 flex items-center gap-2">
+            {Icon && <Icon className={`w-8 h-8 shrink-0 mr-1 ${iconClassName ?? "opacity-80"}`} />}
+            <div>
+                <div className="text-xs">{label}</div>
+                <div className="text-lg font-semibold leading-none mt-0.5">{value}</div>
+            </div>
         </div>
     );
 }
+
+
+
+
 function Chip({ label }: { label: string }) {
-    return <span className="px-2 py-0.5 rounded bg-white/10">{label}</span>;
+    return <span className="px-2 py-0.5 rounded bg-white/10 capitalize">{label}</span>;
 }
 function InfoBlock({ title, children }: { title: string; children: React.ReactNode }) {
     return (

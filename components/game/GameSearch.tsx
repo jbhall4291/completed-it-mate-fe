@@ -64,7 +64,6 @@ export default function GameSearch() {
             setResults([]);
             setLoading(false);
             setErrorText(null);
-            setOpen(false); // hide when query too short
             return;
         }
         const ctrl = new AbortController();
@@ -79,6 +78,8 @@ export default function GameSearch() {
         return () => ctrl.abort();
     }, [debouncedQ]);
 
+    const showOverlay = open && q.trim().length >= 2; // render overlay for all states once typing
+
     return (
         <div ref={containerRef} className="relative w-full max-w-[640px]">
             <input
@@ -88,14 +89,11 @@ export default function GameSearch() {
                 placeholder="Type at least 2 letters…"
                 className="w-full rounded-md border px-3 py-3 shadow-sm outline-none focus:border-green-400/60 focus:ring-2 focus:ring-green-400/60"
                 aria-label="Search games"
-                aria-expanded={open && results.length > 0}
+                aria-expanded={showOverlay}
                 aria-controls="game-search-results"
             />
 
-            {loading && <div className="mt-2 text-sm">Searching…</div>}
-            {errorText && <div className="mt-2 text-sm text-red-600">{errorText}</div>}
-
-            {open && !loading && !errorText && results.length > 0 && (
+            {showOverlay && (
                 <ul
                     id="game-search-results"
                     role="listbox"
@@ -107,33 +105,39 @@ export default function GameSearch() {
             shadow-xl divide-y
           "
                 >
-                    {results.map((g) => {
-                        const href = `/games/${g.slug ?? g._id}`;
-                        return (
-                            <li key={g._id} role="option">
-                                <Link
-                                    href={href}
-                                    onClick={() => setOpen(false)}
-                                    className="p-3 flex gap-3 items-center hover:bg-green-500/70 focus:bg-green-500/70 focus:outline-none"
-                                >
-                                    {g.imageUrl && (
-                                        <img src={g.imageUrl} alt="" className="h-10 w-10 rounded object-cover flex-none" />
-                                    )}
-                                    <div className="min-w-0">
-                                        <div className="font-medium truncate">{g.title}</div>
-                                        <div className="mt-0.5 text-xs">
-                                            <PlatformChips slugs={g.parentPlatforms ?? []} />
+                    {loading && (
+                        <li className="p-3 text-sm text-white/70 select-none">Searching…</li>
+                    )}
+                    {!loading && errorText && (
+                        <li className="p-3 text-sm text-red-500 select-none">{errorText}</li>
+                    )}
+                    {!loading && !errorText && results.length === 0 && (
+                        <li className="p-3 text-sm text-white/70 italic select-none">No matches</li>
+                    )}
+                    {!loading && !errorText && results.length > 0 &&
+                        results.map((g) => {
+                            const href = `/games/${g.slug ?? g._id}`;
+                            return (
+                                <li key={g._id} role="option">
+                                    <Link
+                                        href={href}
+                                        onClick={() => setOpen(false)}
+                                        className="p-3 flex gap-3 items-center hover:bg-green-500/90 focus:bg-green-500/90 focus:outline-none"
+                                    >
+                                        {g.imageUrl && (
+                                            <img src={g.imageUrl} alt="" className="h-10 w-10 rounded object-cover flex-none" />
+                                        )}
+                                        <div className="min-w-0">
+                                            <div className="font-medium truncate">{g.title}</div>
+                                            <div className="mt-0.5 text-xs">
+                                                <PlatformChips slugs={g.parentPlatforms ?? []} />
+                                            </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            </li>
-                        );
-                    })}
+                                    </Link>
+                                </li>
+                            );
+                        })}
                 </ul>
-            )}
-
-            {!loading && !errorText && q.trim().length >= 2 && results.length === 0 && (
-                <div className="mt-2 text-sm">No matches.</div>
             )}
         </div>
     );
