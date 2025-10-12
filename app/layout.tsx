@@ -54,7 +54,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${outfit.variable}`}>
-      <body className="flex min-h-screen flex-col mt-[96px] lg:mt-[116px] max-w-[1326px] mx-auto">
+      <body className="flex min-h-screen flex-col mt-[96px] lg:mt-[116px] max-w-[1326px] overflow-x-clip mx-auto">
         <BootstrapUser />
         <GameProvider>
           <Navbar />

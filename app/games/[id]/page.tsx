@@ -30,7 +30,7 @@ export default async function GameDetailPage(
             {/* Full-page background: image + black fade after ~500px */}
             <section
                 className="
-    relative w-screen left-1/2 right-1/2 -mx-[50vw]
+    relative w-screen left-1/2 right-1/2 -mx-[50vw] 
     h-[clamp(240px,38vh,520px)] xl:h-[min(52vh,680px)] 2xl:h-[min(60vh,760px)]
     -mt-[96px] lg:-mt-[116px]
   "
@@ -38,7 +38,7 @@ export default async function GameDetailPage(
                 {/* Background image container with max width */}
                 <div className="absolute inset-0 flex justify-center bg-[#1e1e20]" aria-hidden>
                     <div
-                        className="w-full h-full max-w-[1360px] bg-top bg-cover bg-no-repeat"
+                        className="w-full h-full max-w-[1326px] bg-top bg-cover bg-no-repeat"
                         style={{
                             backgroundImage: `url(${game.imageUrl ?? "/placeholder.png"})`,
                         }}
@@ -99,7 +99,7 @@ export default async function GameDetailPage(
 
                 {/* Stats */}
                 <section className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <Stat label="Completed" value={`${cc}`} icon={Crown} iconClassName="text-[#f5df0f]" />
+                    <Stat label="Users Completed" value={`${cc}`} icon={Crown} iconClassName="text-[#f5df0f]" />
                     {playtime ? (
                         <Stat label="Avg Completion" value={`${playtime}h`} icon={Hourglass} />
                     ) : null}
@@ -144,12 +144,9 @@ export default async function GameDetailPage(
                 {game.screenshots?.length ? <GameScreenshots shots={game.screenshots} /> : null}
 
 
-
-
-
-
                 {/* Dev/Publisher */}
-                {(game.developers?.length || game.publishers?.length) && (
+                {!!(game.developers?.length || game.publishers?.length) && (
+
                     <section className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
                         {game.developers?.length ? (
                             <InfoBlock title="Developer">
@@ -173,7 +170,7 @@ export default async function GameDetailPage(
                 )}
 
                 {/* Store Links */}
-                {game.storeLinks?.length ? (
+                {/* {game.storeLinks?.length ? (
                     <section className="mt-8">
                         <h2 className="text-xl font-semibold mb-2">Where to get it</h2>
                         <ul className="list-disc list-inside text-blue-300">
@@ -186,7 +183,8 @@ export default async function GameDetailPage(
                             ))}
                         </ul>
                     </section>
-                ) : null}
+                ) : null} */}
+
             </main>
         </>
     );

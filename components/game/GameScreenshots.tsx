@@ -8,10 +8,9 @@ export default function GameScreenshots({ shots }: { shots: string[] }) {
 
     return (
         <section className="mt-8 select-none">
-            <h2 className="text-xl font-semibold mb-3">Screenshots</h2>
 
             <EmblaRow
-                title=""
+                title="Screenshots"
                 items={shots}
                 options={{ align: "start", containScroll: "trimSnaps", loop: false, dragFree: true }}
                 basisClass="basis-[18rem] md:basis-[20rem]"
