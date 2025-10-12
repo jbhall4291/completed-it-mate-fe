@@ -145,7 +145,7 @@ export default function GamesPage() {
     if (loading) {
         return (
             <main className="p-6 font-sans  min-h-screen">
-                <h1 className="text-3xl font-bold  mb-6">My Library</h1>
+                <h1 className="text-3xl font-bold  mb-6">All Games</h1>
                 <div className="flex flex-wrap gap-4">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonCard key={i} />

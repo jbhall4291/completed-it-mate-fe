@@ -27,7 +27,7 @@ export default function UsersPage() {
     if (loading) {
         return (
             <main className="p-6 font-sans  min-h-screen">
-                <h1 className="text-3xl font-bold text-blue-600 mb-6">My Library</h1>
+                <h1 className="text-3xl font-bold mb-6">All Users</h1>
                 <div className="flex flex-wrap gap-4">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonUserCard key={i} />
