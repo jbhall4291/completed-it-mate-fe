@@ -119,14 +119,14 @@ export default function HomePage() {
   }
 
   return (
-    <main className="p-6 font-sans  min-h-screen mb-20">
+    <main className="p-4 font-sans  min-h-screen mb-20">
 
       {/* Hero */}
-      <section className=" mx-auto flex flex-col pt-10 pb-10 items-center text-center">
+      <section className="mx-auto flex flex-col py-2 md:py-10 items-center text-center">
 
-        <div className="mb-12">
+        <div className="mb-6 md:mb-12">
           <BrandLogo />
-          <p className="mt-3 text-sm text-white/70 md:text-xl">
+          <p className="px-10 mt-2 text-base text-white/70 md:text-xl">
             Keep track of the games you own, play, and complete.
           </p>
         </div>
