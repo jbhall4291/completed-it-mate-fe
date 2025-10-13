@@ -6,9 +6,52 @@ import type { GameCardDTO as Game, LibraryItemDTO as LibraryItem, LibraryStatus 
 
 export type Paged<T> = { items: T[]; total: number; page: number; pageSize: number };
 
-export async function fetchGamesPaged(params: { page?: number; pageSize?: number; titleQuery?: string } = {}) {
-  const { page = 1, pageSize = 24, titleQuery } = params;
-  const r = await axiosInstance.get('/games', { params: { page, pageSize, titleQuery } });
+export type BrowseParams = {
+  page?: number;
+  pageSize?: number;
+  titleQuery?: string;         // legacy alias (maps to ?titleQuery=)
+  q?: string;                  // new alias (maps to ?q=)
+  platforms?: string[];        // e.g. ['switch'] (maps to CSV)
+  genres?: string[];           // e.g. ['rpg','strategy']
+  years?: number[];            // e.g. [1998,2001] (exact years)
+  yearMin?: number;
+  yearMax?: number;
+  sort?: 'metacritic-desc' | 'metacritic-asc' | 'released-desc' | 'released-asc' | 'title-asc' | 'title-desc';
+  minScore?: number;           // optional, you might test it later
+};
+
+export async function fetchGamesPaged(params: BrowseParams = {}) {
+  const {
+    page = 1,
+    pageSize = 24,
+    titleQuery,
+    q,
+    platforms,
+    genres,
+    years,
+    yearMin,
+    yearMax,
+    sort,
+    minScore,
+  } = params;
+
+  // Build query object, only include defined keys
+  const query: Record<string, any> = { page, pageSize };
+
+  if (titleQuery) query.titleQuery = titleQuery;
+  if (q) query.q = q;
+
+  if (Array.isArray(platforms) && platforms.length) query.platforms = platforms.join(',');
+  if (Array.isArray(genres) && genres.length) query.genres = genres.join(',');
+  if (Array.isArray(years) && years.length) query.years = years.join(',');
+
+  if (typeof yearMin === 'number') query.yearMin = yearMin;
+  if (typeof yearMax === 'number') query.yearMax = yearMax;
+
+  if (sort) query.sort = sort;
+  if (typeof minScore === 'number') query.minScore = minScore;
+
+  const r = await axiosInstance.get('/games', { params: query });
   return r.data as Paged<Game>;
 }
 
@@ -126,6 +169,14 @@ export async function getAllGames(): Promise<Game[]> {
   const res = await axiosInstance.get(`/games/`);
   return res.data;
 }
+
+
+// lib/api.ts
+export async function getGameFacets() {
+  const { data } = await axiosInstance.get('/games/facets');
+  return data as { platforms: { value: string, count: number }[]; genres: { value: string, count: number }[]; yearMin: number; yearMax: number };
+}
+
 
 export async function searchGames(titleQuery: string, signal?: AbortSignal): Promise<Game[]> {
   try {
