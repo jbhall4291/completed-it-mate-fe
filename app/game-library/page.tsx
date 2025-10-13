@@ -17,6 +17,7 @@ import {
 import { useGameContext } from '@/lib/GameContext';
 import GameCard from '@/components/game/GameCard';
 import SkeletonCard from '@/components/game/SkeletonGameCard';
+import SkeletonFilterPanel from '@/components/game/SkeletonFilterPanel';
 
 const USER_READY_EVENT = 'clm:user-ready';
 
@@ -226,8 +227,9 @@ export default function GamesPage() {
     if (loading) {
         return (
             <main className="p-6 font-sans  min-h-screen">
-                <h1 className="text-3xl font-bold  mb-6">Browse Library</h1>
-                <div className="flex flex-wrap gap-4">
+                <h1 className="text-3xl font-bold  mb-4">Browse Library</h1>
+                <SkeletonFilterPanel />
+                <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonCard key={i} />
                     ))}
@@ -238,12 +240,12 @@ export default function GamesPage() {
 
     return (
         <main className="p-6 font-sans  min-h-screen">
-            <h1 className="text-3xl font-bold">Browse Library <span className="text-sm opacity-70">{total.toLocaleString()} results</span></h1>
+            <h1 className="text-3xl font-bold mb-2">Browse Library <span className="text-sm opacity-70">{total.toLocaleString()} results</span></h1>
 
 
             {/* Sticky filter bar */}
-            <section className=" z-10  bg-background/80 backdrop-blur mb-4 ">
-                <div className=" w-full  py-3 grid  space-y-3.5">
+            <section className=" z-10  mb-4 bg-[#242528] rounded-2xl">
+                <div className=" w-full  p-4 grid  space-y-3.5">
 
                     {/* Row 1: Search */}
                     <div className="flex items-center gap-2">

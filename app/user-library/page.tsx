@@ -26,7 +26,7 @@ function useConfirm() {
 
     const ui = !pending ? null : (
         <div
-            className="fixed inset-0 z-50 grid place-items-center  p-4"
+            className="fixed inset-0 z-50 grid place-items-center p-4"
             role="dialog"
             aria-modal="true"
             aria-labelledby="clm-confirm-title"
@@ -35,7 +35,7 @@ function useConfirm() {
                 if (e.key === 'Enter') close(true);
             }}
         >
-            <div className="w-full max-w-md rounded-2xl   border border-white/10 shadow-xl">
+            <div className="w-full max-w-md rounded-2xl bg-background  border border-white/10 shadow-xl">
                 <div className="px-5 py-4 border-b border-white/10">
                     <h2 id="clm-confirm-title" className="text-lg font-semibold">Remove from library?</h2>
                 </div>
@@ -120,7 +120,7 @@ export default function LibraryPage() {
                 </div>
 
                 <h1 className="text-3xl font-bold  mb-6">My Games</h1>
-                <div className="flex flex-wrap gap-4">
+                <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonCard key={i} />
                     ))}
