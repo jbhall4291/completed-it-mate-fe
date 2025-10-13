@@ -9,4 +9,5 @@ export type LibraryItemDTO = {
     createdAt: string;
     updatedAt: string;
     gameId: GameCardDTO;
+    genres?: string[];
 };

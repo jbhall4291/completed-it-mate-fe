@@ -35,3 +35,15 @@ body {
   background-size: 200% 100%;
   animation: sweep 8s linear infinite;
 }
+
+:root {
+  --background: #1e1e20;
+  --foreground: #fafafa;
+
+  /* Pie chart palette (ShadCN-style) */
+  --chart-1: #9feeab;
+  --chart-2: #306533;
+  --chart-3: #3a803a;
+  --chart-4: #48a344;
+  --chart-5: #5ac558;
+}
