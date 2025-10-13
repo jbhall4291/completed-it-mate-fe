@@ -129,7 +129,7 @@ export default function AddToLibraryButton({
     );
 
     return (
-        <div ref={rootRef} className="relative inline-block w-full">
+        <div ref={rootRef} className="relative inline-block w-[180px]">
             <div className={containerClasses}>
                 <button
                     type="button"

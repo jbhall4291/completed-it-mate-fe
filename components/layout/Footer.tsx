@@ -6,29 +6,30 @@ export default function Footer() {
         <footer className="mt-20 border-t border-white/10 py-8 text-sm text-white/60">
             <div className="mx-auto max-w-5xl px-4">
                 {/* Primary line – personal credit */}
-                <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-                    <p className="text-center sm:text-left">
-                        © {new Date().getFullYear()} Completed It Mate · Built by{" "}
-                        <a
+                <div className="flex flex-col  justify-between gap-3 sm:flex-row">
+
+                    <div>
+                        <div> © {new Date().getFullYear()} Completed It Mate</div>
+                        <div>Built by{" "}<a
                             href="https://www.linkedin.com/in/johnny-hall-dev"
                             target="_blank"
                             rel="noreferrer"
                             className="text-brand hover:text-brand/80 underline-offset-2 hover:underline"
                         >
                             Johnny Hall
-                        </a>
-                        {" · "}
-                        <a
+                        </a></div>
+                        <div><a
                             href="https://johnnyhall.dev"
                             target="_blank"
                             rel="noreferrer"
                             className="hover:text-brand underline-offset-2 hover:underline"
                         >
                             johnnyhall.dev
-                        </a>
-                    </p>
+                        </a></div>
+                    </div>
 
-                    <nav className="flex items-center gap-4">
+
+                    <nav className="flex gap-4 items-center md:items-start">
                         <a href="/about" className="hover:text-brand">About</a>
                         <a
                             href="https://github.com/jbhall4291"
