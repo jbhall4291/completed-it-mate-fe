@@ -69,7 +69,7 @@ export default function UsernameSetter() {
             >
                 {saving ? 'Saving…' : 'Save'}
             </button>
-            {ok && <span className="text-xs text-emerald-400">{ok}</span>}
+            {ok && <span className="text-xs text-green-400">{ok}</span>}
             {err && <span className="text-xs text-red-400">{err}</span>}
         </form>
     );

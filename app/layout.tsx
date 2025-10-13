@@ -5,6 +5,10 @@ import Navbar from "@/components/layout/Navbar";
 import { GameProvider } from '../lib/GameContext';
 import BootstrapUser from "@/components/BootstrapUser";
 import Footer from "@/components/layout/Footer";
+import ScrollToTop from '@/components/layout/ScrollToTop';
+import PageTransition from '@/components/layout/PageTransition';
+
+
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -58,7 +62,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <BootstrapUser />
         <GameProvider>
           <Navbar />
-          <main className="flex-1 w-full">{children}</main>
+          <ScrollToTop />
+          <main className="flex-1 w-full">
+            <PageTransition>{children}</PageTransition>
+          </main>
           <Footer />
         </GameProvider>
       </body>

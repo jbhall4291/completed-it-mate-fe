@@ -168,7 +168,7 @@ export default function HomePage() {
         {/* Hero */}
         <section className="mx-auto flex flex-col pt-10 pb-10 items-center text-center">
           <div className="mb-6 md:mb-12">
-            <BrandLogo /> <span className="ml-2 text-[16px] font-medium text-emerald-300/80">v0.9</span>
+            <BrandLogo /> <span className="ml-2 text-[16px] font-medium text-green-500">v0.9</span>
 
             <p className="px-10 mt-2 text-base text-white/70 md:text-xl">
               Keep track of the games you own, play, and complete.

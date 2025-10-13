@@ -66,7 +66,7 @@ export default function Navbar() {
 
 
 
-                  
+
 
 
 
@@ -98,7 +98,7 @@ export default function Navbar() {
 
                             <li className="rounded-full border-2 border-white p-4 h-6 w-6 flex items-center justify-center">
                                 <Link href="/profile" aria-label="profile">
-                                    <div className="text-base">JH</div>
+                                    <div className="text-base">A</div>
                                 </Link>
                             </li>
 
