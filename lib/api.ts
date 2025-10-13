@@ -6,9 +6,66 @@ import type { GameCardDTO as Game, LibraryItemDTO as LibraryItem, LibraryStatus 
 
 export type Paged<T> = { items: T[]; total: number; page: number; pageSize: number };
 
-export async function fetchGamesPaged(params: { page?: number; pageSize?: number; titleQuery?: string } = {}) {
-  const { page = 1, pageSize = 24, titleQuery } = params;
-  const r = await axiosInstance.get('/games', { params: { page, pageSize, titleQuery } });
+export type BrowseParams = {
+  page?: number;
+  pageSize?: number;
+  titleQuery?: string;         // legacy alias (maps to ?titleQuery=)
+  q?: string;                  // new alias (maps to ?q=)
+  platforms?: string[];        // e.g. ['switch'] (maps to CSV)
+  genres?: string[];           // e.g. ['rpg','strategy']
+  years?: number[];            // e.g. [1998,2001] (exact years)
+  yearMin?: number;
+  yearMax?: number;
+  sort?: 'metacritic-desc' | 'metacritic-asc' | 'released-desc' | 'released-asc' | 'title-asc' | 'title-desc';
+  minScore?: number;           // optional, you might test it later
+};
+
+type SortKey = NonNullable<BrowseParams['sort']>;
+
+type QueryParams = Partial<{
+  page: number;
+  pageSize: number;
+  titleQuery: string;
+  q: string;
+  platforms: string; // CSV
+  genres: string;    // CSV
+  years: string;     // CSV
+  yearMin: number;
+  yearMax: number;
+  sort: SortKey;
+  minScore: number;
+}>;
+
+export async function fetchGamesPaged(params: BrowseParams = {}) {
+  const {
+    page = 1,
+    pageSize = 24,
+    titleQuery,
+    q,
+    platforms,
+    genres,
+    years,
+    yearMin,
+    yearMax,
+    sort,
+    minScore,
+  } = params;
+
+  const query: QueryParams = {
+    page,
+    pageSize,
+    ...(titleQuery ? { titleQuery } : {}),
+    ...(q ? { q } : {}),
+    ...(Array.isArray(platforms) && platforms.length ? { platforms: platforms.join(',') } : {}),
+    ...(Array.isArray(genres) && genres.length ? { genres: genres.join(',') } : {}),
+    ...(Array.isArray(years) && years.length ? { years: years.join(',') } : {}),
+    ...(typeof yearMin === 'number' ? { yearMin } : {}),
+    ...(typeof yearMax === 'number' ? { yearMax } : {}),
+    ...(sort ? { sort } : {}),
+    ...(typeof minScore === 'number' ? { minScore } : {}),
+  };
+
+  const r = await axiosInstance.get('/games', { params: query });
   return r.data as Paged<Game>;
 }
 
@@ -113,6 +170,14 @@ export async function addGame(
   return data;
 }
 
+export type FacetOption = { value: string; count: number }; // count can be ignored in UI
+export type GameFacets = {
+  platforms: FacetOption[];
+  genres: FacetOption[];
+  yearMin: number | null;
+  yearMax: number | null;
+};
+
 export async function updateGameStatus(userGameId: string, status: LibraryStatus) {
   const { data } = await axiosInstance.patch(`/library/${userGameId}`, { status });
   return data as { _id: string; status: LibraryStatus };
@@ -125,6 +190,12 @@ export async function deleteGame(userGameId: string): Promise<void> {
 export async function getAllGames(): Promise<Game[]> {
   const res = await axiosInstance.get(`/games/`);
   return res.data;
+}
+
+
+export async function getGameFacets(/* optionally params */): Promise<GameFacets> {
+  const { data } = await axiosInstance.get('/games/facets');
+  return data as GameFacets;
 }
 
 export async function searchGames(titleQuery: string, signal?: AbortSignal): Promise<Game[]> {

@@ -10,6 +10,9 @@ import {
     type Game,
     type UserGameCreated,
     type LibraryStatus,
+    getGameFacets,
+    GameFacets,
+    FacetOption
 } from '@/lib/api';
 import { useGameContext } from '@/lib/GameContext';
 import GameCard from '@/components/game/GameCard';
@@ -32,14 +35,92 @@ export default function GamesPage() {
     const [loading, setLoading] = useState(true);
     const [openMenuGameId, setOpenMenuGameId] = useState<string | null>(null);
 
+    const [q, setQ] = useState("");              // search
+    const [platform, setPlatform] = useState(""); // single-select today
+    const [genre, setGenre] = useState("");
+
+    const [sort, setSort] = useState<'metacritic-desc' | 'released-desc' | 'title-asc' | 'title-desc'>('metacritic-desc');
+
+    const [facets, setFacets] = useState<GameFacets | null>(null);
+
+
+    useEffect(() => {
+        getGameFacets().then(setFacets).catch(console.error);
+    }, []);
+
+    type YearPreset = "any" | "last-1" | "last-3" | "last-5" | "last-10" | "1990s" | "2000s" | "2010s" | "2020s";
+    const [yearPreset, setYearPreset] = useState<YearPreset>("last-10");
+    const [yearMin, setYearMin] = useState<string>(""); // keep for API call
+    const [yearMax, setYearMax] = useState<string>("");
+
     const { refreshGameCount } = useGameContext();
 
-    // 1) Load the games list whenever page/pageSize changes
+    const INITIALS = {
+        q: "",
+        platform: "",
+        genre: "",
+        yearPreset: "last-10" as YearPreset,
+        yearMin: "",
+        yearMax: "",
+        sort: "metacritic-desc" as const,
+    };
+
+    function clearAll() {
+        setQ(INITIALS.q);
+        setPlatform(INITIALS.platform);
+        setGenre(INITIALS.genre);
+        setSort(INITIALS.sort);
+        setYearPreset(INITIALS.yearPreset);
+        setYearMin(INITIALS.yearMin);
+        setYearMax(INITIALS.yearMax);
+        setPage(1);
+    }
+
+    const isDirty =
+        q !== INITIALS.q ||
+        platform !== INITIALS.platform ||
+        genre !== INITIALS.genre ||
+        sort !== INITIALS.sort ||
+        yearMin !== INITIALS.yearMin ||
+        yearMax !== INITIALS.yearMax;
+
+    function applyPreset(p: YearPreset) {
+        const now = new Date().getFullYear();
+        const setRange = (min?: number, max?: number) => {
+            setYearMin(min ? String(min) : "");
+            setYearMax(max ? String(max) : "");
+            setPage(1);
+        };
+        setYearPreset(p);
+        if (p === "any") return setRange();
+        if (p === "last-1") return setRange(now - 1, now);
+        if (p === "last-3") return setRange(now - 3, now);
+        if (p === "last-5") return setRange(now - 5, now);
+        if (p === "last-10") return setRange(now - 10, now);
+        if (p === "1990s") return setRange(1990, 1999);
+        if (p === "2000s") return setRange(2000, 2009);
+        if (p === "2010s") return setRange(2010, 2019);
+        if (p === "2020s") return setRange(2020, now);
+    }
+
+    // load when page/pageSize or filters change
     useEffect(() => {
         let cancelled = false;
         (async () => {
             try {
-                const data = await fetchGamesPaged({ page, pageSize });
+                const data = await fetchGamesPaged({
+                    page,
+                    pageSize,
+                    // prefer q, but keep titleQuery populated if you want legacy parity
+                    q: q || undefined,
+                    // map to arrays only if non-empty
+                    platforms: platform ? [platform] : undefined,
+                    genres: genre ? [genre] : undefined,
+                    // simple range (skip discrete years for now)
+                    yearMin: yearMin ? parseInt(yearMin, 10) : undefined,
+                    yearMax: yearMax ? parseInt(yearMax, 10) : undefined,
+                    sort, // defaults to metacritic-desc
+                });
                 if (!cancelled) {
                     setGames(data.items);
                     setTotal(data.total);
@@ -49,7 +130,7 @@ export default function GamesPage() {
             }
         })();
         return () => { cancelled = true; };
-    }, [page, pageSize]);
+    }, [page, pageSize, q, platform, genre, yearMin, yearMax, sort]);
 
     // 2) Load the user's library once the anon user is ready (or immediately if already set)
     useEffect(() => {
@@ -145,7 +226,7 @@ export default function GamesPage() {
     if (loading) {
         return (
             <main className="p-6 font-sans  min-h-screen">
-                <h1 className="text-3xl font-bold  mb-6">All Games</h1>
+                <h1 className="text-3xl font-bold  mb-6">Browse Library</h1>
                 <div className="flex flex-wrap gap-4">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonCard key={i} />
@@ -157,23 +238,123 @@ export default function GamesPage() {
 
     return (
         <main className="p-6 font-sans  min-h-screen">
-            <div className="flex items-end justify-between mb-6 gap-3">
-                <h1 className="text-3xl font-bold ">All Games</h1>
+            <h1 className="text-3xl font-bold">Browse Library <span className="text-sm opacity-70">{total.toLocaleString()} results</span></h1>
 
-                {/* Page size selector (minimal) */}
-                <label className="flex items-center gap-2 text-sm">
-                    <span className="">Per page</span>
-                    <select
-                        className=" bg-white text-background border border-gray-300 rounded-md px-2 py-1"
-                        value={pageSize}
-                        onChange={e => { setPageSize(parseInt(e.target.value, 10)); setPage(1); }}
-                    >
-                        {[12, 24, 36, 48].map(v => <option key={v} value={v}>{v}</option>)}
-                    </select>
-                </label>
-            </div>
 
-            <div className="flex flex-wrap gap-4">
+            {/* Sticky filter bar */}
+            <section className=" z-10  bg-background/80 backdrop-blur mb-4 ">
+                <div className=" w-full  py-3 grid  space-y-3.5">
+
+                    {/* Row 1: Search */}
+                    <div className="flex items-center gap-2">
+                        {/* your search input */}
+                        <input
+                            value={q}
+                            onChange={(e) => { setQ(e.target.value); setPage(1); }}
+                            placeholder="Search titles..."
+                            className="h-9 w-full md:max-w-[580px] rounded-md border border-white/10 bg-transparent px-3 text-sm"
+                        />
+
+                    </div>
+
+                    {/* Row 2: Filters */}
+                    <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ">
+                        {/* Platform */}
+                        <select
+                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            value={platform}
+                            onChange={(e) => { setPlatform(e.target.value); setPage(1); }}
+                        >
+                            <option value="">Any platform</option>
+                            {(facets?.platforms ?? []).map((p: FacetOption) => (
+                                <option key={p.value} value={p.value}>{p.value}</option>
+                            ))}
+                        </select>
+
+                        {/* Genre */}
+                        <select
+                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            value={genre}
+                            onChange={(e) => { setGenre(e.target.value); setPage(1); }}
+                        >
+                            <option value="">Any Genre</option>
+                            {(facets?.genres ?? []).map((g: FacetOption) => (
+                                <option key={g.value} value={g.value}>{g.value}</option>
+                            ))}
+                        </select>
+
+                        {/* Year preset (your new single control) */}
+                        <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            value={yearPreset} onChange={(e) => applyPreset(e.target.value as YearPreset)}
+                        >
+                            <option value="any">Any time</option>
+                            <option value="last-1">Last 12 months</option>
+                            <option value="last-3">Last 3 years</option>
+                            <option value="last-5">Last 5 years</option>
+                            <option value="last-10">Last 10 years</option>
+                            <option value="1990s">1990s</option>
+                            <option value="2000s">2000s</option>
+                            <option value="2010s">2010s</option>
+                            <option value="2020s">2020s</option>
+                        </select>
+
+                        {/* (Optional) another quick filter slot or leave empty */}
+                        <div className="hidden lg:block" />
+                    </div>
+
+                    {/* Row 3: Sort + Per page (+ result count) */}
+                    <div className="flex flex-wrap items-center justify-start gap-4">
+
+
+                        <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            value={sort}
+                            onChange={e => {
+                                setSort(e.target.value as 'metacritic-desc' | 'released-desc' | 'title-asc' | 'title-desc');
+                                setPage(1);
+                            }}
+
+                        >
+                            <option value="metacritic-desc">Highest Rated</option>
+                            <option value="released-desc">Newest releases</option>
+                            <option value="title-asc">Title A–Z</option>
+                            <option value="title-desc">Title Z–A</option>
+                        </select>
+                        <label className="flex items-center gap-2 text-sm">
+                            <span>Per Page</span>
+                            <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                                value={pageSize} onChange={e => { setPageSize(+e.target.value); setPage(1); }}>
+                                {[12, 24, 36, 48].map(v => <option key={v} value={v}>{v}</option>)}
+                            </select>
+                        </label>
+
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-start gap-4">
+
+
+
+                        {/* Clear filters (active/inactive already wired) */}
+                        <button
+                            className="h-9 rounded-md border border-white/10 px-3 text-sm disabled:opacity-20 bg-red-400"
+                            onClick={clearAll}
+                            disabled={!isDirty}
+                        >
+                            Clear filters
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+
+
+
+
+
+
+
+
+            <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
                 {games.map(g => {
                     const isAdded = addedGames.has(g._id);
                     const currentStatus = statusByGameId.get(g._id);
