@@ -139,7 +139,7 @@ export default function LibraryPage() {
             <CollectionStatusDashboard items={library} />
 
             <h1 className="text-3xl font-bold  mb-6">My Games</h1>
-            <div className="flex flex-wrap  gap-4">
+            <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
                 {library.length ? library.map((g) => (
                     <GameCard
                         key={g._id}
@@ -152,17 +152,7 @@ export default function LibraryPage() {
                         onOpenChange={(open) => setOpenMenuGameId(open ? g.gameId._id : null)}
                     />
                 )) : (
-                    <p className="">
-                        No games in your collection.{" "}
-                        Why not{" "}
-                        <Link
-                            href="/game-library"
-                            className="text-green-500 hover:text-green-600 underline underline-offset-2"
-                        >
-                            browse the library
-                        </Link>{" "}
-                        and start collecting?
-                    </p>
+                    <p>…</p>
                 )}
             </div>
 
