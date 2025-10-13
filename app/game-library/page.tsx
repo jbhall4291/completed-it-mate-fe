@@ -11,6 +11,8 @@ import {
     type UserGameCreated,
     type LibraryStatus,
     getGameFacets,
+    GameFacets,
+    FacetOption
 } from '@/lib/api';
 import { useGameContext } from '@/lib/GameContext';
 import GameCard from '@/components/game/GameCard';
@@ -39,9 +41,12 @@ export default function GamesPage() {
 
     const [sort, setSort] = useState<'metacritic-desc' | 'released-desc' | 'title-asc' | 'title-desc'>('metacritic-desc');
 
-    const [facets, setFacets] = useState<{ platforms: any[], genres: any[], yearMin: number, yearMax: number } | null>(null);
+    const [facets, setFacets] = useState<GameFacets | null>(null);
 
-    useEffect(() => { getGameFacets().then(setFacets).catch(console.error); }, []);
+
+    useEffect(() => {
+        getGameFacets().then(setFacets).catch(console.error);
+    }, []);
 
     type YearPreset = "any" | "last-1" | "last-3" | "last-5" | "last-10" | "1990s" | "2000s" | "2010s" | "2020s";
     const [yearPreset, setYearPreset] = useState<YearPreset>("last-10");
@@ -255,22 +260,33 @@ export default function GamesPage() {
                     {/* Row 2: Filters */}
                     <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ">
                         {/* Platform */}
-                        <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm "
-                            value={platform} onChange={e => { setPlatform(e.target.value); setPage(1); }}>
+                        <select
+                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            value={platform}
+                            onChange={(e) => { setPlatform(e.target.value); setPage(1); }}
+                        >
                             <option value="">Any platform</option>
-                            {facets?.platforms?.map(p => <option key={p.value} value={p.value}>{p.value}</option>)}
+                            {(facets?.platforms ?? []).map((p: FacetOption) => (
+                                <option key={p.value} value={p.value}>{p.value}</option>
+                            ))}
                         </select>
 
                         {/* Genre */}
-                        <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
-                            value={genre} onChange={e => { setGenre(e.target.value); setPage(1); }}>
+                        <select
+                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            value={genre}
+                            onChange={(e) => { setGenre(e.target.value); setPage(1); }}
+                        >
                             <option value="">Any Genre</option>
-                            {facets?.genres?.map(g => <option key={g.value} value={g.value}>{g.value}</option>)}
+                            {(facets?.genres ?? []).map((g: FacetOption) => (
+                                <option key={g.value} value={g.value}>{g.value}</option>
+                            ))}
                         </select>
 
                         {/* Year preset (your new single control) */}
                         <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
-                            value={yearPreset} onChange={e => applyPreset(e.target.value as any)}>
+                            value={yearPreset} onChange={(e) => applyPreset(e.target.value as YearPreset)}
+                        >
                             <option value="any">Any time</option>
                             <option value="last-1">Last 12 months</option>
                             <option value="last-3">Last 3 years</option>
@@ -291,7 +307,13 @@ export default function GamesPage() {
 
 
                         <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
-                            value={sort} onChange={e => { setSort(e.target.value as any); setPage(1); }}>
+                            value={sort}
+                            onChange={e => {
+                                setSort(e.target.value as 'metacritic-desc' | 'released-desc' | 'title-asc' | 'title-desc');
+                                setPage(1);
+                            }}
+
+                        >
                             <option value="metacritic-desc">Highest Rated</option>
                             <option value="released-desc">Newest releases</option>
                             <option value="title-asc">Title A–Z</option>

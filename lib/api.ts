@@ -20,6 +20,22 @@ export type BrowseParams = {
   minScore?: number;           // optional, you might test it later
 };
 
+type SortKey = NonNullable<BrowseParams['sort']>;
+
+type QueryParams = Partial<{
+  page: number;
+  pageSize: number;
+  titleQuery: string;
+  q: string;
+  platforms: string; // CSV
+  genres: string;    // CSV
+  years: string;     // CSV
+  yearMin: number;
+  yearMax: number;
+  sort: SortKey;
+  minScore: number;
+}>;
+
 export async function fetchGamesPaged(params: BrowseParams = {}) {
   const {
     page = 1,
@@ -35,21 +51,19 @@ export async function fetchGamesPaged(params: BrowseParams = {}) {
     minScore,
   } = params;
 
-  // Build query object, only include defined keys
-  const query: Record<string, any> = { page, pageSize };
-
-  if (titleQuery) query.titleQuery = titleQuery;
-  if (q) query.q = q;
-
-  if (Array.isArray(platforms) && platforms.length) query.platforms = platforms.join(',');
-  if (Array.isArray(genres) && genres.length) query.genres = genres.join(',');
-  if (Array.isArray(years) && years.length) query.years = years.join(',');
-
-  if (typeof yearMin === 'number') query.yearMin = yearMin;
-  if (typeof yearMax === 'number') query.yearMax = yearMax;
-
-  if (sort) query.sort = sort;
-  if (typeof minScore === 'number') query.minScore = minScore;
+  const query: QueryParams = {
+    page,
+    pageSize,
+    ...(titleQuery ? { titleQuery } : {}),
+    ...(q ? { q } : {}),
+    ...(Array.isArray(platforms) && platforms.length ? { platforms: platforms.join(',') } : {}),
+    ...(Array.isArray(genres) && genres.length ? { genres: genres.join(',') } : {}),
+    ...(Array.isArray(years) && years.length ? { years: years.join(',') } : {}),
+    ...(typeof yearMin === 'number' ? { yearMin } : {}),
+    ...(typeof yearMax === 'number' ? { yearMax } : {}),
+    ...(sort ? { sort } : {}),
+    ...(typeof minScore === 'number' ? { minScore } : {}),
+  };
 
   const r = await axiosInstance.get('/games', { params: query });
   return r.data as Paged<Game>;
@@ -156,6 +170,14 @@ export async function addGame(
   return data;
 }
 
+export type FacetOption = { value: string; count: number }; // count can be ignored in UI
+export type GameFacets = {
+  platforms: FacetOption[];
+  genres: FacetOption[];
+  yearMin: number | null;
+  yearMax: number | null;
+};
+
 export async function updateGameStatus(userGameId: string, status: LibraryStatus) {
   const { data } = await axiosInstance.patch(`/library/${userGameId}`, { status });
   return data as { _id: string; status: LibraryStatus };
@@ -171,12 +193,10 @@ export async function getAllGames(): Promise<Game[]> {
 }
 
 
-// lib/api.ts
-export async function getGameFacets() {
+export async function getGameFacets(/* optionally params */): Promise<GameFacets> {
   const { data } = await axiosInstance.get('/games/facets');
-  return data as { platforms: { value: string, count: number }[]; genres: { value: string, count: number }[]; yearMin: number; yearMax: number };
+  return data as GameFacets;
 }
-
 
 export async function searchGames(titleQuery: string, signal?: AbortSignal): Promise<Game[]> {
   try {
