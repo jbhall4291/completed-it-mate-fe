@@ -14,7 +14,7 @@ import NavbarBrandLogo from "./NavbarBrandLogo";
 
 
 const nav = [
-    { label: "My Games", href: "/user-library" },
+    { label: "My Collection", href: "/user-library" },
     { label: "Browse Library", href: "/game-library" },
     { label: "Community", href: "/users" },
     { label: "My Profile", href: "/profile" },
