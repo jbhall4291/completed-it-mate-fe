@@ -6,14 +6,14 @@ export default function LibraryPage() {
 
     return (
         <main className="relative p-6 font-sans  min-h-screen ">
-            user profile page
 
-            <div>link to my games for dash board, or just show stats here too with link there to see more</div>
+            <h1 className="text-3xl font-bold mb-6">My Profile (Beta)</h1>
+            <div className="mb-4">Member since: </div>
 
-            <div>Member since: xxxx </div>
-
-            <UsernameSetter />
-
+            <div className="flex flex-row gap-x-4 items-center">
+                <div>Edit username:</div>
+                <UsernameSetter />
+            </div>
 
         </main>
     );
