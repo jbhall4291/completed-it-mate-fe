@@ -205,14 +205,14 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-3 pt-4">
                         <Stat
-                            icon={<LibraryBig className="h-10 w-10 text-blue-400" />}
-                            label="Owned"
-                            value={pie.find((p) => p.key === "owned")?.value ?? 0}
-                        />
-                        <Stat
                             icon={<Crown className="h-10 w-10 text-yellow-400" />}
                             label="Completed"
                             value={completed}
+                        />
+                        <Stat
+                            icon={<LibraryBig className="h-10 w-10 text-blue-400" />}
+                            label="Owned"
+                            value={pie.find((p) => p.key === "owned")?.value ?? 0}
                         />
                         <Stat
                             icon={<Gamepad2 className="h-10 w-10 text-orange-400" />}
