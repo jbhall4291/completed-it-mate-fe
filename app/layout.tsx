@@ -7,6 +7,7 @@ import BootstrapUser from "@/components/BootstrapUser";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import PageTransition from '@/components/layout/PageTransition';
+import { Analytics } from '@vercel/analytics/next';
 
 
 
@@ -68,6 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
           <Footer />
         </GameProvider>
+        <Analytics />
       </body>
     </html>
   );
