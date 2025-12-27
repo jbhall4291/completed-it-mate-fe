@@ -1,6 +1,6 @@
 // app/games/[id]/page.tsx
 import { notFound } from "next/navigation";
-import { CalendarDays, Crown, Hourglass } from "lucide-react";
+import { Trophy, CalendarDays, Crown, Hourglass } from "lucide-react";
 import MetacriticIcon from "@/components/icons/MetacriticIcon";
 import GameActions from "@/components/game/GameActions";
 import { getGameDetail } from "@/lib/api";
@@ -99,7 +99,7 @@ export default async function GameDetailPage(
 
                 {/* Stats */}
                 <section className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <Stat label="Users Completed" value={`${cc}`} icon={Crown} iconClassName="text-[#f5df0f]" />
+                    <Stat label="Users Completed" value={`${cc}`} icon={Trophy} iconClassName="text-yellow-400" />
                     {playtime ? (
                         <Stat label="Avg Completion" value={`${playtime}h`} icon={Hourglass} />
                     ) : null}

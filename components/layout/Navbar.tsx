@@ -10,7 +10,7 @@ import clsx from "clsx";
 import { cn } from "@/lib/utils";
 // import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
-import NavbarBrandLogo from "./NavbarBrandLogo";
+import BrandLogo from "./BrandLogo";
 
 
 const nav = [
@@ -58,17 +58,9 @@ export default function Navbar() {
                     <div className="relative z-10 h-12 flex items-center font-semibold ">
 
 
-                        <Link href="/" onClick={() => setOpen(false)} className="inline-flex items-center gap-1.5   hover:opacity-70 text-lg font-bold md:text-lg md:font-bold  ">
-
-                            <NavbarBrandLogo shimmer={false} />
+                        <Link href="/" onClick={() => setOpen(false)} className="inline-flex items-center gap-1.5   hover:opacity-80 transition-opacity duration-300  ">
+                            <BrandLogo navbar={true} />
                         </Link>
-
-
-
-
-
-
-
 
 
                         {/* Desktop links */}
@@ -120,7 +112,7 @@ export default function Navbar() {
                                 aria-label={open ? "Close menu" : "Open menu"}
                                 aria-expanded={open}
                                 aria-controls="navbar-mobile-content"
-                                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl  relative z-10 cursor-pointer"
+                                className="inline-flex h-11 w-11 items-center justify-center relative z-10 cursor-pointer"
                             >
                                 <motion.span
                                     initial={false}
