@@ -4,7 +4,7 @@
 import * as React from "react";
 import { PieChart, Pie, Label, Cell } from "recharts";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Crown, LibraryBig, Gamepad2, Heart } from "lucide-react"; // pick any icons you like
+import { Trophy, LibraryBig, Gamepad2, Heart } from "lucide-react";
 
 import type { LibraryItem, LibraryStatus } from "@/lib/api";
 
@@ -205,7 +205,7 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-3 pt-4">
                         <Stat
-                            icon={<Crown className="h-10 w-10 text-yellow-400" />}
+                            icon={<Trophy className="h-10 w-10 text-yellow-400" />}
                             label="Completed"
                             value={completed}
                         />
