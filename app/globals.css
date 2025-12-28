@@ -23,7 +23,7 @@ option {
 
 }
 
-option::hover {
+option:hover {
   background-color: #306533;
 }
 

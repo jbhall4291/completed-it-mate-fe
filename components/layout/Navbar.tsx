@@ -46,7 +46,7 @@ export default function Navbar() {
 
     return (
         <div className="fixed top-4 md:top-6 inset-x-0 z-50 will-change-transform">
-            <div className="mx-auto max-w-[900px] px-4">
+            <div className="mx-auto max-w-[700px] px-4">
                 <motion.div
                     initial={false}
                     animate={{}}
@@ -58,8 +58,25 @@ export default function Navbar() {
                     <div className="relative z-10 h-12 flex items-center font-semibold ">
 
 
-                        <Link href="/" onClick={() => setOpen(false)} className="inline-flex items-center gap-1.5   hover:opacity-80 transition-opacity duration-300  ">
-                            <BrandLogo navbar={true} />
+                        <Link href="/"
+                            onClick={() => setOpen(false)}
+                            aria-label="Completed It Mate – Home"
+                            className="inline-flex items-center gap-1.5   hover:opacity-80 transition-opacity duration-300  ">
+
+                            <div className="flex h-10 w-10 aspect-square items-center justify-center rounded-full bg-green-500 ">
+                                <svg
+                                    className={cn(
+                                        "text-yellow-500 h-6",
+
+                                    )}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path d="m18,4v-2H6v2H1v5h1v2h1v1h1v1h1v1h1v1h3v1h2v3h-4v3h10v-3h-4v-3h2v-1h3v-1h1v-1h1v-1h1v-1h1v-2h1v-5h-5ZM5,12v-1h-1v-2h-1v-3h2v1h1v2h1v3h1v1h-2v-1h-1Zm16-3h-1v2h-1v1h-1v1h-2v-1h1v-2h1v-3h1v-1h2v3Z" />
+                                </svg>
+                            </div>
+
                         </Link>
 
 
@@ -86,25 +103,28 @@ export default function Navbar() {
 
                             ))}
 
-
-
-                            <li className="rounded-full border-2 border-white p-4 h-6 w-6 flex items-center justify-center">
-                                <Link href="/profile" aria-label="profile">
+                            <Link href="/profile" aria-label="profile">
+                                <li className="rounded-full border-2 border-white p-4 h-6 w-6 flex items-center justify-center hover:opacity-70">
                                     <div className="text-base">A</div>
-                                </Link>
-                            </li>
-
+                                </li>
+                            </Link>
 
                         </ul>
 
 
-                        <div className="ml-auto md:hidden flex items-center gap-1 h-9">
+                        <div className="ml-auto md:hidden flex items-center gap-3 h-9">
                             {/* <AnimatedThemeToggler aria-label="Toggle theme" /> */}
                             {/* <div className="rounded-full border-2 border-white p-4 h-6 w-6 flex items-center justify-center">
                                 <Link href="/profile" aria-label="profile">
                                     <div className="text-base">JH</div>
                                 </Link>
                             </div> */}
+
+                            <Link href="/profile" aria-label="profile">
+                                <li className="rounded-full border-2 border-white  h-10 w-10 flex items-center justify-center hover:opacity-70">
+                                    <div className="text-base">A</div>
+                                </li>
+                            </Link>
 
                             {/* Mobile toggle control aka burger */}
                             <button
@@ -153,7 +173,7 @@ export default function Navbar() {
                             >
 
                                 <ul className="">
-                                    {nav.slice(0, 4).map((item) => (
+                                    {nav.slice(0, 3).map((item) => (
                                         <li key={item.label}>
                                             <Link
                                                 href={item.href}
