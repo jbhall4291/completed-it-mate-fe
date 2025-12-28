@@ -179,7 +179,7 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
 
     return (
         <section className="mb-8">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {/* Completion rate */}
                 <Card className="flex flex-col">
                     <CardHeader className="pb-0">
