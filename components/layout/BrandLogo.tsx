@@ -17,7 +17,7 @@ export default function BrandLogo() {
                 "relative inline-flex items-center transition-all duration-300",
                 "rounded-full bg-green-700 text-white",
                 "shadow-[0_4px_16px_rgba(16,185,129,.18)]",
-                "h-14 md:h-20"
+                "h-12 md:h-20"
 
 
             )}
@@ -38,7 +38,7 @@ export default function BrandLogo() {
 
             <div
                 className={cn(
-                    "flex flex-col  leading-none uppercase  tracking-wide text-2xl md:text-4xl px-2 md:px-4 pr-6 md:pr-8",
+                    "flex flex-col  leading-none uppercase  tracking-wide text-lg md:text-4xl px-2 md:px-4 pr-6 md:pr-8",
 
                 )}
             >
