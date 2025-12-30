@@ -192,7 +192,7 @@ export default function HomePage() {
         </div>
 
         <div className="mb-12">
-          <h2 className="text-xl font-semibold mb-2">Latest News</h2>
+          <h2 className="text-xl font-semibold mb-2">Latest Updates</h2>
           <DeveloperUpdateCard />
         </div>
 
