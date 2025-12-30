@@ -182,7 +182,7 @@ export default function HomePage() {
             className="
       absolute inset-0 
       bg-center bg-cover
-      opacity-100 filter grayscale brightness-90 lg:blur-xs
+      opacity-100 filter grayscale brightness-90 md:blur-xs
       
     "
             style={{
@@ -191,12 +191,12 @@ export default function HomePage() {
           />
 
           {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black/75 " />
+          <div className="absolute inset-0 bg-black/80 md:bg-black/75 " />
 
           {/* Content */}
           <div className="relative z-10 flex flex-col items-center translate-y-[2px]">
             <BrandLogo />
-            <p className="px-10 mt-3 text-lg text-white/90 md:text-white/85 md:text-xl w-[420px] md:w-full">
+            <p className="px-10 mt-3 text-base text-white/90 md:text-white/85 md:text-xl w-[350px] md:w-full">
               Keep track of the games you own, play, and complete.
             </p>
           </div>
