@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Completed It Mate",
     description:
-      "Track your game library and completion progress in style.",
+      "Add games to your collection and track progress.",
     url: "https://completeditmate.app",
     siteName: "Completed It Mate",
     images: [

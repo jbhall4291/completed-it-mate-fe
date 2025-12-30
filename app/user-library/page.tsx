@@ -37,7 +37,7 @@ function useConfirm() {
         >
             <div className="w-full max-w-md rounded-2xl bg-background  border border-white/10 shadow-xl">
                 <div className="px-5 py-4 border-b border-white/10">
-                    <h2 id="clm-confirm-title" className="text-lg font-semibold">Remove from library?</h2>
+                    <h2 id="clm-confirm-title" className="text-lg font-semibold">Remove from collection?</h2>
                 </div>
                 <div className="px-5 py-4 text-sm ">
                     {pending.message}
@@ -80,7 +80,7 @@ export default function LibraryPage() {
                 if (!cancelled) setLibrary(usersGames);
                 await refreshGameCount();
             } catch (err) {
-                console.error('Error fetching users library:', err);
+                console.error('Error fetching users collection:', err);
             } finally {
                 if (!cancelled) setLoading(false);
             }
@@ -97,7 +97,7 @@ export default function LibraryPage() {
     }
 
     async function handleRemoveGame(userGameId: string, title?: string) {
-        const ok = await confirm(`Remove “${title ?? 'this game'}” from your library?`);
+        const ok = await confirm(`Remove “${title ?? 'this game'}” from your collection?`);
         if (!ok) return;
 
         try {

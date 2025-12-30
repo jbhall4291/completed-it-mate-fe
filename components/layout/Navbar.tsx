@@ -17,6 +17,7 @@ const nav = [
     { label: "My Collection", href: "/user-library" },
     { label: "Browse Library", href: "/game-library" },
     { label: "Community", href: "/users" },
+    { label: "Updates", href: "/updates" },
     { label: "My Profile (Beta)", href: "/profile" },
 
 ];
@@ -63,7 +64,7 @@ export default function Navbar() {
                             aria-label="Completed It Mate – Home"
                             className="inline-flex items-center gap-1.5   hover:opacity-80 transition-opacity duration-300  ">
 
-                            <div className="flex h-10 w-10 aspect-square items-center justify-center rounded-full bg-green-500 ">
+                            <div className="flex h-10 w-10 aspect-square items-center justify-center rounded-full bg-green-600 ">
                                 <svg
                                     className={cn(
                                         "text-yellow-500 h-6",
@@ -83,7 +84,7 @@ export default function Navbar() {
                         {/* Desktop links */}
                         <ul className="ml-auto hidden md:flex items-center gap-6">
                             {/* primary links... */}
-                            {nav.slice(0, 3).map((item) => (
+                            {nav.slice(0, -1).map((item) => (
                                 <li key={item.label}>
                                     <Link
                                         href={item.href}
@@ -173,7 +174,7 @@ export default function Navbar() {
                             >
 
                                 <ul className="">
-                                    {nav.slice(0, 3).map((item) => (
+                                    {nav.slice(0, -1).map((item) => (
                                         <li key={item.label}>
                                             <Link
                                                 href={item.href}

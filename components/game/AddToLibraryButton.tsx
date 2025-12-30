@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState, useLayoutEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown } from 'lucide-react';
+import { Trophy, ChevronDown } from 'lucide-react';
 import type { LibraryStatus } from '@/lib/api';
 
 type Props = {
@@ -69,18 +69,31 @@ export default function AddToLibraryButton({
     }, [isOpen, updateMenuPos]);
 
     const options: ReadonlyArray<{ label: string; status: LibraryStatus }> = [
-        { label: 'Wishlist', status: 'wishlist' },
-        { label: 'Own it', status: 'owned' },
-        { label: 'Currently playing', status: 'playing' },
-        { label: 'Completed it mate', status: 'completed' },
+        { label: 'Add to wishlist', status: 'wishlist' },
+        { label: 'Add to collection', status: 'owned' },
+        { label: 'Mark as in progress', status: 'playing' },
+        { label: 'Mark as completed', status: 'completed' },
     ] as const;
 
-    const leftLabel = isAdded ? `${currentStatus ?? 'owned'}` : 'Add to Library';
+    const STATUS_LABEL: Record<LibraryStatus, string> = {
+        wishlist: 'On wishlist',
+        owned: 'In backlog',
+        playing: 'In progress',
+        completed: 'Completed',
+    };
+
+    const leftLabel = isAdded
+        ? STATUS_LABEL[currentStatus ?? 'owned']
+        : 'Add to collection';
+
     const leftOnClick = isAdded
         ? () => onUpdate?.(currentStatus ?? 'owned')
         : () => onAdd?.('owned');
 
-    const bgClasses = isAdded ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600';
+    const bgClasses = isAdded
+        ? 'bg-green-600'
+        : 'bg-blue-500 hover:bg-blue-600';
+
     const containerClasses = [
         'inline-flex w-full items-stretch rounded overflow-hidden',
         'motion-safe:transition-colors duration-150',
@@ -122,22 +135,29 @@ export default function AddToLibraryButton({
                     }}
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
                 >
-                    Remove from library
+                    Remove from collection
                 </button>
             )}
         </div>
     );
 
     return (
-        <div ref={rootRef} className="relative inline-block w-[180px]">
+        <div ref={rootRef} className="relative inline-block w-[200px]">
             <div className={containerClasses}>
                 <button
                     type="button"
-                    onClick={disabled ? undefined : leftOnClick}
-                    className="flex-1 py-2 px-4 font-semibold text-left focus:outline-none"
+                    onClick={!isAdded && !disabled ? leftOnClick : undefined}
+                    className={[
+                        'flex-1 py-2 px-4 font-semibold text-left focus:outline-none flex-row flex items-center',
+                        isAdded ? 'cursor-default' : 'cursor-pointer',
+                    ].join(' ')}
                 >
+                    {currentStatus === 'completed' && (
+                        <Trophy strokeWidth={3} className="-ml-1 mr-2 h-4.5 w-4.5 text-yellow-500" />
+                    )}
                     {leftLabel}
                 </button>
+
 
                 <button
                     type="button"

@@ -15,14 +15,14 @@ export default function BrandLogo() {
             className={cn(
                 silkscreen.className,
                 "relative inline-flex items-center transition-all duration-300",
-                "rounded-full bg-green-600 text-white",
+                "rounded-full bg-green-700 text-white",
                 "shadow-[0_4px_16px_rgba(16,185,129,.18)]",
                 "h-14 md:h-20"
 
 
             )}
         >
-            <div className="flex h-full aspect-square items-center justify-center rounded-full bg-green-500 ">
+            <div className="flex h-full aspect-square items-center justify-center rounded-full bg-green-600 ">
                 <svg
                     className={cn(
                         "text-yellow-500 h-6 md:h-11 w-6 md:w-11",
