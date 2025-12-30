@@ -93,15 +93,21 @@ function useStatusCounts(items: LibraryItem[]) {
             number
         >;
         for (const it of items) counts[it.status] = (counts[it.status] ?? 0) + 1;
-        const total = items.length;
+        //const total = items.length;
         const completed = counts.completed;
-        const pct = total ? Math.round((completed / total) * 100) : 0;
+        const ownedTotal =
+            counts.owned + counts.playing + counts.completed;
+
+        const pct = ownedTotal
+            ? Math.round((completed / ownedTotal) * 100)
+            : 0;
+
 
         const pie = (Object.keys(counts) as LibraryStatus[])
             .map((k) => ({ key: k, label: LABEL[k], value: counts[k], fill: COLOR[k] }))
             .filter((d) => d.value > 0);
 
-        return { counts, total, completed, pct, pie };
+        return { counts, ownedTotal, completed, pct, pie };
     }, [items]);
 }
 
@@ -174,7 +180,7 @@ function CompletionRateDonut({
 
 
 export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
-    const { total, completed, pct, pie } = useStatusCounts(items);
+    const { ownedTotal, completed, pct, pie } = useStatusCounts(items);
     const [genreActiveIdx, setGenreActiveIdx] = React.useState(0);
 
     return (
@@ -184,15 +190,15 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                 <Card className="flex flex-col">
                     <CardHeader className="pb-0">
                         <CardTitle className="text-base">Completion Rate</CardTitle>
-                        <CardDescription>Completed vs total</CardDescription>
+                        <CardDescription>Completed vs Owned</CardDescription>
                     </CardHeader>
                     <CardContent className="flex-1">
-                        {total === 0 ? (
+                        {ownedTotal === 0 ? (
                             <div className="flex h-[220px] items-center justify-center text-sm text-muted-foreground">
                                 No games yet.
                             </div>
                         ) : (
-                            <CompletionRateDonut completed={completed} total={total} pct={pct} />
+                            <CompletionRateDonut completed={completed} total={ownedTotal} pct={pct} />
                         )}
                     </CardContent>
                 </Card>
@@ -210,14 +216,14 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                             value={completed}
                         />
                         <Stat
-                            icon={<LibraryBig className="h-10 w-10 text-blue-400" />}
-                            label="Owned"
-                            value={pie.find((p) => p.key === "owned")?.value ?? 0}
-                        />
-                        <Stat
                             icon={<Gamepad2 className="h-10 w-10 text-orange-400" />}
                             label="In Progress"
                             value={pie.find((p) => p.key === "playing")?.value ?? 0}
+                        />
+                        <Stat
+                            icon={<LibraryBig className="h-10 w-10 text-blue-400" />}
+                            label="Backlog"
+                            value={pie.find((p) => p.key === "owned")?.value ?? 0}
                         />
                         <Stat
                             icon={<Heart className="h-10 w-10 text-pink-400" />}
