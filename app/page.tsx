@@ -228,6 +228,7 @@ export default function HomePage() {
           items={topRated}
           loading={loadingTop}
           skeleton={<SkeletonGameCard />}
+          basisClass="basis-[16rem] md:basis-[18rem]"
           renderItem={(g) => (
             <GameCard
               game={g}
