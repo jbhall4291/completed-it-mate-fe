@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState, useLayoutEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronDown } from 'lucide-react';
+import { Trophy, ChevronDown } from 'lucide-react';
 import type { LibraryStatus } from '@/lib/api';
 
 type Props = {
@@ -90,7 +90,10 @@ export default function AddToLibraryButton({
         ? () => onUpdate?.(currentStatus ?? 'owned')
         : () => onAdd?.('owned');
 
-    const bgClasses = isAdded ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600';
+    const bgClasses = isAdded
+        ? 'bg-green-600'
+        : 'bg-blue-500 hover:bg-blue-600';
+
     const containerClasses = [
         'inline-flex w-full items-stretch rounded overflow-hidden',
         'motion-safe:transition-colors duration-150',
@@ -143,11 +146,18 @@ export default function AddToLibraryButton({
             <div className={containerClasses}>
                 <button
                     type="button"
-                    onClick={disabled ? undefined : leftOnClick}
-                    className="flex-1 py-2 px-4 font-semibold text-left focus:outline-none"
+                    onClick={!isAdded && !disabled ? leftOnClick : undefined}
+                    className={[
+                        'flex-1 py-2 px-4 font-semibold text-left focus:outline-none flex-row flex items-center',
+                        isAdded ? 'cursor-default' : 'cursor-pointer',
+                    ].join(' ')}
                 >
+                    {currentStatus === 'completed' && (
+                        <Trophy strokeWidth={3} className="-ml-1 mr-2 h-4.5 w-4.5 text-yellow-500" />
+                    )}
                     {leftLabel}
                 </button>
+
 
                 <button
                     type="button"
