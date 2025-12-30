@@ -69,13 +69,23 @@ export default function AddToLibraryButton({
     }, [isOpen, updateMenuPos]);
 
     const options: ReadonlyArray<{ label: string; status: LibraryStatus }> = [
-        { label: 'Wishlist', status: 'wishlist' },
-        { label: 'Own it', status: 'owned' },
-        { label: 'Currently playing', status: 'playing' },
-        { label: 'Completed it mate', status: 'completed' },
+        { label: 'Add to wishlist', status: 'wishlist' },
+        { label: 'Add to collection', status: 'owned' },
+        { label: 'Mark as in progress', status: 'playing' },
+        { label: 'Mark as completed', status: 'completed' },
     ] as const;
 
-    const leftLabel = isAdded ? `${currentStatus ?? 'owned'}` : 'Add to Library';
+    const STATUS_LABEL: Record<LibraryStatus, string> = {
+        wishlist: 'On wishlist',
+        owned: 'In backlog',
+        playing: 'In progress',
+        completed: 'Completed',
+    };
+
+    const leftLabel = isAdded
+        ? STATUS_LABEL[currentStatus ?? 'owned']
+        : 'Add to collection';
+
     const leftOnClick = isAdded
         ? () => onUpdate?.(currentStatus ?? 'owned')
         : () => onAdd?.('owned');
@@ -122,14 +132,14 @@ export default function AddToLibraryButton({
                     }}
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
                 >
-                    Remove from library
+                    Remove from collection
                 </button>
             )}
         </div>
     );
 
     return (
-        <div ref={rootRef} className="relative inline-block w-[180px]">
+        <div ref={rootRef} className="relative inline-block w-[200px]">
             <div className={containerClasses}>
                 <button
                     type="button"
