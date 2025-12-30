@@ -166,14 +166,43 @@ export default function HomePage() {
 
       <main className="p-4 font-sans min-h-screen mb-20">
         {/* Hero */}
-        <section className="mx-auto flex flex-col pt-10 pb-10 items-center text-center">
-          <div className="mb-4">
+        <section
+          className="
+    relative mx-auto mb-8
+    flex items-center justify-center
+    min-h-[180px] md:min-h-[280px]
+    
+    overflow-hidden
+    text-center
+    
+  "
+        >
+          {/* Background */}
+          <div
+            className="
+      absolute inset-0 
+      bg-center bg-cover
+      opacity-100 filter grayscale brightness-90 lg:blur-xs
+      
+    "
+            style={{
+              backgroundImage: "url('/hero_bg.webp')",
+            }}
+          />
+
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/75 " />
+
+          {/* Content */}
+          <div className="relative z-10 flex flex-col items-center translate-y-[2px]">
             <BrandLogo />
-            <p className="px-10 mt-2 text-base text-white/70 md:text-xl">
+            <p className="px-10 mt-3 text-lg text-white/90 md:text-white/85 md:text-xl w-[420px] md:w-full">
               Keep track of the games you own, play, and complete.
             </p>
           </div>
+
         </section>
+
 
         <div className="flex flex-col">
           <h2 className="text-xl font-semibold mb-2">
