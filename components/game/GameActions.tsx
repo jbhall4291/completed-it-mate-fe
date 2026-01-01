@@ -51,7 +51,7 @@ export default function GameActions({ gameId, initialStatus, initialUserGameId }
         }
 
         // if user already exists this session, check now; otherwise wait for bootstrap
-        const existing = typeof window !== 'undefined' ? sessionStorage.getItem('clm_user_id') : null;
+        const existing = typeof window !== 'undefined' ? sessionStorage.getItem('clm_user_id_v2') : null;
         if (existing) {
             void checkLibrary();
         } else {
@@ -63,7 +63,7 @@ export default function GameActions({ gameId, initialStatus, initialUserGameId }
         return () => { cancelled = true; };
     }, [gameId, userGameId, status]);
 
-    const userReady = () => typeof window !== 'undefined' && !!sessionStorage.getItem('clm_user_id');
+    const userReady = () => typeof window !== 'undefined' && !!sessionStorage.getItem('clm_user_id_v2');
     async function handleAdd(s: LibraryStatus) {
         if (!userReady()) return;
 

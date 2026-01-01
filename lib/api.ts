@@ -72,11 +72,11 @@ export async function fetchGamesPaged(params: BrowseParams = {}) {
 // --- helper: get current user id from sessionStorage ---
 function currentUserId(): string | undefined {
   if (typeof window === 'undefined') return undefined;
-  return sessionStorage.getItem('clm_user_id') || undefined;
+  return sessionStorage.getItem('clm_user_id_v2') || undefined;
 }
 
 function requireUserId(): string {
-  const id = typeof window !== 'undefined' ? sessionStorage.getItem('clm_user_id') || undefined : undefined;
+  const id = typeof window !== 'undefined' ? sessionStorage.getItem('clm_user_id_v2') || undefined : undefined;
   if (!id) throw new Error('User not initialized yet');
   return id;
 }

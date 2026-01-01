@@ -153,7 +153,7 @@ export default function GamesPage() {
         }
 
         // if we already have a user this session, load immediately; otherwise wait for bootstrap
-        const existing = typeof window !== 'undefined' ? sessionStorage.getItem('clm_user_id') : null;
+        const existing = typeof window !== 'undefined' ? sessionStorage.getItem('clm_user_id_v2') : null;
         if (existing) {
             void loadLibrary();
         } else {

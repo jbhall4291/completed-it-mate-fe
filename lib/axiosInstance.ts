@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const uid = typeof window !== 'undefined'
-    ? sessionStorage.getItem('clm_user_id')
+    ? sessionStorage.getItem('clm_user_id_v2')
     : null;
 
   // Ensure we have an AxiosHeaders instance
