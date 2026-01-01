@@ -195,7 +195,7 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                     <CardContent className="flex-1">
                         {ownedTotal === 0 ? (
                             <div className="flex h-[220px] items-center justify-center text-sm text-muted-foreground">
-                                No games yet.
+                                No games owned yet.
                             </div>
                         ) : (
                             <CompletionRateDonut completed={completed} total={ownedTotal} pct={pct} />
