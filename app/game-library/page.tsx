@@ -411,9 +411,9 @@ function Pagination({
     const range = calcRange(page, totalPages);
 
     return (
-        <nav className="mt-8 flex items-center justify-center gap-1 " aria-label="Pagination">
+        <nav className="mt-8 flex items-center justify-center gap-1.5 text-white mx-auto flex-row flex-wrap max-w-[380px] md:max-w-[700px]  md:w-full" aria-label="Pagination">
             <button
-                className="px-3 py-1.5 rounded-md bg-white border  border-gray-300 disabled:opacity-50"
+                className="px-3 py-1.5 rounded-md bg-[#242528] disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                 onClick={onPrev}
                 disabled={page <= 1}
             >
@@ -427,7 +427,7 @@ function Pagination({
                     <button
                         key={item}
                         aria-current={item === page ? 'page' : undefined}
-                        className={` px-3 py-1.5 rounded-md border ${item === page ? 'bg-gray-200 border-gray-300' : 'bg-white border-gray-300 hover:bg-gray-50'
+                        className={` px-3 py-1.5 rounded-md cursor-pointer disabled:cursor-not-allowed  ${item === page ? 'bg-green-700  text-white' : 'bg-[#242528]'
                             }`}
                         onClick={() => onJump(item)}
                     >
@@ -437,7 +437,7 @@ function Pagination({
             )}
 
             <button
-                className="px-3 py-1.5 rounded-md bg-white border  border-gray-300 disabled:opacity-50"
+                className="px-3 py-1.5 rounded-md bg-[#242528]  disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                 onClick={onNext}
                 disabled={page >= totalPages}
             >
