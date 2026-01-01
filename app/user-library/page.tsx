@@ -139,22 +139,33 @@ export default function LibraryPage() {
             <CollectionStatusDashboard items={library} />
 
             <h1 className="text-3xl font-bold  mb-6">My Games</h1>
-            <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
-                {library.length ? library.map((g) => (
-                    <GameCard
-                        key={g._id}
-                        game={g.gameId}
-                        isAdded
-                        currentStatus={g.status}
-                        onUpdate={(_, status) => handleUpdateGame(g._id, status)}
-                        onRemove={() => handleRemoveGame(g._id, g.gameId.title)}
-                        open={openMenuGameId === g.gameId._id}
-                        onOpenChange={(open) => setOpenMenuGameId(open ? g.gameId._id : null)}
-                    />
-                )) : (
-                    <p>…</p>
-                )}
-            </div>
+
+            {(library.length !== 0) ?
+                <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
+                    {library.map((g) => (
+                        <GameCard
+                            key={g._id}
+                            game={g.gameId}
+                            isAdded
+                            currentStatus={g.status}
+                            onUpdate={(_, status) => handleUpdateGame(g._id, status)}
+                            onRemove={() => handleRemoveGame(g._id, g.gameId.title)}
+                            open={openMenuGameId === g.gameId._id}
+                            onOpenChange={(open) => setOpenMenuGameId(open ? g.gameId._id : null)}
+                        />
+                    ))}
+                </div>
+
+
+                : <p className=" mb-2">
+                    No games added to your collection yet. Why not {" "}
+                    <Link
+                        href="/game-library"
+                        className="underline underline-offset-2 hover:text-green-500 transition"
+                    >
+                        browse our library
+                    </Link> and add one?
+                </p>}
 
             {ConfirmUI}
         </main>

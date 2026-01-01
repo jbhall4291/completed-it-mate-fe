@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import axiosInstance from '@/lib/axiosInstance';
 
-const DEVICE_KEY = 'clm_device_id';
+const DEVICE_KEY = 'clm_device_id_v2';
 const USER_READY_EVENT = 'clm:user-ready';
 
 export default function BootstrapUser() {
@@ -13,7 +13,7 @@ export default function BootstrapUser() {
     (async () => {
       try {
         // if a user already exists this session, announce and bail
-        const existing = sessionStorage.getItem('clm_user_id');
+        const existing = sessionStorage.getItem('clm_user_id_v2');
         if (existing) {
           window.dispatchEvent(new Event(USER_READY_EVENT));
           return;
@@ -28,7 +28,7 @@ export default function BootstrapUser() {
 
         const { data } = await axiosInstance.post('/users/anonymous', { deviceId });
         if (!cancelled && data?.userId) {
-          sessionStorage.setItem('clm_user_id', data.userId);
+          sessionStorage.setItem('clm_user_id_v2', data.userId);
           window.dispatchEvent(new Event(USER_READY_EVENT)); // ← notify app
         }
       } catch (e) {

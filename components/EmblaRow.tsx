@@ -76,7 +76,7 @@ export default function EmblaRow<T extends { _id?: string }>({
             </div>
 
             <div ref={emblaRef} className="overflow-hidden">
-                <div className="-ml-6 flex touch-pan-x">
+                <div className="-ml-6 flex">
                     {itemsToRender.map((item, i) => (
                         <div key={item?._id ?? i} className={`pl-6 shrink-0 ${basisClass}`}>
                             {item === null ? skeleton : renderItem(item)}
