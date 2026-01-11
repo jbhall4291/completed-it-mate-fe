@@ -6,7 +6,7 @@ import {
     addGame,
     updateGameStatus,
     deleteGame,
-    fetchGamesPaged,         // ⬅️ NEW: paged fetch
+    fetchGamesPaged,
     type Game,
     type UserGameCreated,
     type LibraryStatus,
@@ -50,7 +50,7 @@ export default function GamesPage() {
     }, []);
 
     type YearPreset = "any" | "last-1" | "last-3" | "last-5" | "last-10" | "1990s" | "2000s" | "2010s" | "2020s";
-    const [yearPreset, setYearPreset] = useState<YearPreset>("last-10");
+    const [yearPreset, setYearPreset] = useState<YearPreset>("any");
     const [yearMin, setYearMin] = useState<string>(""); // keep for API call
     const [yearMax, setYearMax] = useState<string>("");
 
@@ -60,7 +60,7 @@ export default function GamesPage() {
         q: "",
         platform: "",
         genre: "",
-        yearPreset: "last-10" as YearPreset,
+        yearPreset: "any" as YearPreset,
         yearMin: "",
         yearMax: "",
         sort: "metacritic-desc" as const,
@@ -82,8 +82,10 @@ export default function GamesPage() {
         platform !== INITIALS.platform ||
         genre !== INITIALS.genre ||
         sort !== INITIALS.sort ||
+        yearPreset !== INITIALS.yearPreset ||
         yearMin !== INITIALS.yearMin ||
         yearMax !== INITIALS.yearMax;
+
 
     function applyPreset(p: YearPreset) {
         const now = new Date().getFullYear();
@@ -241,15 +243,10 @@ export default function GamesPage() {
     return (
         <main className="p-6 font-sans  min-h-screen">
             <h1 className="text-3xl font-bold mb-2">Browse Library <span className="text-sm opacity-70">{total.toLocaleString()} results</span></h1>
-
-
-            {/* Sticky filter bar */}
             <section className=" z-10  mb-4 bg-[#242528] rounded-2xl">
                 <div className=" w-full  p-4 grid  space-y-3.5">
-
-                    {/* Row 1: Search */}
                     <div className="flex items-center gap-2">
-                        {/* your search input */}
+
                         <input
                             value={q}
                             onChange={(e) => { setQ(e.target.value); setPage(1); }}
@@ -259,9 +256,8 @@ export default function GamesPage() {
 
                     </div>
 
-                    {/* Row 2: Filters */}
                     <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ">
-                        {/* Platform */}
+
                         <select
                             className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={platform}
@@ -285,7 +281,7 @@ export default function GamesPage() {
                             ))}
                         </select>
 
-                        {/* Year preset (your new single control) */}
+                        {/* Year preset */}
                         <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={yearPreset} onChange={(e) => applyPreset(e.target.value as YearPreset)}
                         >
@@ -300,14 +296,6 @@ export default function GamesPage() {
                             <option value="2020s">2020s</option>
                         </select>
 
-                        {/* (Optional) another quick filter slot or leave empty */}
-                        <div className="hidden lg:block" />
-                    </div>
-
-                    {/* Row 3: Sort + Per page (+ result count) */}
-                    <div className="flex flex-wrap items-center justify-start gap-4">
-
-
                         <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={sort}
                             onChange={e => {
@@ -321,19 +309,10 @@ export default function GamesPage() {
                             <option value="title-asc">Title A–Z</option>
                             <option value="title-desc">Title Z–A</option>
                         </select>
-                        <label className="flex items-center gap-2 text-sm">
-                            <span>Per Page</span>
-                            <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
-                                value={pageSize} onChange={e => { setPageSize(+e.target.value); setPage(1); }}>
-                                {[12, 24, 36, 48].map(v => <option key={v} value={v}>{v}</option>)}
-                            </select>
-                        </label>
 
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-start gap-4">
-
-
+                    <div className="flex flex-wrap items-center justify-end gap-4">
 
                         {/* Clear filters (active/inactive already wired) */}
                         <button
@@ -347,14 +326,6 @@ export default function GamesPage() {
 
                 </div>
             </section>
-
-
-
-
-
-
-
-
 
             <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
                 {games.map(g => {
@@ -377,23 +348,36 @@ export default function GamesPage() {
             </div>
 
             {/* Empty state */}
-            {games.length === 0 && (
-                <div className="text-center  py-10">Nothing found.</div>
-            )}
+            {
+                games.length === 0 && (
+                    <div className="text-center  py-10">Nothing found.</div>
+                )
+            }
 
-            {/* Pagination (compact, inline) */}
-            <Pagination
-                page={page}
-                totalPages={totalPages}
-                onPrev={() => setPage(p => Math.max(1, p - 1))}
-                onNext={() => setPage(p => Math.min(totalPages, p + 1))}
-                onJump={(p) => setPage(p)}
-            />
-        </main>
+            <div className='flex flex-col md:flex-row md:pt-8 items-center gap-y-8 justify-between '>
+
+                <div></div>
+
+                <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    onPrev={() => setPage(p => Math.max(1, p - 1))}
+                    onNext={() => setPage(p => Math.min(totalPages, p + 1))}
+                    onJump={(p) => setPage(p)}
+                />
+
+                <label className="flex items-center gap-2 text-sm">
+                    <span>Games Per Page</span>
+                    <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                        value={pageSize} onChange={e => { setPageSize(+e.target.value); setPage(1); }}>
+                        {[12, 24, 36, 48].map(v => <option key={v} value={v}>{v}</option>)}
+                    </select>
+                </label>
+            </div>
+        </main >
     );
 }
 
-/* --- tiny local pagination helper --- */
 function Pagination({
     page,
     totalPages,
@@ -411,7 +395,7 @@ function Pagination({
     const range = calcRange(page, totalPages);
 
     return (
-        <nav className="mt-8 flex items-center justify-center gap-1.5 text-white mx-auto flex-row flex-wrap max-w-[380px] md:max-w-[700px]  md:w-full" aria-label="Pagination">
+        <nav className="flex items-center justify-center gap-1.5 text-white mx-auto flex-row flex-wrap max-w-[380px] md:max-w-[700px]  md:w-full" aria-label="Pagination">
             <button
                 className="px-3 py-1.5 rounded-md bg-[#242528] disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                 onClick={onPrev}
