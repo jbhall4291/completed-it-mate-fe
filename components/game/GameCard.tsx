@@ -5,6 +5,7 @@ import AddToLibraryButton from './AddToLibraryButton';
 import type { Game, LibraryStatus } from '@/lib/api';
 import Link from 'next/link';
 import { Trophy } from 'lucide-react';
+import GameImage from './GameImage';
 
 function PlatformBadges({ slugs }: { slugs: string[] }) {
     if (!slugs?.length) return null;
@@ -70,14 +71,10 @@ function GameCard({
             {/* Card content */}
             <div className="relative z-10 pointer-events-none">
                 {/* Media */}
-                <div className="h-60 rounded-lg overflow-hidden relative pointer-events-none">
-                    <img
+                <div className="h-60 rounded-lg overflow-hidden relative bg-muted">
+                    <GameImage
                         src={game.imageUrl ?? '/placeholder.png'}
                         alt={game.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover scale-[1.1] origin-center
-                                   transition-transform duration-300 group-hover:scale-[1.15]"
                     />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/30 to-transparent" />
@@ -146,7 +143,7 @@ function GameCard({
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
