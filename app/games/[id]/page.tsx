@@ -56,11 +56,7 @@ export default async function GameDetailPage(
                 />
             </section>
 
-
-
             <main className="p-6 max-w-5xl mx-auto">
-
-
                 {/* Hero (title + chips) */}
                 <div className="">
                     <div className="">
@@ -130,7 +126,7 @@ export default async function GameDetailPage(
                             className="
         prose prose-invert max-w-none
         [&_:where(h3)]:mt-6 [&_:where(h3)]:mb-2 [&_:where(h3)]:font-semibold
-        [&_:where(p)]:my-0 [&_:where(p)]:leading-7
+        [&_:where(p)]:my-0 [&_:where(p)]:leading-5.5
         [&_:where(p+p)]:mt-2
       "
                         >

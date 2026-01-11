@@ -58,7 +58,7 @@ export default function EmblaRow<T extends { _id?: string }>({
                         onClick={() => emblaApi?.scrollPrev()}
                         data-disabled={prevDisabled}
                         disabled={prevDisabled}
-                        className="h-8 w-8 rounded-full border bg-background/80 data-[disabled=true]:opacity-40 data-[disabled=true]:pointer-events-none flex items-center justify-center"
+                        className="h-8 w-8 rounded-full border bg-background/80 data-[disabled=true]:opacity-40 data-[disabled=true]:pointer-events-none flex items-center justify-center cursor-pointer hover:bg-green-700 hover:border-green-700 duration-300"
                         aria-label="Previous"
                     >
                         <ChevronLeft className="h-4 w-4" />
@@ -67,7 +67,7 @@ export default function EmblaRow<T extends { _id?: string }>({
                         onClick={() => emblaApi?.scrollNext()}
                         data-disabled={nextDisabled}
                         disabled={nextDisabled}
-                        className="h-8 w-8 rounded-full border bg-background/80 data-[disabled=true]:opacity-40 data-[disabled=true]:pointer-events-none flex items-center justify-center"
+                        className="h-8 w-8 rounded-full border bg-background/80 data-[disabled=true]:opacity-40 data-[disabled=true]:pointer-events-none flex items-center justify-center cursor-pointer hover:bg-green-700 hover:border-green-700 duration-300"
                         aria-label="Next"
                     >
                         <ChevronRight className="h-4 w-4" />

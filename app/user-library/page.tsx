@@ -121,7 +121,7 @@ export default function LibraryPage() {
 
                 <h1 className="text-3xl font-bold  mb-6 mt-6">My Games</h1>
                 <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
-                    {Array.from({ length: 8 }).map((_, i) => (
+                    {Array.from({ length: 4 }).map((_, i) => (
                         <SkeletonCard key={i} />
                     ))}
                 </div>

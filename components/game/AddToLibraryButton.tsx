@@ -121,7 +121,7 @@ export default function AddToLibraryButton({
                         (isAdded ? onUpdate : onAdd)?.(opt.status);
                         setOpen(false);
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-green-800 hover:text-white cursor-pointer"
                 >
                     {opt.label}
                 </button>
@@ -133,7 +133,7 @@ export default function AddToLibraryButton({
                         onRemove();
                         setOpen(false);
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
+                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-700 hover:text-white cursor-pointer"
                 >
                     Remove from collection
                 </button>
@@ -164,9 +164,9 @@ export default function AddToLibraryButton({
                     aria-label={isAdded ? 'Change status' : 'Choose add status'}
                     aria-expanded={isOpen}
                     onClick={disabled ? undefined : () => setOpen(!isOpen)}
-                    className="shrink-0 px-3 border-l border-white/20 focus:outline-none"
+                    className="shrink-0 px-3 border-l border-white/20 focus:outline-none cursor-pointer"
                 >
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="w-4 h-4 " />
                 </button>
             </div>
 
