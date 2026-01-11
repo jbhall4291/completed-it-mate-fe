@@ -13,7 +13,8 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* <div className="flex h-[96px] w-[96px] aspect-square items-center justify-center  bg-green-500 ">
+            {/* manual ico generation */}
+            {/* <div className="flex h-[96px] w-[96px] aspect-square items-center justify-center  bg-green-700 ">
                 <svg
                     className=
                     "text-yellow-500 h-16"
