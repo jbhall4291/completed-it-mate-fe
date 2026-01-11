@@ -164,9 +164,9 @@ export default function AddToLibraryButton({
                     aria-label={isAdded ? 'Change status' : 'Choose add status'}
                     aria-expanded={isOpen}
                     onClick={disabled ? undefined : () => setOpen(!isOpen)}
-                    className="shrink-0 px-3 border-l border-white/20 focus:outline-none"
+                    className="shrink-0 px-3 border-l border-white/20 focus:outline-none cursor-pointer"
                 >
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="w-4 h-4 " />
                 </button>
             </div>
 
