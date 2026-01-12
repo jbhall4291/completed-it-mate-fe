@@ -81,11 +81,11 @@ function requireUserId(): string {
   return id;
 }
 
-// Keep User here (or move later if you want)
 export type User = {
   _id: string;
   username: string;
   gameCount: number;
+  createdAt: string;
 };
 export type { Game, LibraryItem, LibraryStatus };
 

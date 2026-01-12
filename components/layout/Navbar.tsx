@@ -9,6 +9,8 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { cn } from "@/lib/utils";
 // import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+import { getMe } from '@/lib/api';
+import { UserRound } from 'lucide-react';
 
 import BrandLogo from "./BrandLogo";
 
@@ -23,7 +25,9 @@ const nav = [
 ];
 
 export default function Navbar() {
+
     const [open, setOpen] = useState(false);
+    const [me, setMe] = useState<{ _id: string; username?: string } | null>(null);
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -43,6 +47,32 @@ export default function Navbar() {
         // highlight parent on subroutes, ignore query
         return pathname === href || pathname.startsWith(href + "/");
     }
+
+    const hasUsername = Boolean(me?.username);
+    const avatarLabel = me?.username?.[0]?.toUpperCase() ?? null;
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function fetchMe() {
+            try {
+                const user = await getMe();
+                if (!cancelled) setMe(user);
+            } catch {
+                if (!cancelled) setMe(null);
+            }
+        }
+
+        fetchMe();
+
+        const handler = () => fetchMe();
+        window.addEventListener('clm:user-ready', handler);
+
+        return () => {
+            cancelled = true;
+            window.removeEventListener('clm:user-ready', handler);
+        };
+    }, []);
 
 
     return (
@@ -105,9 +135,21 @@ export default function Navbar() {
                             ))}
 
                             <Link href="/profile" aria-label="profile">
-                                <li className="rounded-full border-2 border-white p-4 h-6 w-6 flex items-center justify-center hover:opacity-70">
-                                    <div className="text-base">A</div>
+                                <li className="h-10 w-10 flex items-center justify-center hover:opacity-70">
+                                    <div
+                                        className={cn(
+                                            "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
+                                            hasUsername ? "bg-green-600 text-white" : "bg-[#3a3b3e] text-white"
+                                        )}
+                                    >
+                                        {avatarLabel ? (
+                                            <span>{avatarLabel}</span>
+                                        ) : (
+                                            <UserRound strokeWidth={2.5} />
+                                        )}
+                                    </div>
                                 </li>
+
                             </Link>
 
                         </ul>
@@ -122,9 +164,21 @@ export default function Navbar() {
                             </div> */}
 
                             <Link href="/profile" aria-label="profile">
-                                <li className="rounded-full border-2 border-white  h-10 w-10 flex items-center justify-center hover:opacity-70">
-                                    <div className="text-base">A</div>
+                                <li className="h-10 w-10 flex items-center justify-center hover:opacity-70">
+                                    <div
+                                        className={cn(
+                                            "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
+                                            hasUsername ? "bg-green-600 text-white" : "bg-[#3a3b3e] text-white"
+                                        )}
+                                    >
+                                        {avatarLabel ? (
+                                            <span>{avatarLabel}</span>
+                                        ) : (
+                                            <UserRound strokeWidth={2.5} />
+                                        )}
+                                    </div>
                                 </li>
+
                             </Link>
 
                             {/* Mobile toggle control aka burger */}
