@@ -115,7 +115,7 @@ export async function getUser(userId: string): Promise<User> {
 
 export async function getMe() {
   const r = await axiosInstance.get('/users/me');
-  return r.data as { _id: string; username?: string };
+  return r.data as { userId: string; username?: string };
 }
 
 

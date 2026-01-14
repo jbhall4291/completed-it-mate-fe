@@ -8,6 +8,7 @@ import Footer from "@/components/layout/Footer";
 import ScrollToTop from '@/components/layout/ScrollToTop';
 import PageTransition from '@/components/layout/PageTransition';
 import { Analytics } from '@vercel/analytics/next';
+import { UserProvider } from "@/lib/UserContext";
 
 
 
@@ -61,14 +62,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${outfit.variable}`}>
       <body className="flex min-h-screen flex-col mt-[96px] lg:mt-[116px] max-w-[1326px] overflow-x-clip mx-auto">
         <BootstrapUser />
-        <GameProvider>
-          <Navbar />
-          <ScrollToTop />
-          <main className="flex-1 w-full">
-            <PageTransition>{children}</PageTransition>
-          </main>
-          <Footer />
-        </GameProvider>
+        <UserProvider>
+          <GameProvider>
+            <Navbar />
+            <ScrollToTop />
+            <main className="flex-1 w-full">
+              <PageTransition>{children}</PageTransition>
+            </main>
+            <Footer />
+          </GameProvider>
+        </UserProvider>
         <Analytics />
       </body>
     </html>

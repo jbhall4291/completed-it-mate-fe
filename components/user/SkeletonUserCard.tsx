@@ -1,15 +1,31 @@
 'use client';
 
+import { UserRound } from "lucide-react";
+
 export default function SkeletonUserCard() {
+
+    // animate-pulse
     return (
         <div
-            className="animate-pulse relative rounded-xl bg-background border border-white/10 overflow-hidden h-[90px] w-[370px]"
+            className="px-5 py-4 bg-[#242528] rounded-lg  transition text-[#fafafa] animate-pulse h-[104px] items-center flex"
         >
+            <div className="flex items-center gap-x-5">
 
+                {/* Avatar */}
+                <div
+                    className='w-14 h-14 rounded-full flex items-center justify-center font-semibold text-2xl bg-[#3a3b3e]'
+                >
+                    <span className="text-[#fafafa]">
+                        <UserRound strokeWidth={2.75} />
+                    </span>
+                </div>
 
-            <div className="p-3 space-y-2">
-                <div className="h-4 bg-white/10 rounded w-3/4" />
-                <div className="h-3 bg-white/10 rounded w-1/2" />
+                {/* User info */}
+                <div className="flex flex-col gap-y-1">
+                    <div className="bg-[#3a3b3e] w-42 h-5 rounded"></div>
+                    <div className="bg-[#3a3b3e] w-36 h-4 rounded"></div>
+                    <div className="bg-[#3a3b3e] w-10 h-3.5 rounded"></div>
+                </div>
             </div>
         </div>
     );

@@ -165,7 +165,7 @@ function CompletionRateDonut({
                                         y={(viewBox.cy || 0) + 24}
                                         className="fill-white/70 text-sm "
                                     >
-                                        {completed}/{total} completed
+                                        Completed
                                     </tspan>
                                 </text>
                             );
