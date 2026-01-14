@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getUsers, User } from '@/lib/api';
 import SkeletonUserCard from '@/components/user/SkeletonUserCard';
 import { UserRound } from 'lucide-react';
+import { useUser } from '@/lib/UserContext';
 
 function getAvatarLabel(username: string | null) {
     if (!username) return null;
@@ -30,6 +31,9 @@ function formatJoined(createdAt: string) {
 
 
 export default function UsersPage() {
+
+    const { me } = useUser();
+
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -67,6 +71,7 @@ export default function UsersPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-background">
                 {users.map((u) => {
+                    const isMe = me?.userId === u._id;
                     const avatarLabel = getAvatarLabel(u.username);
                     const hasUsername = Boolean(u.username);
 
@@ -74,14 +79,16 @@ export default function UsersPage() {
                     return (
                         <div
                             key={u._id}
-                            className="px-5 py-4 bg-[#242528] rounded-lg  transition text-[#fafafa]"
+                            className={`px-5 py-4 bg-[#242528] rounded-lg  transition text-[#fafafa] 
+                                         ${isMe && 'ring-2 ring-green-500/40'}
+                                      `}
                         >
                             <div className="flex items-center gap-x-5">
 
                                 {/* Avatar */}
                                 <div
                                     className={`w-14 h-14 rounded-full flex items-center justify-center font-semibold text-2xl
-                                        ${hasUsername ? 'bg-green-500' : 'bg-[#3a3b3e]'}`}
+                            ${hasUsername ? 'bg-green-500' : 'bg-[#3a3b3e]'}`}
                                 >
                                     {avatarLabel ? avatarLabel : (
                                         <span className="text-[#fafafa]">
@@ -92,8 +99,11 @@ export default function UsersPage() {
 
                                 {/* User info */}
                                 <div className="flex flex-col">
-                                    <h2 className="text-xl font-semibold">
+                                    <h2 className="text-xl font-semibold flex flex-row items-baseline gap-x-1.5">
                                         {u.username ?? 'Anonymous Player'}
+                                        {isMe && (
+                                            <span className="text-sm text-green-400/80">(You)</span>
+                                        )}
                                     </h2>
 
 
@@ -101,7 +111,7 @@ export default function UsersPage() {
 
                                     <p className="text-base">
                                         {u.gameCount > 0
-                                            ? `Completed ${u.gameCount} game${u.gameCount > 1 ? 's' : ''}`
+                                            ? `Completed ${u.gameCount} game${u.gameCount > 1 ? 's' : ''} `
                                             : 'No games yet'}
                                     </p>
 
