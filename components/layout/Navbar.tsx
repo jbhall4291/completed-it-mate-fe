@@ -27,7 +27,7 @@ const nav = [
 export default function Navbar() {
 
     const [open, setOpen] = useState(false);
-    const [me, setMe] = useState<{ _id: string; username?: string } | null>(null);
+    const [me, setMe] = useState<{ userId: string; username?: string } | null>(null);
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
