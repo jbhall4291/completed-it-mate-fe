@@ -14,6 +14,7 @@ import { getMe } from './api';
 export type Me = {
     userId: string;
     username?: string;
+    createdAt?: string;
 } | null;
 
 type UserContextType = {

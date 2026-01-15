@@ -4,16 +4,11 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-// import { Button } from "../ui/button";
 import { usePathname } from "next/navigation";
-import clsx from "clsx";
 import { cn } from "@/lib/utils";
 // import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
-import { getMe } from '@/lib/api';
 import { UserRound } from 'lucide-react';
-
-import BrandLogo from "./BrandLogo";
-
+import { useUser } from '@/lib/UserContext';
 
 const nav = [
     { label: "My Collection", href: "/user-library" },
@@ -26,8 +21,9 @@ const nav = [
 
 export default function Navbar() {
 
+    const pathname = usePathname();
     const [open, setOpen] = useState(false);
-    const [me, setMe] = useState<{ userId: string; username?: string } | null>(null);
+    const { me } = useUser();
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -40,7 +36,7 @@ export default function Navbar() {
         };
     }, []);
 
-    const pathname = usePathname();
+
 
     function isActive(pathname: string, href: string) {
         if (href === "/") return pathname === "/";
@@ -50,29 +46,6 @@ export default function Navbar() {
 
     const hasUsername = Boolean(me?.username);
     const avatarLabel = me?.username?.[0]?.toUpperCase() ?? null;
-
-    useEffect(() => {
-        let cancelled = false;
-
-        async function fetchMe() {
-            try {
-                const user = await getMe();
-                if (!cancelled) setMe(user);
-            } catch {
-                if (!cancelled) setMe(null);
-            }
-        }
-
-        fetchMe();
-
-        const handler = () => fetchMe();
-        window.addEventListener('clm:user-ready', handler);
-
-        return () => {
-            cancelled = true;
-            window.removeEventListener('clm:user-ready', handler);
-        };
-    }, []);
 
 
     return (
@@ -84,11 +57,8 @@ export default function Navbar() {
                     className="relative rounded-3xl overflow-hidden bg-zinc-700/50 backdrop-blur-sm pl-4 pr-2 md:pl-4 md:pr-4   py-2 "
                 >
 
-
                     {/* default always visible nav */}
                     <div className="relative z-10 h-12 flex items-center font-semibold ">
-
-
                         <Link href="/"
                             onClick={() => setOpen(false)}
                             aria-label="Completed It Mate – Home"
@@ -107,9 +77,7 @@ export default function Navbar() {
                                     <path d="m18,4v-2H6v2H1v5h1v2h1v1h1v1h1v1h1v1h3v1h2v3h-4v3h10v-3h-4v-3h2v-1h3v-1h1v-1h1v-1h1v-1h1v-2h1v-5h-5ZM5,12v-1h-1v-2h-1v-3h2v1h1v2h1v3h1v1h-2v-1h-1Zm16-3h-1v2h-1v1h-1v1h-2v-1h1v-2h1v-3h1v-1h2v3Z" />
                                 </svg>
                             </div>
-
                         </Link>
-
 
                         {/* Desktop links */}
                         <ul className="ml-auto hidden md:flex items-center gap-6">
@@ -131,11 +99,10 @@ export default function Navbar() {
                                         {item.label}
                                     </Link>
                                 </li>
-
                             ))}
 
-                            <Link href="/profile" aria-label="profile">
-                                <li className="h-10 w-10 flex items-center justify-center hover:opacity-70">
+                            <li className="h-10 w-10 flex items-center justify-center hover:opacity-70">
+                                <Link href="/profile" aria-label="profile">
                                     <div
                                         className={cn(
                                             "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
@@ -148,14 +115,13 @@ export default function Navbar() {
                                             <UserRound strokeWidth={2.5} />
                                         )}
                                     </div>
-                                </li>
-
-                            </Link>
+                                </Link>
+                            </li>
 
                         </ul>
 
 
-                        <div className="ml-auto md:hidden flex items-center gap-3 h-9">
+                        <ul className="ml-auto md:hidden flex items-center gap-3 h-9 ">
                             {/* <AnimatedThemeToggler aria-label="Toggle theme" /> */}
                             {/* <div className="rounded-full border-2 border-white p-4 h-6 w-6 flex items-center justify-center">
                                 <Link href="/profile" aria-label="profile">
@@ -163,8 +129,8 @@ export default function Navbar() {
                                 </Link>
                             </div> */}
 
-                            <Link href="/profile" aria-label="profile">
-                                <li className="h-10 w-10 flex items-center justify-center hover:opacity-70">
+                            <li className="h-10 w-10 flex items-center justify-center hover:opacity-70">
+                                <Link href="/profile" aria-label="profile">
                                     <div
                                         className={cn(
                                             "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
@@ -177,9 +143,8 @@ export default function Navbar() {
                                             <UserRound strokeWidth={2.5} />
                                         )}
                                     </div>
-                                </li>
-
-                            </Link>
+                                </Link>
+                            </li>
 
                             {/* Mobile toggle control aka burger */}
                             <button
@@ -211,7 +176,7 @@ export default function Navbar() {
                                     />
                                 </motion.span>
                             </button>
-                        </div>
+                        </ul>
                     </div>
 
                     {/* Mobile expanding content (still inside the pill; will push content of navbar, not page) */}
@@ -239,11 +204,7 @@ export default function Navbar() {
                                             </Link>
                                         </li>
                                     ))}
-
                                 </ul>
-
-
-
                             </motion.div>
                         )}
                     </AnimatePresence>
