@@ -1,3 +1,4 @@
+// BootstrapUser.tsx
 'use client';
 
 import { useEffect } from 'react';
@@ -12,14 +13,14 @@ export default function BootstrapUser() {
 
     (async () => {
       try {
-        // if a user already exists this session, announce and bail
+        // If a user already exists for this tab, just announce readiness
         const existing = sessionStorage.getItem('clm_user_id_v2');
         if (existing) {
           window.dispatchEvent(new Event(USER_READY_EVENT));
           return;
         }
 
-        // stable per-browser device id
+        // Stable per-browser device ID
         let deviceId = localStorage.getItem(DEVICE_KEY);
         if (!deviceId) {
           deviceId = crypto.randomUUID();
@@ -27,16 +28,19 @@ export default function BootstrapUser() {
         }
 
         const { data } = await axiosInstance.post('/users/anonymous', { deviceId });
+
         if (!cancelled && data?.userId) {
           sessionStorage.setItem('clm_user_id_v2', data.userId);
-          window.dispatchEvent(new Event(USER_READY_EVENT)); // ← notify app
+          window.dispatchEvent(new Event(USER_READY_EVENT));
         }
       } catch (e) {
         console.error('anon bootstrap failed', e);
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return null;

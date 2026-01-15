@@ -41,7 +41,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }, []);
 
     useEffect(() => {
-        refreshMe();
+        const handler = () => {
+            refreshMe();
+        };
+
+        window.addEventListener('clm:user-ready', handler);
+
+        return () => {
+            window.removeEventListener('clm:user-ready', handler);
+        };
     }, [refreshMe]);
 
     return (
