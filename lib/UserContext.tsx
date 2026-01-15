@@ -41,12 +41,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }, []);
 
     useEffect(() => {
+        refreshMe();
         const handler = () => {
             refreshMe();
         };
 
         window.addEventListener('clm:user-ready', handler);
-
         return () => {
             window.removeEventListener('clm:user-ready', handler);
         };
@@ -61,8 +61,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
 export function useUser() {
     const ctx = useContext(UserContext);
-    if (!ctx) {
-        throw new Error('useUser must be used inside a UserProvider');
-    }
+    if (!ctx) throw new Error('useUser must be used inside a UserProvider');
     return ctx;
 }
