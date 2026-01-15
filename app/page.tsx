@@ -182,7 +182,7 @@ export default function HomePage() {
             className="
       absolute inset-0 
       bg-center bg-cover
-      opacity-100 filter grayscale brightness-90 md:blur-xs
+      opacity-100 filter  brightness-90 blur-xs md:blur-sm
       
     "
             style={{
@@ -191,7 +191,7 @@ export default function HomePage() {
           />
 
           {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black/80 md:bg-black/75 " />
+          <div className="absolute inset-0 bg-black/65 md:bg-black/60 " />
 
           {/* Content */}
           <div className="relative z-10 flex flex-col items-center translate-y-[2px]">
