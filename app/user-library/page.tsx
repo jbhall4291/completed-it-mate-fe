@@ -145,6 +145,7 @@ export default function LibraryPage() {
                     {library.map((g) => (
                         <GameCard
                             key={g._id}
+                            hidePlatformChips={true}
                             game={g.gameId}
                             isAdded
                             currentStatus={g.status}

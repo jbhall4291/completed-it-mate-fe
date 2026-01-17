@@ -12,13 +12,13 @@ function PlatformBadges({ slugs }: { slugs: string[] }) {
     const names = slugs.join(', ');
     return (
         <div
-            className="flex items-center gap-1 text-xs text-gray-200 pt-1 pb-1.5"
+            className="flex items-center gap-1 text-xs text-gray-200"
             title={names}
         >
             {slugs.slice(0, 3).map(s => (
                 <span
                     key={s}
-                    className="px-1.5 py-0.5 rounded bg-background/70 backdrop-blur capitalize"
+                    className="px-1.5 py-0.5 rounded bg-background/70 backdrop-blur uppercase"
                 >
                     {s}
                 </span>
@@ -41,6 +41,7 @@ type Props = {
     onRemove?: (gameId: string) => void;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
+    hidePlatformChips?: boolean;
 };
 
 function GameCard({
@@ -52,6 +53,7 @@ function GameCard({
     onRemove,
     open,
     onOpenChange,
+    hidePlatformChips = false
 }: Props) {
     const platforms = useMemo(() => game.parentPlatforms ?? [], [game]);
     const cc = game.completedCount ?? 0;
@@ -99,15 +101,15 @@ function GameCard({
 
                 {/* Footer overlay */}
                 <div className="absolute bottom-0 left-0 right-0 pl-3 pb-3 pr-2 pointer-events-none">
-                    <h2 className="font-bold leading-tight line-clamp-2">
+                    <h2 className="font-bold text-xl leading-tight line-clamp-2 mb-1">
                         {game.title}
                     </h2>
 
-                    <PlatformBadges slugs={platforms} />
+                    {!hidePlatformChips && <PlatformBadges slugs={platforms} />}
 
                     {/* Actions – opt out of card navigation */}
                     <div
-                        className="mt-1 pointer-events-auto cursor-default w-fit "
+                        className="mt-1.5 pointer-events-auto cursor-default w-fit "
                         onClick={(e) => e.stopPropagation()}
                     >
 

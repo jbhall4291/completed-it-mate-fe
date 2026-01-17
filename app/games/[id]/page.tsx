@@ -30,10 +30,10 @@ export default async function GameDetailPage(
             {/* Full-page background: image + black fade after ~500px */}
             <section
                 className="
-    relative w-screen left-1/2 right-1/2 -mx-[50vw] 
-    h-[clamp(240px,38vh,520px)] xl:h-[min(52vh,680px)] 2xl:h-[min(60vh,760px)]
-    -mt-[96px] lg:-mt-[116px]
-  "
+                        relative w-screen left-1/2 right-1/2 -mx-[50vw] 
+                        h-[clamp(240px,38vh,520px)] xl:h-[min(52vh,680px)] 2xl:h-[min(60vh,760px)]
+                        -mt-[96px] lg:-mt-[116px]
+                        "
             >
                 {/* Background image container with max width */}
                 <div className="absolute inset-0 flex justify-center bg-[#1e1e20]" aria-hidden>
@@ -58,31 +58,13 @@ export default async function GameDetailPage(
 
             <main className="p-6 max-w-5xl mx-auto">
                 {/* Hero (title + chips) */}
-                <div className="">
-                    <div className="">
-                        <h1 className="text-3xl md:text-4xl font-extrabold">{game.title}</h1>
 
+                <div className="flex flex-col md:flex-row gap-x-6 gap-y-1.5 md:items-center mb-5">
 
-                        <div className="mt-2 flex flex-col gap-2 text-xs ">
-                            {!!game.parentPlatforms?.length && (
-                                <div className="flex flex-wrap gap-2">
-                                    {game.parentPlatforms.map((p) => (
-                                        <Chip key={p} label={p} />
-                                    ))}
-                                </div>
-                            )}
-                            {!!game.genres?.length && (
-                                <div className="flex flex-wrap gap-2">
-                                    {game.genres.map((g) => (
-                                        <Chip key={g} label={g} />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
+                    <h1 className="text-3xl md:text-4xl font-extrabold">{game.title}</h1>
 
                     {/* user actions (same control used on cards) */}
-                    <div className="mt-4 relative z-10 w-[300px]">
+                    <div className=" relative z-10 w-[300px]">
                         <GameActions
                             gameId={game._id}
                             initialStatus={game.userStatus}
@@ -90,8 +72,25 @@ export default async function GameDetailPage(
                         />
 
                     </div>
-
                 </div>
+
+                <div className="mt-2 flex flex-col gap-2 text-xs ">
+                    {!!game.parentPlatforms?.length && (
+                        <div className="flex flex-wrap gap-2">
+                            {game.parentPlatforms.map((p) => (
+                                <Chip key={p} label={p.toUpperCase()} />
+                            ))}
+                        </div>
+                    )}
+                    {!!game.genres?.length && (
+                        <div className="flex flex-wrap gap-2">
+                            {game.genres.map((g) => (
+                                <Chip key={g} label={g} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+
 
                 {/* Stats */}
                 <section className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -215,7 +214,7 @@ function Stat({
 
 
 function Chip({ label }: { label: string }) {
-    return <span className="px-2 py-0.5 rounded bg-white/10 capitalize">{label}</span>;
+    return <span className="px-2 py-0.5 rounded bg-white/10">{label}</span>;
 }
 function InfoBlock({ title, children }: { title: string; children: React.ReactNode }) {
     return (
