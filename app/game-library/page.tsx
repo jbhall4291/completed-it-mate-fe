@@ -242,7 +242,7 @@ export default function GamesPage() {
 
     return (
         <main className="p-6 font-sans  min-h-screen">
-            <h1 className="text-3xl font-bold mb-2">Browse Library <span className="text-sm opacity-70">{total.toLocaleString()} results</span></h1>
+            <h1 className="text-3xl font-bold mb-2">Browse Library <span className="text-sm opacity-70">{total.toLocaleString()} games found</span></h1>
             <section className=" z-10  mb-4 bg-[#242528] rounded-2xl">
                 <div className=" w-full  p-4 grid  space-y-3.5">
                     <div className="flex items-center gap-2">
