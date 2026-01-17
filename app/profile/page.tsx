@@ -80,7 +80,7 @@ function useConfirm() {
                     {pending.state === 'confirm' && (
                         <>
                             <button
-                                className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20"
+                                className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 cursor-pointer"
                                 onClick={() => {
                                     resolveConfirm(false);
                                     close();
@@ -89,7 +89,7 @@ function useConfirm() {
                                 Cancel
                             </button>
                             <button
-                                className="px-3 py-1.5 rounded-lg bg-red-600/90 hover:bg-red-600"
+                                className="px-3 py-1.5 rounded-lg bg-red-600/90 hover:bg-red-600 cursor-pointer"
                                 onClick={() => resolveConfirm(true)}
                             >
                                 Remove all
@@ -99,7 +99,7 @@ function useConfirm() {
 
                     {(pending.state === 'success' || pending.state === 'error') && (
                         <button
-                            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20"
+                            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 cursor-pointer"
                             onClick={close}
                         >
                             Close
@@ -220,7 +220,7 @@ export default function ProfilePage() {
 
     return (
         <main className="p-6 min-h-screen">
-            <h1 className="text-3xl font-bold mb-6">Account</h1>
+            <h1 className="text-3xl font-bold mb-6">Profile</h1>
 
             <div className="max-w-2xl space-y-6">
                 {/* Account details */}
@@ -236,7 +236,7 @@ export default function ProfilePage() {
                         </div>
 
                         <form onSubmit={onSubmit}>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-3">
                                 {!editing ? (
                                     <span className="text-lg font-semibold">
                                         {me?.username ?? 'Anonymous Player'}
@@ -246,7 +246,7 @@ export default function ProfilePage() {
                                         value={value}
                                         onChange={(e) => setValue(e.target.value)}
                                         autoFocus
-                                        className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm w-48"
+                                        className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm w-24"
                                     />
                                 )}
 
@@ -268,11 +268,12 @@ export default function ProfilePage() {
                                     )}
                                 >
                                     {saving ? (
-                                        <LoaderCircle className="animate-spin" />
+                                        <LoaderCircle className="animate-spin" size={16} />
                                     ) : editing ? (
-                                        <Save />
+                                        <Save size={16} />
                                     ) : (
-                                        <Pencil />
+                                        <Pencil size={16} />
+
                                     )}
                                 </button>
 
@@ -299,20 +300,19 @@ export default function ProfilePage() {
 
                 {/* Danger zone */}
                 <div className="rounded-xl bg-[#242528] p-6">
-                    <h2 className="text-sm font-semibold text-red-400 mb-2">
+                    <h2 className="text-base font-semibold text-red-400 mb-2">
                         Danger zone
                     </h2>
 
-                    <p className="text-sm text-white/70 mb-4">
-                        Clears your entire game collection and progress.
-                        Your username and account will remain.
+                    <p className="text-sm text-white/60 mb-3">
+                        Irreversible actions affecting your account
                     </p>
 
                     <button
                         onClick={onResetLibrary}
-                        className="rounded-lg bg-red-500/20 text-red-400 px-4 py-2 text-sm hover:bg-red-500/30 disabled:opacity-50 cursor-pointer"
+                        className="rounded-lg bg-red-500/20 text-white px-4 py-2 text-sm hover:bg-red-500/30 disabled:opacity-50 cursor-pointer"
                     >
-                        Remove all games from collection
+                        Reset game collection
                     </button>
 
                 </div>
