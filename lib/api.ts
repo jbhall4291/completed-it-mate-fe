@@ -82,8 +82,7 @@ function requireUserId(): string {
 }
 
 export type User = {
-  _id: string;
-  username: string;
+  username: string | null;
   completedCount: number;
   createdAt: string;
 };
@@ -122,6 +121,10 @@ export async function getMe() {
 export async function patchMe(body: { username: string }) {
   const r = await axiosInstance.patch('/users/me', body);
   return r.data as { userId?: string; username: string };
+}
+
+export async function resetMyLibrary(): Promise<void> {
+  await axiosInstance.delete('/users/me/library');
 }
 
 
