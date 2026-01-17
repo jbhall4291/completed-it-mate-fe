@@ -71,14 +71,19 @@ export default function UsersPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-background">
                 {users.map((u) => {
-                    const isMe = me?.userId === u._id;
+                    const isMe =
+                        Boolean(me?.username) &&
+                        Boolean(u.username) &&
+                        me?.username === u.username &&
+                        me?.username !== 'Anonymous Player';
+
                     const avatarLabel = getAvatarLabel(u.username);
                     const hasUsername = Boolean(u.username);
 
 
                     return (
                         <div
-                            key={u._id}
+                            key={u.username ?? `anon-${u.createdAt}`}
                             className={`px-5 py-4 bg-[#242528] rounded-lg  transition text-[#fafafa] 
                                          ${isMe && 'ring-2 ring-green-500/40'}
                                       `}
