@@ -22,10 +22,12 @@ export default function GameImage({ src, alt }: Props) {
                 blurDataURL="/blur.png"
                 onLoadingComplete={() => setLoaded(true)}
                 className={`
-                    object-cover scale-[1.1]
-                    group-hover:scale-[1.15]
-                    transition-[opacity,filter,transform]
-                    duration-200 ease-out
+                    object-cover
+                    scale-100
+                    group-hover:scale-[1.1]
+                    transition-transform
+                    duration-700
+                    ease-out
                     ${loaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}
                 `}
             />

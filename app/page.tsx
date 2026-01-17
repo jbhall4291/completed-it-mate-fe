@@ -253,7 +253,7 @@ export default function HomePage() {
 
         <EmblaRow
           options={{ align: "start", containScroll: "trimSnaps", loop: true, dragFree: false }}
-          title="Top Rated"
+          title="Top Rated (All Time)"
           items={topRated}
           loading={loadingTop}
           skeleton={<SkeletonGameCard />}

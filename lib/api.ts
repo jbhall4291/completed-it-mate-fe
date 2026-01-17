@@ -84,7 +84,7 @@ function requireUserId(): string {
 export type User = {
   _id: string;
   username: string;
-  gameCount: number;
+  completedCount: number;
   createdAt: string;
 };
 export type { Game, LibraryItem, LibraryStatus };

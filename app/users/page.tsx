@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getUsers, User } from '@/lib/api';
 import SkeletonUserCard from '@/components/user/SkeletonUserCard';
-import { UserRound } from 'lucide-react';
+import { Trophy, UserRound } from 'lucide-react';
 import { useUser } from '@/lib/UserContext';
 
 function getAvatarLabel(username: string | null) {
@@ -55,7 +55,7 @@ export default function UsersPage() {
     if (loading) {
         return (
             <main className="p-6 font-sans  min-h-screen">
-                <h1 className="text-3xl font-bold mb-6">Recent Players</h1>
+                <h1 className="text-3xl font-bold mb-6">Recent Users</h1>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-background">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonUserCard key={i} />
@@ -67,7 +67,7 @@ export default function UsersPage() {
 
     return (
         <main className="p-6 font-sans  min-h-screen">
-            <h1 className="text-3xl font-bold  mb-6">Recent Players</h1>
+            <h1 className="text-3xl font-bold  mb-6">Recent Users</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-background">
                 {users.map((u) => {
@@ -105,18 +105,20 @@ export default function UsersPage() {
                                             <span className="text-sm text-green-400/80">(You)</span>
                                         )}
                                     </h2>
-
-
-
-
-                                    <p className="text-base">
-                                        {u.gameCount > 0
-                                            ? `Completed ${u.gameCount} game${u.gameCount > 1 ? 's' : ''} `
-                                            : 'No games yet'}
-                                    </p>
+                                    <div className="text-base">
+                                        {u.completedCount > 0
+                                            ? <div className="flex flex-row gap-x-1 items-center">
+                                                <Trophy
+                                                    className="h-4 w-4 text-yellow-500/80"
+                                                    strokeWidth={2.5}
+                                                />
+                                                <p>        Completed {u.completedCount} game{u.completedCount > 1 ? 's' : ''}
+                                                </p>
+                                            </div>
+                                            : <p>No completions yet</p>}
+                                    </div>
 
                                     <p className="text-sm">{formatJoined(u.createdAt)}</p>
-
 
                                 </div>
                             </div>
