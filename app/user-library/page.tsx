@@ -36,22 +36,22 @@ function useConfirm() {
             }}
         >
             <div className="w-full max-w-md rounded-2xl bg-background  border border-white/10 shadow-xl">
-                <div className="px-5 py-4 border-b border-white/10">
+                <div className="px-5 py-4  border-white/10">
                     <h2 id="clm-confirm-title" className="text-lg font-semibold">Remove from collection?</h2>
                 </div>
                 <div className="px-5 py-4 text-sm ">
                     {pending.message}
                 </div>
-                <div className="px-5 py-4 border-t border-white/10 flex items-center justify-end gap-2">
+                <div className="px-5 py-6  border-white/10 flex items-center justify-end gap-2">
                     <button
-                        className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20"
+                        className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 cursor-pointer"
                         onClick={() => close(false)}
                         autoFocus
                     >
                         Cancel
                     </button>
                     <button
-                        className="px-3 py-1.5 rounded-lg bg-red-600/90 hover:bg-red-600"
+                        className="px-3 py-1.5 rounded-lg bg-red-600/90 hover:bg-red-600 cursor-pointer"
                         onClick={() => close(true)}
                     >
                         Remove
