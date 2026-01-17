@@ -94,10 +94,10 @@ export default async function GameDetailPage(
                 </div>
 
                 {/* Stats */}
-                <section className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <Stat label="Users Completed" value={`${cc}`} icon={Trophy} iconClassName="text-yellow-400" />
+                <section className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <Stat label="Users Completed" value={`${cc}`} icon={Trophy} />
                     {playtime ? (
-                        <Stat label="Avg Completion" value={`${playtime}h`} icon={Hourglass} />
+                        <Stat label="Average Playtime" value={`${playtime} hrs`} icon={Hourglass} />
                     ) : null}
                     {release ? (
                         <Stat
@@ -108,10 +108,9 @@ export default async function GameDetailPage(
                     ) : null}
                     {game.metacritic?.score ? (
                         <Stat
-                            label="Metacritic"
+                            label="Metacritic Score"
                             value={String(game.metacritic.score)}
                             icon={MetacriticIcon}
-
                         />
                     ) : null}
                 </section>
@@ -202,8 +201,8 @@ function Stat({
     iconClassName?: string;
 }) {
     return (
-        <div className="rounded-lg bg-white/10 px-3 py-2 flex items-center gap-2">
-            {Icon && <Icon className={`w-8 h-8 shrink-0 mr-1 ${iconClassName ?? "opacity-80"}`} />}
+        <div className="rounded-lg bg-white/10 px-3 py-2 flex items-center gap-1 md:gap-2">
+            {Icon && <Icon className={`w-7 md:w-8 h-7 md:h-8 shrink-0 mr-1 ${iconClassName ?? "opacity-80"}`} />}
             <div>
                 <div className="text-xs">{label}</div>
                 <div className="text-lg font-semibold leading-none mt-0.5">{value}</div>
