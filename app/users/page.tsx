@@ -55,7 +55,7 @@ export default function UsersPage() {
     if (loading) {
         return (
             <main className="p-6 font-sans  min-h-screen">
-                <h1 className="text-3xl font-bold mb-6">Recent Players</h1>
+                <h1 className="text-3xl font-bold mb-6">Recent Users</h1>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-background">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonUserCard key={i} />
@@ -67,7 +67,7 @@ export default function UsersPage() {
 
     return (
         <main className="p-6 font-sans  min-h-screen">
-            <h1 className="text-3xl font-bold  mb-6">Recent Players</h1>
+            <h1 className="text-3xl font-bold  mb-6">Recent Users</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-background">
                 {users.map((u) => {
