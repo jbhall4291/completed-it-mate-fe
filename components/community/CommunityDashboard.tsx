@@ -67,13 +67,13 @@ function CommunityTotalsCard({ snapshot }: { snapshot: CommunitySnapshot }) {
         <Card className="flex flex-col">
             <CardHeader className="pb-0">
                 <CardTitle className="text-base">Totals</CardTitle>
-                <CardDescription>Quick stats</CardDescription>
+                <CardDescription>Quick stats for games across all collections</CardDescription>
             </CardHeader>
 
             <CardContent className="grid grid-cols-2 gap-3 pt-4">
                 <Stat
                     icon={<Trophy className="h-10 w-10 text-yellow-400" />}
-                    label="Games completed"
+                    label="Completed"
                     value={snapshot.totalCompletions}
                 />
 
@@ -85,7 +85,7 @@ function CommunityTotalsCard({ snapshot }: { snapshot: CommunitySnapshot }) {
 
                 <Stat
                     icon={<LibraryBig className="h-10 w-10 text-blue-400" />}
-                    label="Games tracked"
+                    label="Tracked"
                     value={snapshot.gamesInLibraries}
                 />
 
@@ -114,7 +114,7 @@ function Stat({
             <div className="min-w-0">
                 <div className="text-xs text-muted-foreground">{label}</div>
                 <div
-                    className="text-2xl font-semibold leading-tight truncate"
+                    className="text-lg md:text-2xl font-semibold leading-tight truncate"
                     title={typeof value === "string" ? value : undefined}
                 >
                     {value}
