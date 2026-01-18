@@ -212,12 +212,12 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                     <CardContent className="grid grid-cols-2 gap-3 pt-4">
                         <Stat
                             icon={<Trophy className="h-10 w-10 text-yellow-400" />}
-                            label="Completed"
+                            label="Games completed"
                             value={completed}
                         />
                         <Stat
                             icon={<Gamepad2 className="h-10 w-10 text-orange-400" />}
-                            label="In Progress"
+                            label="In progress"
                             value={pie.find((p) => p.key === "playing")?.value ?? 0}
                         />
                         <Stat
