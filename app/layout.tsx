@@ -60,18 +60,20 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${outfit.variable}`}>
-      <body className="flex min-h-screen flex-col mt-[96px] lg:mt-[116px] max-w-[1326px] overflow-x-clip mx-auto">
-        <UserProvider>
-          <BootstrapUser />
-          <GameProvider>
-            <Navbar />
-            <ScrollToTop />
-            <main className="flex-1 w-full">
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <Footer />
-          </GameProvider>
-        </UserProvider>
+      <body className="flex min-h-screen flex-col overflow-x-clip">
+        <div className="mx-auto w-full max-w-[1326px] mt-[96px] lg:mt-[116px] flex flex-col flex-1">
+          <UserProvider>
+            <BootstrapUser />
+            <GameProvider>
+              <Navbar />
+              <ScrollToTop />
+              <main className="flex-1 w-full">
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <Footer />
+            </GameProvider>
+          </UserProvider>
+        </div>
         <Analytics />
       </body>
     </html>
