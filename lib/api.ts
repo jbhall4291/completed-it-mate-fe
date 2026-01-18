@@ -231,3 +231,28 @@ export async function getGameDetail(
     throw e;
   }
 }
+
+// community dashboard
+export type CommunitySnapshot = {
+  players: number;
+  gamesInLibraries: number;
+  totalCompletions: number;
+  completionRatePct: number;
+  mostPopularGenre: { name: string; count: number } | null;
+};
+
+export type MostCompletedGame = {
+  gameId: string;
+  title: string;
+  completionCount: number;
+};
+
+export type CommunityDashboardResponse = {
+  snapshot: CommunitySnapshot;
+  mostCompletedGames: MostCompletedGame[];
+};
+
+export async function getCommunityDashboard(): Promise<CommunityDashboardResponse> {
+  const { data } = await axiosInstance.get("/community/dashboard");
+  return data as CommunityDashboardResponse;
+}
