@@ -1,9 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { patchMe, resetMyLibrary } from '@/lib/api';
 import { useUser } from '@/lib/UserContext';
-// import axios from 'axios';
 import { LoaderCircle, Pencil, Save, UserRound } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
@@ -17,6 +16,8 @@ function useConfirm() {
         error?: string;
     }>(null);
 
+    const overlayRef = useRef<HTMLDivElement>(null);
+
     const confirm = useCallback((message: string) => {
         return new Promise<boolean>(resolve => {
             setPending({ message, state: 'confirm', resolve });
@@ -27,10 +28,6 @@ function useConfirm() {
         setPending(p => (p ? { ...p, state, error } : null));
     };
 
-    const reset = () => {
-        setPending(null);
-    };
-
     const resolveConfirm = (ok: boolean) => {
         pending?.resolve(ok);
     };
@@ -39,14 +36,44 @@ function useConfirm() {
         setPending(null);
     };
 
+    useEffect(() => {
+        if (!pending) return;
+
+        const el = overlayRef.current;
+        if (!el) return;
+
+        el.focus();
+
+        const prevent = (e: Event) => e.preventDefault();
+
+        el.addEventListener('wheel', prevent, { passive: false });
+        el.addEventListener('touchmove', prevent, { passive: false });
+
+        return () => {
+            el.removeEventListener('wheel', prevent as any);
+            el.removeEventListener('touchmove', prevent as any);
+        };
+    }, [pending]);
 
     const ConfirmUI = !pending ? null : (
         <div
-            className="fixed inset-0 z-50 grid place-items-center p-4"
+            ref={overlayRef}
+            tabIndex={-1}
+            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 touch-none"
             role="dialog"
             aria-modal="true"
+            onClick={close}
+            onKeyDown={(e) => {
+                if (e.key === 'Escape') close();
+                if (e.key === 'Enter' && pending.state === 'confirm') {
+                    resolveConfirm(true);
+                }
+            }}
         >
-            <div className="w-full max-w-md rounded-2xl bg-background border border-white/10 shadow-xl">
+            <div
+                className="w-full max-w-md rounded-2xl bg-background border border-white/10 shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <div className="px-5 py-4">
                     <h2 className="text-lg font-semibold">Reset collection?</h2>
                 </div>
@@ -110,12 +137,8 @@ function useConfirm() {
         </div>
     );
 
-
-    return { confirm, ConfirmUI, setState, reset };
+    return { confirm, ConfirmUI, setState };
 }
-
-
-
 
 export default function ProfilePage() {
     const { me, refreshMe } = useUser();
@@ -125,10 +148,9 @@ export default function ProfilePage() {
     const [saving, setSaving] = useState(false);
     const [ok, setOk] = useState<string | null>(null);
     const [err, setErr] = useState<string | null>(null);
-
     const [editing, setEditing] = useState(false);
 
-    const { confirm, ConfirmUI, setState, reset } = useConfirm();
+    const { confirm, ConfirmUI, setState } = useConfirm();
 
     useEffect(() => {
         if (me?.username) {

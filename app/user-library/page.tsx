@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { getUserGames, deleteGame, updateGameStatus, type LibraryItem, type LibraryStatus } from '@/lib/api';
 import { useGameContext } from '@/lib/GameContext';
 import GameCard from '@/components/game/GameCard';
@@ -15,8 +15,12 @@ function useConfirm() {
         resolve: (ok: boolean) => void;
     }>(null);
 
+    const overlayRef = useRef<HTMLDivElement>(null);
+
     const confirm = useCallback((message: string) => {
-        return new Promise<boolean>(resolve => setPending({ message, resolve }));
+        return new Promise<boolean>(resolve =>
+            setPending({ message, resolve })
+        );
     }, []);
 
     const close = (ok: boolean) => {
@@ -24,25 +28,58 @@ function useConfirm() {
         setPending(null);
     };
 
+    // lock background scroll + focus overlay
+    useEffect(() => {
+        if (!pending) return;
+
+        const el = overlayRef.current;
+        if (!el) return;
+
+        // focus for Escape/Enter
+        el.focus();
+
+        const prevent = (e: Event) => e.preventDefault();
+
+        // critical: passive:false so preventDefault actually works
+        el.addEventListener('wheel', prevent, { passive: false });
+        el.addEventListener('touchmove', prevent, { passive: false });
+
+        return () => {
+            el.removeEventListener('wheel', prevent as any);
+            el.removeEventListener('touchmove', prevent as any);
+        };
+    }, [pending]);
+
+
     const ui = !pending ? null : (
         <div
-            className="fixed inset-0 z-50 grid place-items-center p-4"
+            ref={overlayRef}
+            tabIndex={-1}
+            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 touch-none"
             role="dialog"
             aria-modal="true"
             aria-labelledby="clm-confirm-title"
+            onClick={() => close(false)}
             onKeyDown={(e) => {
                 if (e.key === 'Escape') close(false);
                 if (e.key === 'Enter') close(true);
             }}
         >
-            <div className="w-full max-w-md rounded-2xl bg-background  border border-white/10 shadow-xl">
-                <div className="px-5 py-4  border-white/10">
-                    <h2 id="clm-confirm-title" className="text-lg font-semibold">Remove from collection?</h2>
+            <div
+                className="w-full max-w-md rounded-2xl bg-background border border-white/10 shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="px-5 py-4">
+                    <h2 id="clm-confirm-title" className="text-lg font-semibold">
+                        Remove from collection?
+                    </h2>
                 </div>
-                <div className="px-5 py-4 text-sm ">
+
+                <div className="px-5 py-4 text-sm">
                     {pending.message}
                 </div>
-                <div className="px-5 py-6  border-white/10 flex items-center justify-end gap-2">
+
+                <div className="px-5 py-6 flex items-center justify-end gap-2">
                     <button
                         className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 cursor-pointer"
                         onClick={() => close(false)}
@@ -50,6 +87,7 @@ function useConfirm() {
                     >
                         Cancel
                     </button>
+
                     <button
                         className="px-3 py-1.5 rounded-lg bg-red-600/90 hover:bg-red-600 cursor-pointer"
                         onClick={() => close(true)}
@@ -63,6 +101,7 @@ function useConfirm() {
 
     return { confirm, ConfirmUI: ui };
 }
+
 
 
 export default function LibraryPage() {
