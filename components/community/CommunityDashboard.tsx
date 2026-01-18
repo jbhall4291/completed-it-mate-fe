@@ -11,6 +11,13 @@ import {
 } from "@/components/ui/card";
 import { Trophy, Users, LibraryBig, Tags } from "lucide-react";
 import type { CommunitySnapshot } from "@/lib/api";
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart";
+import { PieChart, Pie, Cell, Label } from "recharts";
+
 
 export default function CommunityDashboard() {
     const [data, setData] = useState<CommunityDashboardResponse | null>(null);
@@ -39,6 +46,7 @@ export default function CommunityDashboard() {
 
     return (
         <section className="mb-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <CommunityCompletionCard snapshot={data.snapshot} />
             <CommunityTotalsCard snapshot={data.snapshot} />
         </section>
     );
@@ -103,5 +111,89 @@ function Stat({
                 </div>
             </div>
         </div>
+    );
+}
+
+function CommunityCompletionCard({ snapshot }: { snapshot: CommunitySnapshot }) {
+    const completed = snapshot.totalCompletions;
+    const total = snapshot.gamesInLibraries;
+    const pct = snapshot.completionRatePct;
+
+    const remaining = Math.max(total - completed, 0);
+
+    const data = [
+        { key: "completed", value: completed, fill: "var(--chart-5)" },
+        { key: "remaining", value: remaining, fill: "rgba(255,255,255,0.08)" },
+    ];
+
+    return (
+        <Card className="flex flex-col">
+            <CardHeader className="pb-0">
+                <CardTitle className="text-base">Community Completion</CardTitle>
+                <CardDescription>Completed games across all users</CardDescription>
+            </CardHeader>
+
+            <CardContent className="flex-1">
+                {total === 0 ? (
+                    <div className="flex h-[220px] items-center justify-center text-sm text-muted-foreground">
+                        No games tracked yet.
+                    </div>
+                ) : (
+                    <ChartContainer
+                        config={{
+                            completed: { label: "Completed", color: "var(--chart-5)" },
+                            remaining: { label: "Remaining", color: "rgba(255,255,255,0.08)" },
+                            value: { label: "Games" },
+                        }}
+                        className="mx-auto aspect-square max-h-[250px]"
+                    >
+                        <PieChart>
+                            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                            <Pie
+                                data={data}
+                                dataKey="value"
+                                nameKey="key"
+                                innerRadius={60}
+                                outerRadius={90}
+                                strokeWidth={5}
+                                cornerRadius={6}
+                                isAnimationActive
+                                animationBegin={150}
+                                animationDuration={900}
+                                animationEasing="ease-out"
+                            >
+                                {data.map(d => (
+                                    <Cell key={d.key} fill={d.fill} />
+                                ))}
+                                <Label
+                                    content={({ viewBox }) => {
+                                        if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) return null;
+                                        return (
+                                            <text
+                                                x={viewBox.cx}
+                                                y={viewBox.cy}
+                                                textAnchor="middle"
+                                                dominantBaseline="middle"
+                                            >
+                                                <tspan className="fill-foreground text-3xl font-bold">
+                                                    {pct}%
+                                                </tspan>
+                                                <tspan
+                                                    x={viewBox.cx}
+                                                    y={(viewBox.cy || 0) + 24}
+                                                    className="fill-white/70 text-sm"
+                                                >
+                                                    Completion
+                                                </tspan>
+                                            </text>
+                                        );
+                                    }}
+                                />
+                            </Pie>
+                        </PieChart>
+                    </ChartContainer>
+                )}
+            </CardContent>
+        </Card>
     );
 }
