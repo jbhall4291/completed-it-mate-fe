@@ -16,7 +16,16 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart";
-import { PieChart, Pie, Cell, Label } from "recharts";
+import { PieChart, Pie, Cell, Label, LabelList } from "recharts";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    ResponsiveContainer,
+} from "recharts";
+import Link from "next/link";
+
 
 
 export default function CommunityDashboard() {
@@ -48,6 +57,7 @@ export default function CommunityDashboard() {
         <section className="mb-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
             <CommunityCompletionCard snapshot={data.snapshot} />
             <CommunityTotalsCard snapshot={data.snapshot} />
+            <MostCompletedGamesCard games={data.mostCompletedGames} />
         </section>
     );
 }
@@ -193,6 +203,103 @@ function CommunityCompletionCard({ snapshot }: { snapshot: CommunitySnapshot }) 
                         </PieChart>
                     </ChartContainer>
                 )}
+            </CardContent>
+        </Card>
+    );
+}
+
+function MostCompletedGamesCard({
+    games,
+}: {
+    games: {
+        gameId: string;
+        title: string;
+        completionCount: number;
+    }[];
+}) {
+    if (!games.length) {
+        return (
+            <Card className="flex flex-col">
+                <CardHeader className="pb-0">
+                    <CardTitle className="text-base">Most Completed Games</CardTitle>
+                    <CardDescription>No completions yet</CardDescription>
+                </CardHeader>
+            </Card>
+        );
+    }
+
+    return (
+        <Card className="flex flex-col">
+            <CardHeader className="pb-0">
+                <CardTitle className="text-base">Most Completed Games</CardTitle>
+                <CardDescription>Across all users</CardDescription>
+            </CardHeader>
+
+            <CardContent className="">
+                <ResponsiveContainer width="100%" height={260}>
+                    <BarChart
+                        data={games}
+                        layout="vertical"
+                        margin={{ left: 12, right: 24 }}
+                    >
+                        <XAxis type="number" hide />
+                        <YAxis
+                            axisLine={false}
+                            tickLine={false}
+                            type="category"
+                            dataKey="title"
+                            width={180}
+                            tick={({
+                                x,
+                                y,
+                                payload,
+                            }: {
+                                x?: number
+                                y?: number
+                                payload?: { value: string }
+                            }) => {
+                                if (!payload?.value || x == null || y == null) {
+                                    return <g />
+                                }
+
+                                const game = games.find(g => g.title === payload.value)
+                                if (!game) {
+                                    return <g />
+                                }
+
+                                return (
+                                    <foreignObject
+                                        x={x - 180}
+                                        y={y - 14}
+                                        width={170}
+                                        height={40}
+                                    >
+                                        <Link
+                                            href={`/games/${game.gameId}`}
+                                            title={game.title}
+                                            className="block text-sm leading-snug text-white/90 hover:underline line-clamp-2"
+                                        >
+                                            {game.title}
+                                        </Link>
+                                    </foreignObject>
+                                )
+                            }}
+                        />
+
+                        <Bar
+                            dataKey="completionCount"
+                            radius={[6, 6, 6, 6]}
+                            fill="var(--chart-4)"
+                        >
+                            <LabelList
+                                dataKey="completionCount"
+                                position="right"
+                                className="fill-white/70 text-sm"
+                            />
+                        </Bar>
+
+                    </BarChart>
+                </ResponsiveContainer>
             </CardContent>
         </Card>
     );
