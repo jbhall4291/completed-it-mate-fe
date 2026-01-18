@@ -207,12 +207,12 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                 <Card className="flex flex-col">
                     <CardHeader className="pb-0">
                         <CardTitle className="text-base">Totals</CardTitle>
-                        <CardDescription>Quick stats</CardDescription>
+                        <CardDescription>Quick stats for games in your collection</CardDescription>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-3 pt-4">
                         <Stat
                             icon={<Trophy className="h-10 w-10 text-yellow-400" />}
-                            label="Games completed"
+                            label="Completed"
                             value={completed}
                         />
                         <Stat
