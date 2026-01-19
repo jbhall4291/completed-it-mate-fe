@@ -179,6 +179,12 @@ export default function ProfilePage() {
             setErr('Too short');
             return;
         }
+
+        if (/\s/.test(name)) {
+            setErr('Usernames can’t contain spaces.');
+            return;
+        }
+
         if (name === initial) return;
 
         setSaving(true);
@@ -264,13 +270,22 @@ export default function ProfilePage() {
                                         {me?.username ?? 'Anonymous Player'}
                                     </span>
                                 ) : (
-                                    <input
-                                        value={value}
-                                        onChange={(e) => setValue(e.target.value)}
-                                        autoFocus
-                                        className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm w-24"
-                                    />
+                                    <div className="flex flex-col">
+                                        <input
+                                            value={value}
+                                            onChange={(e) => setValue(e.target.value)}
+                                            autoFocus
+                                            className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm w-32"
+                                        />
+
+                                        {/* {!err && (
+                                            <p className="text-xs text-white/50 mt-1">
+                                                Letters and numbers only — no spaces
+                                            </p>
+                                        )} */}
+                                    </div>
                                 )}
+
 
                                 <button
                                     type={editing ? 'submit' : 'button'}
