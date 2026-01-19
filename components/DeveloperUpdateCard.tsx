@@ -8,26 +8,21 @@ export default function DeveloperUpdateCard() {
     return (
         <section
             aria-label="Development update"
-            className="relative w-full overflow-hidden    transition-colors flex flex-col gap-y-4"
+            className="relative w-fit overflow-hidden    transition-colors flex flex-col gap-y-4"
         >
             <Link
                 href="/updates/"
-                className="block p-5 sm:p-6 md:p-7 bg-[#242528] rounded-2xl  "
+                className="block px-5 md:px-8 py-5 bg-[#242528] rounded-lg  "
             >
-                <div className="mx-auto  max-w-3xl">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-green-500 bg-green-500/10 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-green-300">
-                        <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                        PUBLIC LAUNCH
-                    </span>
+                <div className=" max-w-3xl">
 
-                    <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">
+
+                    <h3 className="text-base md:text-lg font-semibold text-white sm:text-2xl">
                         Completed It Mate is now publicly available
                     </h3>
 
-                    <p className="mt-2 text-sm text-white/80 leading-relaxed max-w-3xl">
-                        After several months of development and iteration <strong>Completed It Mate v0.91</strong> is now being shared publicly for the first time. The core functionality is implemented end-to-end, allowing users to browse and search thousands of games, add them to a personal collection, and track play status.
-
-                        This post introduces the project, explains why it was built, and highlights what’s been added since the initial build.
+                    <p className="mt-1 text-sm text-white/80 leading-relaxed max-w-3xl">
+                        After several months of development and iteration <strong>Completed It Mate</strong> is now being shared publicly for the first time.
                     </p>
 
 
@@ -42,26 +37,20 @@ export default function DeveloperUpdateCard() {
                 </div>
             </Link>
 
-            <Link
+            {/* <Link
                 href="/updates#Sep_2025"
-                className="block p-5 sm:p-6 md:p-7 bg-[#242528] rounded-2xl"
+                className="block p-5  md:p-7 bg-[#242528] rounded-lg"
             >
                 <div className="mx-auto  max-w-3xl">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-green-500 bg-green-500/10 px-2 py-1 text-[11px] font-semibold uppercase tracking-wide text-green-300">
-                        <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                        Version 0.9 - Initial Public Build
-                    </span>
 
-                    <h3 className="mt-3 text-xl font-bold text-white sm:text-2xl">
-                        Completed It Mate — Project Status (v0.9)
+
+                    <h3 className="mt-3 text-lg font-bold text-white sm:text-2xl">
+                        Completed It Mate updated!
                     </h3>
 
                     <p className="mt-2 text-sm text-white/80 leading-relaxed max-w-3xl">
-                        <strong>Completed It Mate v0.9</strong> represents the first complete public build of the application. The core experience is implemented end-to-end, allowing users to browse a large game catalogue, build a personal collection, and track play status — all without requiring an account.
-
-                        This update outlines the current feature set and the direction of future development as the project continues to evolve.
+                        <strong>Completed It Mate v0.9</strong> represents the first complete build of the application. The core experience is implemented end-to-end, allowing users to browse a large game catalogue...
                     </p>
-
 
                     <div className="flex flex-row justify-between mt-4 text-sm max-w-3xl">
                         <span className="inline-flex items-center gap-1  font-medium text-green-500 transition-opacity">
@@ -72,7 +61,7 @@ export default function DeveloperUpdateCard() {
 
                     </div>
                 </div>
-            </Link>
+            </Link> */}
         </section>
     );
 }
