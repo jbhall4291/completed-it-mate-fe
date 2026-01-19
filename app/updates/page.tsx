@@ -22,7 +22,7 @@ export default function UpdatePage() {
                     <h1 className="text-3xl font-bold text-white">
                         Developer Update: January 2026
                     </h1>
-                    <p className="mt-2 text-sm text-white/60">Published Sep 30, 2025</p>
+                    <p className="mt-2 text-sm text-white/60">Published Jan 18, 2026</p>
 
                     <div className="mt-8 space-y-6 text-white/90 leading-relaxed">
                         <p>
@@ -81,7 +81,7 @@ export default function UpdatePage() {
                 </div>
             </article>
 
-            <article id="Sep_2025" className="bg-[#242528] scroll-mt-24 w-full mx-auto p-4 py-10 rounded-2xl">
+            {/* <article id="Sep_2025" className="bg-[#242528] scroll-mt-24 w-full mx-auto p-4 py-10 rounded-2xl">
                 <div className=" max-w-prose mx-auto">
                     <h1 className="text-3xl font-bold text-white">
                         Developer Update: September 2025
@@ -144,7 +144,7 @@ export default function UpdatePage() {
                         </p>
                     </div>
                 </div>
-            </article>
+            </article> */}
         </main>
     );
 }
