@@ -236,12 +236,16 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                 {/* Genres */}
                 <Card className="flex flex-col">
                     <CardHeader className="pb-0">
-                        <CardTitle className="text-base">Top Genres</CardTitle>
+                        <CardTitle className="text-base">Top 5 Genres</CardTitle>
                         <CardDescription>Your collection’s mix</CardDescription>
                     </CardHeader>
                     <CardContent className="flex-1">
                         {(() => {
-                            const data = buildGenreBuckets(items, 6);
+
+                            const MAX_SLICES = 5;
+
+                            const data = buildGenreBuckets(items, MAX_SLICES - 1);
+
                             const total = data.reduce((s, d) => s + d.count, 0);
                             if (!total) {
                                 return (
@@ -257,9 +261,9 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                                 "var(--chart-3)",
                                 "var(--chart-4)",
                                 "var(--chart-5)",
-
-
+                                "var(--chart-6)",
                             ];
+
 
                             const chartData = data.map((d, i) => ({
                                 genre: d.name,
@@ -279,19 +283,21 @@ export function CollectionStatusDashboard({ items }: { items: LibraryItem[] }) {
                                         <PieChart>
                                             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                                             <Pie
+                                                data={chartData}
+                                                dataKey="count"
+                                                nameKey="genre"
+                                                innerRadius={16}
+                                                outerRadius={86}
+                                                stroke="none"
                                                 isAnimationActive
                                                 animationBegin={200}
                                                 animationDuration={800}
                                                 animationEasing="ease-out"
-                                                data={chartData}
-                                                dataKey="count"
-                                                nameKey="genre"
-                                                innerRadius={20}
-                                                outerRadius={80}
-                                                strokeWidth={2}
                                                 onMouseEnter={(_, i) => setGenreActiveIdx(i)}
                                                 activeIndex={genreActiveIdx}
                                             >
+
+
                                                 {chartData.map((entry) => (
                                                     <Cell key={entry.genre} fill={entry.fill} />
                                                 ))}
