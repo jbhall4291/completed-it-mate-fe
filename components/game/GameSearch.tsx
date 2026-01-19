@@ -1,3 +1,4 @@
+// GameSearch.tsx
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -22,11 +23,11 @@ function PlatformChips({ slugs = [] as string[] }) {
     const remaining = uniq.length - visible.length;
 
     return (
-        <div className="flex items-center gap-1 text-foreground" title={uniq.join(', ')}>
+        <div className="flex items-center gap-1 text-foreground uppercase" title={uniq.join(', ')}>
             {visible.map((p) => (
                 <span
                     key={p}
-                    className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium bg-white/10 capitalize"
+                    className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium bg-white/10 "
                 >
                     {p}
                 </span>
@@ -81,13 +82,13 @@ export default function GameSearch() {
     const showOverlay = open && q.trim().length >= 2; // render overlay for all states once typing
 
     return (
-        <div ref={containerRef} className="relative w-full max-w-[640px]">
+        <div ref={containerRef} className="relative w-full md:max-w-[940px]">
             <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 onFocus={() => setOpen(true)}
-                placeholder="Type at least 2 letters…"
-                className="w-full rounded-md border px-3 py-3 shadow-sm outline-none focus:border-green-400/60 focus:ring-2 focus:ring-green-400/60"
+                placeholder="Start typing to find your first game..."
+                className="bg-blur-2xl bg-black/15 text-left placeholder:text-base placeholder:text-white placeholder:text-center w-full rounded-lg border px-3 py-3 shadow-sm outline-none focus:border-brand/60 focus:ring-2 focus:ring-green-500/60"
                 aria-label="Search games"
                 aria-expanded={showOverlay}
                 aria-controls="game-search-results"
@@ -102,17 +103,17 @@ export default function GameSearch() {
             absolute left-0 right-0 top-full mt-2 z-50
             max-h-96 overflow-auto
             rounded-md border bg-background/95 backdrop-blur
-            shadow-xl divide-y
+            shadow-xl 
           "
                 >
                     {loading && (
-                        <li className="p-3 text-sm text-white/70 select-none">Searching…</li>
+                        <li className="p-3 text-sm text-white/90 select-none">Searching…</li>
                     )}
                     {!loading && errorText && (
                         <li className="p-3 text-sm text-red-500 select-none">{errorText}</li>
                     )}
                     {!loading && !errorText && results.length === 0 && (
-                        <li className="p-3 text-sm text-white/70 italic select-none">No matches</li>
+                        <li className="p-3 text-sm text-white/90 italic select-none">No matches</li>
                     )}
                     {!loading && !errorText && results.length > 0 &&
                         results.map((g) => {
@@ -122,13 +123,13 @@ export default function GameSearch() {
                                     <Link
                                         href={href}
                                         onClick={() => setOpen(false)}
-                                        className="p-3 flex gap-3 items-center hover:bg-green-500/90 focus:bg-green-500/90 focus:outline-none"
+                                        className="p-3 flex gap-3 items-center hover:bg-brand focus:bg-brand focus:outline-none"
                                     >
                                         {g.imageUrl && (
                                             <img src={g.imageUrl} alt="" className="h-10 w-10 rounded object-cover flex-none" />
                                         )}
                                         <div className="min-w-0">
-                                            <div className="font-medium truncate">{g.title}</div>
+                                            <div className="font-medium truncate text-left">{g.title}</div>
                                             <div className="mt-0.5 text-xs">
                                                 <PlatformChips slugs={g.parentPlatforms ?? []} />
                                             </div>

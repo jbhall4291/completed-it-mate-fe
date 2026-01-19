@@ -166,59 +166,55 @@ export default function HomePage() {
 
       <main className="p-4 font-sans min-h-screen mb-20">
         {/* Hero */}
-        <section
-          className="
-    relative mx-auto mb-8
-    flex items-center justify-center
-    min-h-[180px] md:min-h-[280px]
-    
-    overflow-hidden
-    text-center
-    
-  "
-        >
-          {/* Background */}
-          <div
-            className="
-      absolute inset-0 
-      bg-center bg-cover
-      opacity-100 filter  brightness-90 blur-xs md:blur-sm
-      
-    "
-            style={{
-              backgroundImage: "url('/hero_bg.webp')",
-            }}
-          />
+        <section className="relative mx-auto mb-8 flex items-center justify-center min-h-[310px] md:min-h-[360px] text-center">
 
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black/65 md:bg-black/60 " />
+          {/* Background wrapper */}
+          <div className="absolute inset-0 overflow-hidden rounded-lg">
+            {/* Background image */}
+            <div
+              className="absolute inset-0 bg-center bg-cover filter brightness-90 blur-xs md:blur-sm"
+              style={{ backgroundImage: "url('/hero_bg.webp')" }}
+            />
+
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/65 md:bg-black/60" />
+          </div>
+
 
           {/* Content */}
           <div className="relative z-10 flex flex-col items-center translate-y-[2px]">
             <BrandLogo />
-            <p className="px-10 mt-3 text-base text-white/90 md:text-white/85 md:text-xl w-[350px] md:w-full">
+            <p className="px-10 mt-3 text-base font-semibold text-white/90 md:text-white/85 md:text-xl w-[350px] md:w-full">
               Keep track of the games you own, play, and complete.
             </p>
+
+            <div className="flex flex-col mt-6 md:mt-10">
+              {/* <h2 className="text-lg font-normal mb-2">
+                Search for your first game to add to your collection:
+
+              </h2> */}
+
+              <div className="w-[300px] md:w-[400px]">
+                <GameSearch />
+              </div>
+              <Link
+                href="/game-library"
+                className="underline underline-offset-2 hover:text-brand transition duration-300"
+              >
+                <div className="text-base mt-2 font-normal">
+                  or browse the full library
+                </div>
+              </Link>
+            </div>
+
           </div>
+
+
+
 
         </section>
 
 
-        <div className="flex flex-col">
-          <h2 className="text-xl font-semibold mb-2">
-            Search for a game to add, or{" "}
-            <Link
-              href="/game-library"
-              className="underline underline-offset-2 hover:text-brand transition"
-            >
-              browse the full library
-            </Link>.
-          </h2>
-
-          <div className="mb-12 w-full">
-            <GameSearch />
-          </div>
-        </div>
 
         <div className="mb-12">
           <h2 className="text-xl font-semibold mb-2">Latest Updates</h2>
