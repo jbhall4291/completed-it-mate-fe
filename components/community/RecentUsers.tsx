@@ -35,7 +35,13 @@ export default function RecentUsers() {
         async function fetchUsers() {
             try {
                 const userList = await getUsers();
-                setUsers(userList);
+
+                const filtered = userList.filter(u =>
+                    u.completedCount > 0 ||
+                    (u.username && u.username !== "Anonymous Player")
+                );
+
+                setUsers(filtered);
             } catch (err) {
                 console.error("Error fetching users:", err);
             } finally {
