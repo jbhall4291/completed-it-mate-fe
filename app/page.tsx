@@ -209,7 +209,7 @@ export default function HomePage() {
             Search for a game to add, or{" "}
             <Link
               href="/game-library"
-              className="underline underline-offset-2 hover:text-green-500 transition"
+              className="underline underline-offset-2 hover:text-brand transition"
             >
               browse the full library
             </Link>.
