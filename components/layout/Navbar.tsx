@@ -14,7 +14,7 @@ const nav = [
     { label: "My Collection", href: "/user-library" },
     { label: "Browse Library", href: "/game-library" },
     { label: "Community", href: "/users" },
-    { label: "Updates", href: "/updates" },
+    { label: "News", href: "/updates" },
     { label: "My Profile (Beta)", href: "/profile" },
 
 ];
