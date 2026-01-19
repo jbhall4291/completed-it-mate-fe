@@ -25,6 +25,7 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import Link from "next/link";
+import SkeletonStatCard from "../layout/SkeletonStatCard";
 
 
 
@@ -48,7 +49,11 @@ export default function CommunityDashboard() {
     }, []);
 
     if (loading) {
-        return <div>Loading community stats…</div>;
+        return <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 ">
+            {Array.from({ length: 3 }).map((_, i) => (
+                <SkeletonStatCard key={i} />
+            ))}
+        </div>;
     }
 
     if (!data) return null;
