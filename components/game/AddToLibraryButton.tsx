@@ -91,7 +91,7 @@ export default function AddToLibraryButton({
         : () => onAdd?.('owned');
 
     const bgClasses = isAdded
-        ? 'bg-green-600'
+        ? 'bg-brand'
         : 'bg-blue-500 hover:bg-blue-600';
 
     const containerClasses = [
@@ -121,7 +121,7 @@ export default function AddToLibraryButton({
                         (isAdded ? onUpdate : onAdd)?.(opt.status);
                         setOpen(false);
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-green-800 hover:text-white cursor-pointer"
+                    className="block w-full text-left px-4 py-2 text-sm hover:bg-brand hover:text-white cursor-pointer"
                 >
                     {opt.label}
                 </button>

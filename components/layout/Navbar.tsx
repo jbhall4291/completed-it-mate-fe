@@ -64,7 +64,7 @@ export default function Navbar() {
                             aria-label="Completed It Mate – Home"
                             className="inline-flex items-center gap-1.5   hover:opacity-80 transition-opacity duration-300  ">
 
-                            <div className="flex h-10 w-10 aspect-square items-center justify-center rounded-full bg-green-600 ">
+                            <div className="flex h-10 w-10 aspect-square items-center justify-center rounded-full bg-brand ">
                                 <svg
                                     className={cn(
                                         "text-yellow-500 h-6",
@@ -106,7 +106,7 @@ export default function Navbar() {
                                     <div
                                         className={cn(
                                             "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
-                                            hasUsername ? "bg-green-600 text-white" : "bg-[#3a3b3e] text-white"
+                                            hasUsername ? "bg-brand text-white" : "bg-[#3a3b3e] text-white"
                                         )}
                                     >
                                         {avatarLabel ? (
@@ -134,7 +134,7 @@ export default function Navbar() {
                                     <div
                                         className={cn(
                                             "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
-                                            hasUsername ? "bg-green-600 text-white" : "bg-[#3a3b3e] text-white"
+                                            hasUsername ? "bg-brand text-white" : "bg-[#3a3b3e] text-white"
                                         )}
                                     >
                                         {avatarLabel ? (

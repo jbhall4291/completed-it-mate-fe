@@ -63,7 +63,7 @@ export default function RecentUsers() {
         <section>
             <h2 className="text-2xl font-bold mb-4">Recent Users</h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2.5 md:gap-y-3">
                 {users.map((u) => {
                     const isMe =
                         Boolean(me?.username) &&
@@ -78,15 +78,15 @@ export default function RecentUsers() {
                         <div
                             key={u.username ?? `anon-${u.createdAt}`}
                             className={`px-5 py-4 bg-[#242528] rounded-lg transition text-[#fafafa]
-                ${isMe && "ring-2 ring-green-500/40"}
-              `}
+                                ${isMe && "ring-2 ring-green-600/80"}
+                            `}
                         >
                             <div className="flex items-center gap-x-5">
                                 {/* Avatar */}
                                 <div
                                     className={`w-14 h-14 rounded-full flex items-center justify-center font-semibold text-2xl
-                    ${hasUsername ? "bg-green-500" : "bg-[#3a3b3e]"}
-                  `}
+                                        ${hasUsername ? "bg-brand" : "bg-[#3a3b3e]"}
+                                    `}
                                 >
                                     {avatarLabel ? (
                                         avatarLabel
@@ -102,14 +102,14 @@ export default function RecentUsers() {
                                     <h3 className="text-xl font-semibold flex items-baseline gap-x-1.5">
                                         {u.username ?? "Anonymous Player"}
                                         {isMe && (
-                                            <span className="text-sm text-green-400/80">(You)</span>
+                                            <span className="text-sm text-brand">(You)</span>
                                         )}
                                     </h3>
 
                                     <div className="text-base">
                                         {u.completedCount > 0 ? (
                                             <div className="flex gap-x-1 items-center">
-                                                <Trophy className="h-4 w-4 text-yellow-500/80" />
+                                                <Trophy className="h-4 w-4 text-yellow-500/90" />
                                                 <p>
                                                     Completed {u.completedCount} game
                                                     {u.completedCount > 1 ? "s" : ""}

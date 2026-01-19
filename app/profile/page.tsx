@@ -90,7 +90,7 @@ function useConfirm() {
                     )}
 
                     {pending.state === 'success' && (
-                        <p className="text-green-400">
+                        <p className="text-green-500">
                             Collection cleared successfully.
                         </p>
                     )}
@@ -251,7 +251,7 @@ export default function ProfilePage() {
                         <div
                             className={cn(
                                 "h-14 w-14 rounded-full flex items-center justify-center font-semibold text-2xl",
-                                hasUsername ? "bg-green-600 text-white" : "bg-[#3a3b3e] text-white"
+                                hasUsername ? "bg-brand text-white" : "bg-[#3a3b3e] text-white"
                             )}
                         >
                             {avatarLabel ? <span>{avatarLabel}</span> : <UserRound strokeWidth={2.5} />}
@@ -300,7 +300,7 @@ export default function ProfilePage() {
                                 </button>
 
                                 <div>
-                                    {ok && <p className="text-xs text-green-400">{ok}</p>}
+                                    {ok && <p className="text-xs text-green-500">{ok}</p>}
                                     {err && <p className="text-xs text-red-400">{err}</p>}
                                 </div>
                             </div>
@@ -309,7 +309,7 @@ export default function ProfilePage() {
 
                     {me?.createdAt && (
                         <p className="text-sm text-white/70">
-                            Member since{' '}
+                            Member since:{' '}
                             <span className="text-white">
                                 {new Date(me.createdAt).toLocaleDateString('en-GB', {
                                     month: 'short',

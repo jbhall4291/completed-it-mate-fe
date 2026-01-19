@@ -78,7 +78,7 @@ function CommunityTotalsCard({ snapshot }: { snapshot: CommunitySnapshot }) {
                 />
 
                 <Stat
-                    icon={<Users className="h-10 w-10 text-green-400" />}
+                    icon={<Users className="h-10 w-10 text-orange-400" />}
                     label="Players"
                     value={snapshot.players}
                 />
@@ -90,7 +90,7 @@ function CommunityTotalsCard({ snapshot }: { snapshot: CommunitySnapshot }) {
                 />
 
                 <Stat
-                    icon={<Tags className="h-10 w-10 text-purple-400" />}
+                    icon={<Tags className="h-10 w-10 text-pink-400" />}
                     label="Top genre"
                     value={snapshot.mostPopularGenre?.name ?? "—"}
                 />
@@ -289,7 +289,7 @@ function MostCompletedGamesCard({
                         <Bar
                             dataKey="completionCount"
                             radius={[6, 6, 6, 6]}
-                            fill="var(--chart-4)"
+                            fill="var(--chart-5)"
                         >
                             <LabelList
                                 dataKey="completionCount"
