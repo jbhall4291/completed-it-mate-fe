@@ -22,7 +22,7 @@ export default function DeveloperUpdateCard() {
                     </h3>
 
                     <p className="mt-1 text-sm text-white/80 leading-relaxed max-w-3xl">
-                        After several months of development and iteration <strong>Completed It Mate</strong> is now being shared publicly for the first time.
+                        After of months of part-time development and iteration, I’m sharing <strong>Completed It Mate</strong> publicly for the first time.
                     </p>
 
 
