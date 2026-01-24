@@ -6,7 +6,7 @@ export default function AboutPage() {
             <p className="mb-4">
                 Completed It Mate is a personal project built by{" "}
                 <a
-                    href="https://www.linkedin.com/in/johnnyhalldev"
+                    href="https://www.linkedin.com/in/johnny-hall-dev"
                     target="_blank"
                     rel="noreferrer"
                     className="text-brand hover:text-brand/80 underline-offset-2 hover:underline"
