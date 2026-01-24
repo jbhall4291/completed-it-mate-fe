@@ -179,6 +179,12 @@ export default function ProfilePage() {
             setErr('Too short');
             return;
         }
+
+        if (/\s/.test(name)) {
+            setErr('Usernames can’t contain spaces.');
+            return;
+        }
+
         if (name === initial) return;
 
         setSaving(true);
@@ -242,7 +248,7 @@ export default function ProfilePage() {
 
     return (
         <main className="p-6 min-h-screen">
-            <h1 className="text-3xl font-bold mb-6">Profile</h1>
+            <h1 className="text-3xl font-bold mb-4">My Profile</h1>
 
             <div className="max-w-2xl space-y-6">
                 {/* Account details */}
@@ -264,13 +270,22 @@ export default function ProfilePage() {
                                         {me?.username ?? 'Anonymous Player'}
                                     </span>
                                 ) : (
-                                    <input
-                                        value={value}
-                                        onChange={(e) => setValue(e.target.value)}
-                                        autoFocus
-                                        className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm w-24"
-                                    />
+                                    <div className="flex flex-col">
+                                        <input
+                                            value={value}
+                                            onChange={(e) => setValue(e.target.value)}
+                                            autoFocus
+                                            className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm w-32"
+                                        />
+
+                                        {/* {!err && (
+                                            <p className="text-xs text-white/50 mt-1">
+                                                Letters and numbers only — no spaces
+                                            </p>
+                                        )} */}
+                                    </div>
                                 )}
+
 
                                 <button
                                     type={editing ? 'submit' : 'button'}

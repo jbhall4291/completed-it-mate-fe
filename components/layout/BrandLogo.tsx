@@ -15,9 +15,9 @@ export default function BrandLogo() {
             className={cn(
                 silkscreen.className,
                 "relative inline-flex items-center transition-all duration-300",
-                "rounded-full bg-brand-muted text-white",
+                "rounded-full bg-brand-muted min-w-[300px]  text-white ",
                 "shadow-[0_4px_16px_rgba(16,185,129,.18)]",
-                "h-12 md:h-20"
+                "h-14 md:h-20"
 
 
             )}
@@ -25,7 +25,7 @@ export default function BrandLogo() {
             <div className="flex h-full aspect-square items-center justify-center rounded-full bg-brand ">
                 <svg
                     className={cn(
-                        "text-yellow-500 h-6 md:h-11 w-6 md:w-11",
+                        "text-yellow-500 h-8 md:h-11 w-8 md:w-11",
 
                     )}
                     xmlns="http://www.w3.org/2000/svg"
@@ -38,11 +38,13 @@ export default function BrandLogo() {
 
             <div
                 className={cn(
-                    "flex flex-col  leading-none uppercase  tracking-wide text-lg md:text-4xl px-2 md:px-4 pr-6 md:pr-8",
+                    "flex flex-col  leading-none uppercase  tracking-wide text-xl md:text-4xl px-3 md:px-4 pr-6 md:pr-8",
 
                 )}
             >
-                Completed It Mate
+                <div>
+                    Completed It Mate
+                </div>
             </div>
         </div >
     );

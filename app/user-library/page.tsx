@@ -151,14 +151,14 @@ export default function LibraryPage() {
         return (
 
             <main className="p-6 font-sans  min-h-screen">
-                <h1 className="text-3xl font-bold  mb-6">My Collection</h1>
+                <h1 className="text-3xl font-bold  mb-4">My Collection</h1>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 ">
                     {Array.from({ length: 3 }).map((_, i) => (
                         <SkeletonStatCard key={i} />
                     ))}
                 </div>
 
-                <h1 className="text-3xl font-bold  mb-6 mt-6">My Games</h1>
+                <h1 className="text-3xl font-bold  mb-4 ">My Games</h1>
                 <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
                     {Array.from({ length: 4 }).map((_, i) => (
                         <SkeletonCard key={i} />
@@ -173,11 +173,11 @@ export default function LibraryPage() {
 
     return (
         <main className="relative p-6 font-sans  min-h-screen">
-            <h1 className="text-3xl font-bold  mb-6">My Collection</h1>
+            <h1 className="text-3xl font-bold  mb-4">My Collection</h1>
 
             <CollectionStatusDashboard items={library} />
 
-            <h1 className="text-3xl font-bold  mb-6">My Games</h1>
+            <h1 className="text-3xl font-bold  mb-4">My Games</h1>
 
             {(library.length !== 0) ?
                 <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
