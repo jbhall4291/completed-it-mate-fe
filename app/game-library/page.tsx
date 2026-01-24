@@ -257,7 +257,7 @@ export default function GamesPage() {
                     <Popover>
                         <PopoverTrigger asChild>
                             <button
-                                className="inline-flex items-center rounded-full p-1 hover:bg-muted focus:outline-none "
+                                className="inline-flex items-center rounded-full p-1 hover:bg-muted focus:outline-none cursor-pointer"
                                 aria-label="Library filtering info"
                             >
                                 <Info className="h-4.5 w-4.5" />
