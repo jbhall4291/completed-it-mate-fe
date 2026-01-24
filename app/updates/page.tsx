@@ -15,11 +15,11 @@ export default function UpdatePage() {
 
     return (
 
-        <main className="mx-auto w-full  px-4 py-10 flex flex-col gap-6">
-
-            <article className="bg-[#242528] w-full mx-auto p-4 py-10 rounded-2xl">
+        <main className="mx-auto w-full  px-4 py-10 ">
+            <h1 className="text-3xl font-bold  mb-4">Latest News</h1>
+            <article className="bg-[#242528] w-full mx-auto p-4 py-10 rounded-2xl flex flex-col gap-6">
                 <div className=" max-w-prose mx-auto">
-                    <h1 className="text-3xl font-bold text-white">
+                    <h1 className="text-2xl font-semibold text-white">
                         Developer Update: January 2026
                     </h1>
                     <p className="mt-2 text-sm text-white/60">Published Jan 18, 2026</p>

@@ -248,7 +248,7 @@ export default function ProfilePage() {
 
     return (
         <main className="p-6 min-h-screen">
-            <h1 className="text-3xl font-bold mb-6">Profile</h1>
+            <h1 className="text-3xl font-bold mb-4">My Profile</h1>
 
             <div className="max-w-2xl space-y-6">
                 {/* Account details */}
