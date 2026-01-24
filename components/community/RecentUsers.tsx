@@ -55,7 +55,7 @@ export default function RecentUsers() {
     if (loading) {
         return (
             <section>
-                <h2 className="text-2xl font-bold mb-4">Recent Users</h2>
+                <h2 className="text-2xl font-bold mb-4">Active Players</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {Array.from({ length: 8 }).map((_, i) => (
                         <SkeletonUserCard key={i} />
@@ -67,7 +67,7 @@ export default function RecentUsers() {
 
     return (
         <section>
-            <h2 className="text-2xl font-bold mb-4">Recent Users</h2>
+            <h2 className="text-2xl font-bold mb-4">Active Players</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-2.5 md:gap-y-3">
                 {users.map((u) => {
