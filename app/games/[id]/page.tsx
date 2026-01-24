@@ -32,7 +32,7 @@ export default async function GameDetailPage(
                 className="
                         relative w-screen left-1/2 right-1/2 -mx-[50vw] 
                         h-[clamp(240px,38vh,520px)] xl:h-[min(52vh,680px)] 2xl:h-[min(60vh,760px)]
-                        -mt-[96px] lg:-mt-[116px]
+                        -mt-[60px] lg:-mt-[116px]
                         "
             >
                 {/* Background image container with max width */}
@@ -59,7 +59,7 @@ export default async function GameDetailPage(
             <main className="p-6 max-w-5xl mx-auto">
                 {/* Hero (title + chips) */}
 
-                <div className="flex flex-col md:flex-row gap-x-6 gap-y-1.5 md:items-center mb-5">
+                <div className="flex flex-col md:flex-row gap-x-6 gap-y-1 md:gap-y-1.5 md:items-center mb-5">
 
                     <h1 className="text-3xl md:text-4xl font-extrabold">{game.title}</h1>
 
@@ -93,7 +93,7 @@ export default async function GameDetailPage(
 
 
                 {/* Stats */}
-                <section className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
+                <section className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
                     <Stat label="Users Completed" value={`${cc}`} icon={Trophy} />
                     {playtime ? (
                         <Stat label="Average Playtime" value={`${playtime} hrs`} icon={Hourglass} />
