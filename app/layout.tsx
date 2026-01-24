@@ -12,8 +12,7 @@ import { UserProvider } from "@/lib/UserContext";
 
 
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE_URL = 'https://completeditmate.app';
 
 
 const outfit = Outfit({
@@ -27,7 +26,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Completed It Mate",
   description:
-    "Track your game collection, completion status, and playtime insights — built by Johnny Hall.",
+    "Track your game collection and completion status, with community insights - built by Johnny Hall.",
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -38,12 +37,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Completed It Mate",
     description:
-      "Add games to your collection and track progress.",
-    url: "https://completeditmate.app",
+      "Track your video game collection — completed, in-progress, and wishlisted titles — with personal dashboards and community-wide insights.",
+    url: SITE_URL,
     siteName: "Completed It Mate",
     images: [
       {
-        url: "/og-image.png", // replace with your actual OG image
+        url: `${SITE_URL}/og-image.png`,
         width: 1200,
         height: 630,
         alt: "Completed It Mate preview",
