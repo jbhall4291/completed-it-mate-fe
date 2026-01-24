@@ -14,7 +14,7 @@ export default function Footer() {
                             href="https://www.linkedin.com/in/johnny-hall-dev"
                             target="_blank"
                             rel="noreferrer"
-                            className="text-brand hover:text-brand/80 underline-offset-2 hover:underline"
+                            className=" underline-offset-2 hover:underline hover:text-brand/80"
                         >
                             Johnny Hall
                         </a></div>
@@ -22,7 +22,7 @@ export default function Footer() {
                             href="https://johnnyhall.dev"
                             target="_blank"
                             rel="noreferrer"
-                            className="hover:text-brand underline-offset-2 hover:underline"
+                            className="text-brand hover:text-brand/80 underline-offset-2 hover:underline"
                         >
                             johnnyhall.dev
                         </a></div>

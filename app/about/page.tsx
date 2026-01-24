@@ -1,7 +1,7 @@
 export default function AboutPage() {
     return (
         <main className="mx-auto max-w-3xl px-6 py-16 text-white/80">
-            <h1 className="text-3xl font-semibold mb-6 text-brand">About Completed It Mate</h1>
+            <h1 className="text-3xl font-semibold mb-6">About Completed It Mate</h1>
 
             <p className="mb-4">
                 Completed It Mate is a personal project built by{" "}
