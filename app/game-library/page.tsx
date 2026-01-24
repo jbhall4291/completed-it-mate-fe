@@ -18,6 +18,13 @@ import { useGameContext } from '@/lib/GameContext';
 import GameCard from '@/components/game/GameCard';
 import SkeletonCard from '@/components/game/SkeletonGameCard';
 import SkeletonFilterPanel from '@/components/game/SkeletonFilterPanel';
+import {
+    Popover,
+    PopoverContent,
+
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { Info } from 'lucide-react';
 
 const USER_READY_EVENT = 'clm:user-ready';
 
@@ -242,7 +249,32 @@ export default function GamesPage() {
 
     return (
         <main className="p-6 font-sans  min-h-screen">
-            <h1 className="text-3xl font-bold mb-4">Browse Library <span className="text-sm opacity-70">{total.toLocaleString()} games found</span></h1>
+
+
+            <div className="flex flex-col sm:flex-row gap-x-2 items-baseline mb-4">
+                <h1 className="text-3xl font-bold ">Browse Library</h1>
+                <div className="text-sm  font-semibold opacity-70 flex items-center">{total.toLocaleString()} games found<span>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <button
+                                className="inline-flex items-center rounded-full p-1 hover:bg-muted focus:outline-none "
+                                aria-label="Library filtering info"
+                            >
+                                <Info className="h-4.5 w-4.5" />
+                            </button>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="max-w-xs text-sm leading-relaxed bg-[#1e1e20]">
+                            <p className="font-semibold mb-1.5">Games exclusive to PC, Mac, or web are not included.</p>
+                            <p>Despite best efforts at filtering, those platforms permit significantly more NSFW or low-quality content than consoles.</p>
+                            <p>To maintain a clean and consistent catalogue, the library is limited to titles released on at least one console.</p>
+                        </PopoverContent>
+                    </Popover></span></div>
+            </div>
+
+
+
+
             <section className=" z-10  mb-4 bg-[#242528] rounded-2xl">
                 <div className=" w-full  p-4 grid  space-y-3.5">
                     <div className="flex items-center gap-2">
