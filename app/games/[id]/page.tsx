@@ -56,7 +56,7 @@ export default async function GameDetailPage(
                 />
             </section>
 
-            <main className="p-6 max-w-5xl mx-auto">
+            <main className="px-6 pb-6  max-w-5xl mx-auto">
                 {/* Hero (title + chips) */}
 
                 <div className="flex flex-col md:flex-row gap-x-6 gap-y-1 md:gap-y-1.5 md:items-center mb-5">
@@ -64,7 +64,7 @@ export default async function GameDetailPage(
                     <h1 className="text-3xl md:text-4xl font-extrabold">{game.title}</h1>
 
                     {/* user actions (same control used on cards) */}
-                    <div className=" relative z-10 w-[300px]">
+                    <div className=" relative z-10 mt-1.5 md:mt-0 w-[300px]">
                         <GameActions
                             gameId={game._id}
                             initialStatus={game.userStatus}
