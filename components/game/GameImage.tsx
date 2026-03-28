@@ -25,10 +25,10 @@ export default function GameImage({ src, alt }: Props) {
                     object-cover
                     scale-100
                     group-hover:scale-[1.1]
-                    transition-transform
+                    transition-all
                     duration-700
                     ease-out
-                    ${loaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}
+                    ${loaded ? 'opacity-100 blur-0' : 'opacity-10 blur-sm'}
                 `}
             />
         </div>
