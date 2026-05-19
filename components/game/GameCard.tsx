@@ -156,7 +156,9 @@ export default memo(
         a.isAdded === b.isAdded &&
         a.currentStatus === b.currentStatus &&
         a.open === b.open &&
+        a.hidePlatformChips === b.hidePlatformChips &&
         a.game.imageUrl === b.game.imageUrl &&
         a.game.title === b.game.title &&
-        a.game.completedCount === b.game.completedCount
+        a.game.completedCount === b.game.completedCount &&
+        a.game.parentPlatforms?.join('|') === b.game.parentPlatforms?.join('|')
 );

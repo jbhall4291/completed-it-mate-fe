@@ -25,7 +25,7 @@ export default function UpdatePage() {
                     <p className="mt-2 text-sm text-white/60">Published Jan 18, 2026</p>
 
                     <div className="mt-8  text-white/90 leading-relaxed">
-                        <p>After of months of part-time development and iteration, I’m sharing <strong>Completed It Mate</strong> publicly for the first time.</p>
+                        <p>After months of part-time development and iteration, I’m sharing <strong>Completed It Mate</strong> publicly for the first time.</p>
                         <br />
                         <p>
                             Completed It Mate is a web app for tracking the games you own, play, and complete. You can browse a large game catalogue, build a personal collection, and track play status — all without creating an account.

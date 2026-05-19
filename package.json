@@ -7,7 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "playwright test"
+    "test": "playwright test",
+    "test:unit": "vitest --project unit",
+    "test:unit:watch": "vitest --project unit --watch",
+    "test:storybook": "vitest --project storybook",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@radix-ui/react-popover": "^1.1.15",
@@ -31,20 +36,36 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^5.2.1",
     "@eslint/eslintrc": "^3",
     "@playwright/test": "^1.54.2",
+    "@storybook/addon-a11y": "^10.4.0",
+    "@storybook/addon-docs": "^10.4.0",
+    "@storybook/addon-vitest": "^10.4.0",
+    "@storybook/nextjs-vite": "^10.4.0",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.19",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/browser-playwright": "^4.1.6",
+    "@vitest/coverage-v8": "^4.1.6",
     "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.4.2",
+    "eslint-plugin-storybook": "^10.4.0",
+    "jsdom": "^29.1.1",
+    "playwright": "^1.60.0",
     "postcss": "^8.5.6",
+    "storybook": "^10.4.0",
     "tailwindcss": "^4.1.11",
     "typescript": "^5",
+    "vite": "^8.0.13",
+    "vitest": "^4.1.6",
     "wait-on": "^8.0.4"
   }
 }
