@@ -91,8 +91,8 @@ export default function AddToLibraryButton({
         : () => onAdd?.('owned');
 
     const bgClasses = isAdded
-        ? 'bg-brand'
-        : 'bg-blue-500 hover:bg-blue-600';
+        ? 'bg-green-700'
+        : 'bg-blue-700 hover:bg-blue-800';
 
     const containerClasses = [
         'inline-flex w-full items-stretch rounded overflow-hidden',
