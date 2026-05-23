@@ -33,6 +33,12 @@ const meta = {
     parameters: {
         layout: 'centered',
     },
+    argTypes: {
+        onOpenChange: { action: 'open changed', control: false },
+        onAdd: { action: 'add clicked', control: false },
+        onUpdate: { action: 'status updated', control: false },
+        onRemove: { action: 'remove clicked', control: false },
+    },
     decorators: [
         (Story) => (
             <div className="w-[360px] bg-neutral-100 p-4">
