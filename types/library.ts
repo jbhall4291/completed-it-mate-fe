@@ -11,3 +11,9 @@ export type LibraryItemDTO = {
     gameId: GameCardDTO;
     genres?: string[];
 };
+
+export type GameCardLibraryState = {
+  isInLibrary: boolean;
+  userStatus?: LibraryStatus;
+  userGameId?: string;
+};

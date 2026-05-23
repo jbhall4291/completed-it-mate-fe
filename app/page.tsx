@@ -21,6 +21,7 @@ import SkeletonGameCard from '@/components/game/SkeletonGameCard';
 import EmblaRow from '@/components/EmblaRow';
 import BrandLogo from '@/components/layout/BrandLogo';
 import DeveloperUpdateCard from '@/components/DeveloperUpdateCard';
+import { toGameCardViewModel } from '@/lib/gameCard';
 
 
 
@@ -232,18 +233,25 @@ export default function HomePage() {
             loading={loadingLatest}
             skeleton={<SkeletonGameCard />}
             basisClass="basis-[16rem] md:basis-[18rem]"
-            renderItem={(g) => (
-              <GameCard
-                game={g}
-                isAdded={addedGames.has(g._id)}
-                currentStatus={statusByGameId.get(g._id)}
-                onAdd={(id, status) => handleAdd(id, status)}
-                onUpdate={addedGames.has(g._id) ? (id, s) => handleUpdate(id, s) : undefined}
-                onRemove={addedGames.has(g._id) ? (id) => handleRemove(id) : undefined}
-                open={openMenuGameId === g._id}
-                onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
-              />
-            )}
+            renderItem={(g) => {
+              const game = toGameCardViewModel(g, {
+                isInLibrary: addedGames.has(g._id),
+                userStatus: statusByGameId.get(g._id),
+                userGameId: idByGameId.get(g._id),
+              });
+
+              return (
+                <GameCard
+                  game={game}
+                  onAdd={handleAdd}
+                  onUpdate={game.isInLibrary ? handleUpdate : undefined}
+                  onRemove={game.isInLibrary ? handleRemove : undefined}
+                  open={openMenuGameId === game.id}
+                  onOpenChange={(open) => setOpenMenuGameId(open ? game.id : null)}
+                />
+              );
+            }
+            }
           />
         </section>
 
@@ -254,18 +262,25 @@ export default function HomePage() {
           loading={loadingTop}
           skeleton={<SkeletonGameCard />}
           basisClass="basis-[16rem] md:basis-[18rem]"
-          renderItem={(g) => (
-            <GameCard
-              game={g}
-              isAdded={addedGames.has(g._id)}
-              currentStatus={statusByGameId.get(g._id)}
-              onAdd={(id, status) => handleAdd(id, status)}
-              onUpdate={addedGames.has(g._id) ? (id, s) => handleUpdate(id, s) : undefined}
-              onRemove={addedGames.has(g._id) ? (id) => handleRemove(id) : undefined}
-              open={openMenuGameId === g._id}
-              onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
-            />
-          )}
+          renderItem={(g) => {
+            const game = toGameCardViewModel(g, {
+              isInLibrary: addedGames.has(g._id),
+              userStatus: statusByGameId.get(g._id),
+              userGameId: idByGameId.get(g._id),
+            });
+
+            return (
+              <GameCard
+                game={game}
+                onAdd={handleAdd}
+                onUpdate={game.isInLibrary ? handleUpdate : undefined}
+                onRemove={game.isInLibrary ? handleRemove : undefined}
+                open={openMenuGameId === game.id}
+                onOpenChange={(open) => setOpenMenuGameId(open ? game.id : null)}
+              />
+            );
+          }
+          }
         />
       </main>
     </>

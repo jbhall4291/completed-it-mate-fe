@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import type { ComponentProps } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-
+import userEvent from '@testing-library/user-event';
 import GameCard from './GameCard';
-import type { GameCardDTO } from '@/types';
+import type { GameCardViewModel } from '@/types/gameCard';
 
-const mockGame: GameCardDTO = {
-    _id: 'resident-evil-2',
+const mockGame: GameCardViewModel = {
+    id: 'resident-evil-2',
     slug: 'resident-evil-2',
     title: 'Resident Evil 2',
     imageUrl: 'https://media.rawg.io/media/games/053/053fc543bf488349610f1ae2d0c1b51b.jpg',
@@ -14,14 +14,15 @@ const mockGame: GameCardDTO = {
     releaseDate: '2019-01-25',
     avgCompletionTime: 8,
     completedCount: 1,
+    isInLibrary: false,
+    userStatus: undefined,
+    userGameId: undefined,
 };
 
 const createProps = (
     overrides: Partial<ComponentProps<typeof GameCard>> = {}
 ): ComponentProps<typeof GameCard> => ({
     game: mockGame,
-    isAdded: false,
-    currentStatus: undefined,
     open: false,
     onOpenChange: vi.fn(),
     onAdd: vi.fn(),
@@ -90,4 +91,105 @@ describe('GameCard', () => {
         expect(screen.queryByText('playstation')).not.toBeInTheDocument();
         expect(screen.queryByText('xbox')).not.toBeInTheDocument();
     });
+
+    it('calls onAdd with owned status when Add to collection is clicked', async () => {
+        const user = userEvent.setup();
+        const onAdd = vi.fn();
+
+        render(<GameCard {...createProps({ onAdd })} />);
+
+        await user.click(
+            screen.getByRole('button', { name: /add to collection/i })
+        );
+
+        expect(onAdd).toHaveBeenCalledWith('resident-evil-2', 'owned');
+    });
+
+    it('shows the current library status when the game is already in the library', () => {
+        render(
+            <GameCard
+                {...createProps({
+                    game: {
+                        ...mockGame,
+                        isInLibrary: true,
+                        userStatus: 'completed',
+                        userGameId: 'library-item-1',
+                    },
+                })}
+            />
+        );
+
+        expect(screen.getByText(/completed/i)).toBeInTheDocument();
+    });
+
+    it('calls onUpdate when a status option is selected', async () => {
+        const user = userEvent.setup();
+        const onUpdate = vi.fn();
+
+        render(
+            <GameCard
+                {...createProps({
+                    game: {
+                        ...mockGame,
+                        isInLibrary: true,
+                        userStatus: 'owned',
+                        userGameId: 'library-item-1',
+                    },
+                    open: true,
+                    onUpdate,
+                })}
+            />
+        );
+
+        await user.click(screen.getByRole('button', { name: /mark as completed/i }));
+
+        expect(onUpdate).toHaveBeenCalledWith('resident-evil-2', 'completed');
+    });
+
+    it('calls onRemove when Remove from collection is clicked', async () => {
+        const user = userEvent.setup();
+        const onRemove = vi.fn();
+
+        render(
+            <GameCard
+                {...createProps({
+                    game: {
+                        ...mockGame,
+                        isInLibrary: true,
+                        userStatus: 'completed',
+                        userGameId: 'library-item-1',
+                    },
+                    open: true,
+                    onRemove,
+                })}
+            />
+        );
+
+        await user.click(
+            screen.getByRole('button', { name: /remove from collection/i })
+        );
+
+        expect(onRemove).toHaveBeenCalledWith('resident-evil-2');
+    });
+
+    it('does not show remove option when the game is not in the library', () => {
+        render(
+            <GameCard
+                {...createProps({
+                    game: {
+                        ...mockGame,
+                        isInLibrary: false,
+                        userStatus: undefined,
+                        userGameId: undefined,
+                    },
+                    open: true,
+                })}
+            />
+        );
+
+        expect(
+            screen.queryByRole('button', { name: /remove from collection/i })
+        ).not.toBeInTheDocument();
+    });
 });
+

@@ -25,6 +25,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { Info } from 'lucide-react';
+import { toGameCardViewModel } from '@/lib/gameCard';
 
 const USER_READY_EVENT = 'clm:user-ready';
 
@@ -360,20 +361,22 @@ export default function GamesPage() {
             </section>
 
             <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
-                {games.map(g => {
-                    const isAdded = addedGames.has(g._id);
-                    const currentStatus = statusByGameId.get(g._id);
+                {games.map((g) => {
+                    const game = toGameCardViewModel(g, {
+                        isInLibrary: addedGames.has(g._id),
+                        userStatus: statusByGameId.get(g._id),
+                        userGameId: idByGameId.get(g._id),
+                    });
+
                     return (
                         <GameCard
-                            key={g._id}
-                            game={g}
-                            isAdded={isAdded}
-                            currentStatus={currentStatus}
-                            onAdd={(gameId, status) => handleAddGame(gameId, status)}
-                            onUpdate={isAdded ? (gameId, status) => handleUpdateFromBrowse(gameId, status) : undefined}
-                            onRemove={isAdded ? (gameId) => handleRemoveFromBrowse(gameId) : undefined}
-                            open={openMenuGameId === g._id}
-                            onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
+                            key={game.id}
+                            game={game}
+                            onAdd={handleAddGame}
+                            onUpdate={game.isInLibrary ? handleUpdateFromBrowse : undefined}
+                            onRemove={game.isInLibrary ? handleRemoveFromBrowse : undefined}
+                            open={openMenuGameId === game.id}
+                            onOpenChange={(open) => setOpenMenuGameId(open ? game.id : null)}
                         />
                     );
                 })}
