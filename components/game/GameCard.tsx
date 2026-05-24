@@ -2,10 +2,11 @@
 
 import { memo, useMemo } from 'react';
 import AddToLibraryButton from './AddToLibraryButton';
-import type { Game, LibraryStatus } from '@/lib/api';
+import type { LibraryStatus } from '@/types/library';
 import Link from 'next/link';
 import { Trophy } from 'lucide-react';
 import GameImage from './GameImage';
+import { GameCardViewModel } from '@/types/gameCard';
 
 function PlatformBadges({ slugs }: { slugs: string[] }) {
     if (!slugs?.length) return null;
@@ -33,9 +34,7 @@ function PlatformBadges({ slugs }: { slugs: string[] }) {
 }
 
 type Props = {
-    game: Game;
-    isAdded: boolean;
-    currentStatus?: LibraryStatus;
+    game: GameCardViewModel;
     onAdd?: (gameId: string, status: LibraryStatus) => void;
     onUpdate?: (gameId: string, status: LibraryStatus) => void;
     onRemove?: (gameId: string) => void;
@@ -46,8 +45,6 @@ type Props = {
 
 function GameCard({
     game,
-    isAdded,
-    currentStatus,
     onAdd,
     onUpdate,
     onRemove,
@@ -57,6 +54,8 @@ function GameCard({
 }: Props) {
     const platforms = useMemo(() => game.parentPlatforms ?? [], [game]);
     const cc = game.completedCount ?? 0;
+    const isAdded = game.isInLibrary;
+    const currentStatus = game.userStatus;
 
     return (
         <div
@@ -65,7 +64,7 @@ function GameCard({
         >
             {/* Full-card clickable layer */}
             <Link
-                href={`/games/${game._id}`}
+                href={`/games/${game.id}`}
                 aria-label={`Open ${game.title}`}
                 className="absolute inset-0 z-0"
             />
@@ -75,7 +74,7 @@ function GameCard({
                 {/* Media */}
                 <div className="h-60 rounded-lg overflow-hidden relative bg-muted">
                     <GameImage
-                        src={game.imageUrl ?? '/placeholder.png'}
+                        src={game.imageUrl ?? '/placeholder.webp'}
                         alt={game.title}
                     />
 
@@ -118,7 +117,7 @@ function GameCard({
                                 isAdded={false}
                                 onAdd={
                                     onAdd
-                                        ? status => onAdd(game._id, status)
+                                        ? status => onAdd(game.id, status)
                                         : undefined
                                 }
                                 open={open}
@@ -130,12 +129,12 @@ function GameCard({
                                 currentStatus={currentStatus}
                                 onUpdate={
                                     onUpdate
-                                        ? status => onUpdate(game._id, status)
+                                        ? status => onUpdate(game.id, status)
                                         : undefined
                                 }
                                 onRemove={
                                     onRemove
-                                        ? () => onRemove(game._id)
+                                        ? () => onRemove(game.id)
                                         : undefined
                                 }
                                 open={open}
@@ -152,9 +151,9 @@ function GameCard({
 export default memo(
     GameCard,
     (a, b) =>
-        a.game._id === b.game._id &&
-        a.isAdded === b.isAdded &&
-        a.currentStatus === b.currentStatus &&
+        a.game.id === b.game.id &&
+        a.game.isInLibrary === b.game.isInLibrary &&
+        a.game.userStatus === b.game.userStatus &&
         a.open === b.open &&
         a.hidePlatformChips === b.hidePlatformChips &&
         a.game.imageUrl === b.game.imageUrl &&

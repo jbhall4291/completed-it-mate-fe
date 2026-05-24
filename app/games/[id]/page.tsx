@@ -40,7 +40,7 @@ export default async function GameDetailPage(
                     <div
                         className="w-full h-full max-w-[1326px] bg-top bg-cover bg-no-repeat"
                         style={{
-                            backgroundImage: `url(${game.imageUrl ?? "/placeholder.png"})`,
+                            backgroundImage: `url(${game.imageUrl ?? "/placeholder.webp"})`,
                         }}
                     />
                 </div>

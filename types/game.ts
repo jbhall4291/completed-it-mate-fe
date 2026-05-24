@@ -1,4 +1,3 @@
-// types/index.ts
 import type { LibraryStatus } from '@/lib/api';
 
 export type GameCardDTO = {

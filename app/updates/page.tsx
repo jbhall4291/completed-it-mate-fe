@@ -64,7 +64,7 @@ export default function UpdatePage() {
                             platform evolves.
                         </p>
                         <br />
-                        <p className=" text-white">
+                        <div className=" text-white">
                             <div className="font-semibold">Feedback is always welcome.</div> You can follow development updates and other
                             projects at{" "}
                             <a
@@ -75,7 +75,7 @@ export default function UpdatePage() {
                             >
                                 johnnyhall.dev
                             </a>.
-                        </p>
+                        </div>
                     </div>
                 </div>
             </article>

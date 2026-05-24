@@ -21,7 +21,8 @@ import SkeletonGameCard from '@/components/game/SkeletonGameCard';
 import EmblaRow from '@/components/EmblaRow';
 import BrandLogo from '@/components/layout/BrandLogo';
 import DeveloperUpdateCard from '@/components/DeveloperUpdateCard';
-
+import { toGameCardViewModel } from '@/lib/gameCard';
+import Image from 'next/image';
 
 
 export default function HomePage() {
@@ -158,12 +159,6 @@ export default function HomePage() {
         />
       </div>
 
-
-
-
-
-
-
       <main className="p-4 font-sans min-h-screen mb-20">
         {/* Hero */}
         <section className="relative mx-auto mb-8 flex items-center justify-center min-h-[310px] md:min-h-[360px] text-center">
@@ -171,9 +166,13 @@ export default function HomePage() {
           {/* Background wrapper */}
           <div className="absolute inset-0 overflow-hidden rounded-lg">
             {/* Background image */}
-            <div
-              className="absolute inset-0 bg-center bg-cover filter brightness-90 blur-xs md:blur-sm"
-              style={{ backgroundImage: "url('/hero_bg.webp')" }}
+            <Image
+              src="/hero_bg.webp"
+              alt=""
+              fill
+              preload
+              sizes="100vw"
+              className="object-cover brightness-90 blur-xs md:blur-sm"
             />
 
             {/* Dark overlay */}
@@ -188,30 +187,18 @@ export default function HomePage() {
               Keep track of the games you own, play, and complete.
             </p>
 
-            <div className="flex flex-col mt-6 md:mt-10">
-              {/* <h2 className="text-lg font-normal mb-2">
-                Search for your first game to add to your collection:
-
-              </h2> */}
-
+            <div className="flex flex-col mt-6 md:mt-10 items-center">
               <div className="w-[300px] md:w-[400px]">
                 <GameSearch />
               </div>
               <Link
                 href="/game-library"
-                className="underline underline-offset-2 hover:text-brand transition duration-300"
+                className="underline underline-offset-2 hover:text-brand transition duration-300 w-fit text-base mt-2 font-normal"
               >
-                <div className="text-base mt-2 font-normal">
-                  or browse the full library
-                </div>
+                or browse the full library
               </Link>
             </div>
-
           </div>
-
-
-
-
         </section>
 
 
@@ -232,18 +219,25 @@ export default function HomePage() {
             loading={loadingLatest}
             skeleton={<SkeletonGameCard />}
             basisClass="basis-[16rem] md:basis-[18rem]"
-            renderItem={(g) => (
-              <GameCard
-                game={g}
-                isAdded={addedGames.has(g._id)}
-                currentStatus={statusByGameId.get(g._id)}
-                onAdd={(id, status) => handleAdd(id, status)}
-                onUpdate={addedGames.has(g._id) ? (id, s) => handleUpdate(id, s) : undefined}
-                onRemove={addedGames.has(g._id) ? (id) => handleRemove(id) : undefined}
-                open={openMenuGameId === g._id}
-                onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
-              />
-            )}
+            renderItem={(g) => {
+              const game = toGameCardViewModel(g, {
+                isInLibrary: addedGames.has(g._id),
+                userStatus: statusByGameId.get(g._id),
+                userGameId: idByGameId.get(g._id),
+              });
+
+              return (
+                <GameCard
+                  game={game}
+                  onAdd={handleAdd}
+                  onUpdate={game.isInLibrary ? handleUpdate : undefined}
+                  onRemove={game.isInLibrary ? handleRemove : undefined}
+                  open={openMenuGameId === game.id}
+                  onOpenChange={(open) => setOpenMenuGameId(open ? game.id : null)}
+                />
+              );
+            }
+            }
           />
         </section>
 
@@ -254,18 +248,25 @@ export default function HomePage() {
           loading={loadingTop}
           skeleton={<SkeletonGameCard />}
           basisClass="basis-[16rem] md:basis-[18rem]"
-          renderItem={(g) => (
-            <GameCard
-              game={g}
-              isAdded={addedGames.has(g._id)}
-              currentStatus={statusByGameId.get(g._id)}
-              onAdd={(id, status) => handleAdd(id, status)}
-              onUpdate={addedGames.has(g._id) ? (id, s) => handleUpdate(id, s) : undefined}
-              onRemove={addedGames.has(g._id) ? (id) => handleRemove(id) : undefined}
-              open={openMenuGameId === g._id}
-              onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
-            />
-          )}
+          renderItem={(g) => {
+            const game = toGameCardViewModel(g, {
+              isInLibrary: addedGames.has(g._id),
+              userStatus: statusByGameId.get(g._id),
+              userGameId: idByGameId.get(g._id),
+            });
+
+            return (
+              <GameCard
+                game={game}
+                onAdd={handleAdd}
+                onUpdate={game.isInLibrary ? handleUpdate : undefined}
+                onRemove={game.isInLibrary ? handleRemove : undefined}
+                open={openMenuGameId === game.id}
+                onOpenChange={(open) => setOpenMenuGameId(open ? game.id : null)}
+              />
+            );
+          }
+          }
         />
       </main>
     </>

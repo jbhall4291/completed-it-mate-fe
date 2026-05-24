@@ -3,7 +3,7 @@
 
 export default function Footer() {
     return (
-        <footer className="mt-20 border-t border-white/10 py-8 text-sm text-white/60">
+        <footer className="mt-20 border-t border-white/10 py-8 text-base text-white/60">
             <div className="mx-auto max-w-5xl px-4">
                 {/* Primary line – personal credit */}
                 <div className="flex flex-col  justify-between gap-3 sm:flex-row">
@@ -42,13 +42,13 @@ export default function Footer() {
                     </nav>
                 </div>
 
-                <p className="mt-3 text-xs text-white/40 sm:text-left">
+                <p className="mt-3 text-sm text-white/80 sm:text-left">
                     Some game data and images sourced from third-party providers, including{" "}
                     <a
                         href="https://api.rawg.io/docs/"
                         target="_blank"
                         rel="noopener noreferrer nofollow"
-                        className="text-white/50 hover:text-white/70 underline-offset-2 hover:underline"
+                        className="text-white/80 hover:text-white/90 underline-offset-2 hover:underline"
                     >
                         RAWG
                     </a>{" "}

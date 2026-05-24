@@ -25,6 +25,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { Info } from 'lucide-react';
+import { toGameCardViewModel } from '@/lib/gameCard';
 
 const USER_READY_EVENT = 'clm:user-ready';
 
@@ -291,6 +292,7 @@ export default function GamesPage() {
                     <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ">
 
                         <select
+                            aria-label="Filter by platform"
                             className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={platform}
                             onChange={(e) => { setPlatform(e.target.value); setPage(1); }}
@@ -303,6 +305,7 @@ export default function GamesPage() {
 
                         {/* Genre */}
                         <select
+                            aria-label="Filter by genre"
                             className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={genre}
                             onChange={(e) => { setGenre(e.target.value); setPage(1); }}
@@ -314,7 +317,9 @@ export default function GamesPage() {
                         </select>
 
                         {/* Year preset */}
-                        <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                        <select
+                            aria-label="Filter by year"
+                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={yearPreset} onChange={(e) => applyPreset(e.target.value as YearPreset)}
                         >
                             <option value="any">Any time</option>
@@ -328,7 +333,9 @@ export default function GamesPage() {
                             <option value="2020s">2020s</option>
                         </select>
 
-                        <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                        <select
+                            aria-label="Sort results"
+                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={sort}
                             onChange={e => {
                                 setSort(e.target.value as 'metacritic-desc' | 'released-desc' | 'title-asc' | 'title-desc');
@@ -360,20 +367,22 @@ export default function GamesPage() {
             </section>
 
             <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
-                {games.map(g => {
-                    const isAdded = addedGames.has(g._id);
-                    const currentStatus = statusByGameId.get(g._id);
+                {games.map((g) => {
+                    const game = toGameCardViewModel(g, {
+                        isInLibrary: addedGames.has(g._id),
+                        userStatus: statusByGameId.get(g._id),
+                        userGameId: idByGameId.get(g._id),
+                    });
+
                     return (
                         <GameCard
-                            key={g._id}
-                            game={g}
-                            isAdded={isAdded}
-                            currentStatus={currentStatus}
-                            onAdd={(gameId, status) => handleAddGame(gameId, status)}
-                            onUpdate={isAdded ? (gameId, status) => handleUpdateFromBrowse(gameId, status) : undefined}
-                            onRemove={isAdded ? (gameId) => handleRemoveFromBrowse(gameId) : undefined}
-                            open={openMenuGameId === g._id}
-                            onOpenChange={(open) => setOpenMenuGameId(open ? g._id : null)}
+                            key={game.id}
+                            game={game}
+                            onAdd={handleAddGame}
+                            onUpdate={game.isInLibrary ? handleUpdateFromBrowse : undefined}
+                            onRemove={game.isInLibrary ? handleRemoveFromBrowse : undefined}
+                            open={openMenuGameId === game.id}
+                            onOpenChange={(open) => setOpenMenuGameId(open ? game.id : null)}
                         />
                     );
                 })}

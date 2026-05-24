@@ -289,6 +289,7 @@ export default function ProfilePage() {
 
                                 <button
                                     type={editing ? 'submit' : 'button'}
+                                    aria-label={saving ? "Saving username" : editing ? "Save username" : "Edit username"}
                                     disabled={saving || (editing && !isUsernameDirty)}
                                     onClick={() => {
                                         if (!editing) {
@@ -305,11 +306,11 @@ export default function ProfilePage() {
                                     )}
                                 >
                                     {saving ? (
-                                        <LoaderCircle className="animate-spin" size={16} />
+                                        <LoaderCircle className="animate-spin" size={16} aria-hidden="true" />
                                     ) : editing ? (
-                                        <Save size={16} />
+                                        <Save size={16} aria-hidden="true" />
                                     ) : (
-                                        <Pencil size={16} />
+                                        <Pencil size={16} aria-hidden="true" />
 
                                     )}
                                 </button>

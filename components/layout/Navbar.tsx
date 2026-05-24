@@ -147,35 +147,37 @@ export default function Navbar() {
                             </li>
 
                             {/* Mobile toggle control aka burger */}
-                            <button
-                                onClick={() => setOpen((v) => !v)}
-                                aria-label={open ? "Close menu" : "Open menu"}
-                                aria-expanded={open}
-                                aria-controls="navbar-mobile-content"
-                                className="inline-flex h-11 w-11 items-center justify-center relative z-10 cursor-pointer"
-                            >
-                                <motion.span
-                                    initial={false}
-                                    animate={open ? "open" : "closed"}
-                                    className="relative block h-4 w-5"
+                            <li>
+                                <button
+                                    onClick={() => setOpen((v) => !v)}
+                                    aria-label={open ? "Close menu" : "Open menu"}
+                                    aria-expanded={open}
+                                    aria-controls="navbar-mobile-content"
+                                    className="inline-flex h-11 w-11 items-center justify-center relative z-10 cursor-pointer"
                                 >
                                     <motion.span
-                                        variants={{ closed: { rotate: 0, y: -6 }, open: { rotate: 45, y: 0 } }}
-                                        transition={{ type: "spring", stiffness: 400, damping: 28 }}
-                                        className="absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2 bg-foreground"
-                                    />
-                                    <motion.span
-                                        variants={{ closed: { opacity: 1 }, open: { opacity: 0 } }}
-                                        transition={{ duration: 0.15 }}
-                                        className="absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2 bg-foreground"
-                                    />
-                                    <motion.span
-                                        variants={{ closed: { rotate: 0, y: 6 }, open: { rotate: -45, y: 0 } }}
-                                        transition={{ type: "spring", stiffness: 400, damping: 28 }}
-                                        className="absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2 bg-foreground"
-                                    />
-                                </motion.span>
-                            </button>
+                                        initial={false}
+                                        animate={open ? "open" : "closed"}
+                                        className="relative block h-4 w-5"
+                                    >
+                                        <motion.span
+                                            variants={{ closed: { rotate: 0, y: -6 }, open: { rotate: 45, y: 0 } }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                                            className="absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2 bg-foreground"
+                                        />
+                                        <motion.span
+                                            variants={{ closed: { opacity: 1 }, open: { opacity: 0 } }}
+                                            transition={{ duration: 0.15 }}
+                                            className="absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2 bg-foreground"
+                                        />
+                                        <motion.span
+                                            variants={{ closed: { rotate: 0, y: 6 }, open: { rotate: -45, y: 0 } }}
+                                            transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                                            className="absolute left-0 right-0 top-1/2 h-0.5 -translate-y-1/2 bg-foreground"
+                                        />
+                                    </motion.span>
+                                </button>
+                            </li>
                         </ul>
                     </div>
 

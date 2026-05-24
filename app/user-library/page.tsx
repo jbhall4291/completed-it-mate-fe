@@ -7,6 +7,7 @@ import SkeletonCard from '@/components/game/SkeletonGameCard';
 import { CollectionStatusDashboard } from "@/components/stats/CollectionStatusDashboard";
 import Link from "next/link";
 import SkeletonStatCard from '@/components/layout/SkeletonStatCard';
+import { toGameCardViewModel } from '@/lib/gameCard';
 
 
 function useConfirm() {
@@ -181,22 +182,27 @@ export default function LibraryPage() {
 
             {(library.length !== 0) ?
                 <div className="grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
-                    {library.map((g) => (
-                        <GameCard
-                            key={g._id}
-                            hidePlatformChips={true}
-                            game={g.gameId}
-                            isAdded
-                            currentStatus={g.status}
-                            onUpdate={(_, status) => handleUpdateGame(g._id, status)}
-                            onRemove={() => handleRemoveGame(g._id, g.gameId.title)}
-                            open={openMenuGameId === g.gameId._id}
-                            onOpenChange={(open) => setOpenMenuGameId(open ? g.gameId._id : null)}
-                        />
-                    ))}
+
+                    {library.map((item) => {
+                        const game = toGameCardViewModel(item.gameId, {
+                            isInLibrary: true,
+                            userStatus: item.status,
+                            userGameId: item._id,
+                        });
+
+                        return (
+                            <GameCard
+                                key={item._id}
+                                hidePlatformChips
+                                game={game}
+                                onUpdate={(_, status) => handleUpdateGame(item._id, status)}
+                                onRemove={() => handleRemoveGame(item._id, item.gameId.title)}
+                                open={openMenuGameId === game.id}
+                                onOpenChange={(open) => setOpenMenuGameId(open ? game.id : null)}
+                            />
+                        );
+                    })}
                 </div>
-
-
                 : <p className=" mb-2">
                     No games added to your collection yet. Why not {" "}
                     <Link
@@ -205,7 +211,8 @@ export default function LibraryPage() {
                     >
                         browse our library
                     </Link> and add one?
-                </p>}
+                </p>
+            }
 
             {ConfirmUI}
         </main>
