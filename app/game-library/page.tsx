@@ -292,6 +292,7 @@ export default function GamesPage() {
                     <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ">
 
                         <select
+                            aria-label="Filter by platform"
                             className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={platform}
                             onChange={(e) => { setPlatform(e.target.value); setPage(1); }}
@@ -304,6 +305,7 @@ export default function GamesPage() {
 
                         {/* Genre */}
                         <select
+                            aria-label="Filter by genre"
                             className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={genre}
                             onChange={(e) => { setGenre(e.target.value); setPage(1); }}
@@ -315,7 +317,9 @@ export default function GamesPage() {
                         </select>
 
                         {/* Year preset */}
-                        <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                        <select
+                            aria-label="Filter by year"
+                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={yearPreset} onChange={(e) => applyPreset(e.target.value as YearPreset)}
                         >
                             <option value="any">Any time</option>
@@ -329,7 +333,9 @@ export default function GamesPage() {
                             <option value="2020s">2020s</option>
                         </select>
 
-                        <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                        <select
+                            aria-label="Sort results"
+                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
                             value={sort}
                             onChange={e => {
                                 setSort(e.target.value as 'metacritic-desc' | 'released-desc' | 'title-asc' | 'title-desc');

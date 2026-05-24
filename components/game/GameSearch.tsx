@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { searchGames, type Game as ApiGame } from '@/lib/api';
+import Image from "next/image";
 
 // (optional) tiny inline debounce
 function useDebounced<T>(value: T, delay = 250): T {
@@ -90,8 +91,6 @@ export default function GameSearch() {
                 placeholder="Start typing to find your first game..."
                 className="bg-blur-2xl bg-black/15 text-left placeholder:text-base placeholder:text-white placeholder:text-center w-full rounded-lg border px-3 py-3 shadow-sm outline-none focus:border-brand/60 focus:ring-2 focus:ring-green-500/60"
                 aria-label="Search games"
-                aria-expanded={showOverlay}
-                aria-controls="game-search-results"
             />
 
             {showOverlay && (
@@ -126,7 +125,14 @@ export default function GameSearch() {
                                         className="p-3 flex gap-3 items-center hover:bg-brand focus:bg-brand focus:outline-none"
                                     >
                                         {g.imageUrl && (
-                                            <img src={g.imageUrl} alt="" className="h-10 w-10 rounded object-cover flex-none" />
+                                            <Image
+                                                src={g.imageUrl}
+                                                alt=""
+                                                width={80}
+                                                height={80}
+                                                quality={90}
+                                                className="h-10 w-10 rounded object-cover flex-none"
+                                            />
                                         )}
                                         <div className="min-w-0">
                                             <div className="font-medium truncate text-left">{g.title}</div>

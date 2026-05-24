@@ -74,7 +74,7 @@ function GameCard({
                 {/* Media */}
                 <div className="h-60 rounded-lg overflow-hidden relative bg-muted">
                     <GameImage
-                        src={game.imageUrl ?? '/placeholder.png'}
+                        src={game.imageUrl ?? '/placeholder.webp'}
                         alt={game.title}
                     />
 

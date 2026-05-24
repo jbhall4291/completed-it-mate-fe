@@ -19,7 +19,7 @@ export default function GameImage({ src, alt }: Props) {
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
                 placeholder="blur"
-                blurDataURL="/blur.png"
+                blurDataURL="/blur.webp"
                 onLoadingComplete={() => setLoaded(true)}
                 className={`
                     object-cover
