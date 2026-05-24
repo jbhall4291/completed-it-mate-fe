@@ -113,10 +113,21 @@ export async function getUser(userId: string): Promise<User> {
 }
 
 export async function getMe() {
-  const r = await axiosInstance.get('/users/me');
-  return r.data as { userId: string; username?: string };
-}
+  try {
+    const r = await axiosInstance.get("/users/me");
+    return r.data as {
+      userId: string;
+      username?: string;
+      createdAt?: string;
+    };
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response?.status === 401) {
+      return null;
+    }
 
+    throw e;
+  }
+}
 
 export async function patchMe(body: { username: string }) {
   const r = await axiosInstance.patch('/users/me', body);
