@@ -64,6 +64,7 @@ function GameCard({
         >
             {/* Full-card clickable layer */}
             <Link
+                prefetch={false}
                 href={`/games/${game.id}`}
                 aria-label={`Open ${game.title}`}
                 className="absolute inset-0 z-0"
