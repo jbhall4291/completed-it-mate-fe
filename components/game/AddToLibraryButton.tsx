@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useLayoutEffect, useCallback, useId } from
 import { createPortal } from 'react-dom';
 import { Trophy, ChevronDown } from 'lucide-react';
 import type { LibraryStatus } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 type Props = {
     isAdded: boolean;
@@ -172,11 +173,11 @@ export default function AddToLibraryButton({
                         setOpen(false);
                         triggerRef.current?.focus();
                     }}
-                    className={[
+                    className={cn(
                         "block w-full px-4 py-2 text-left text-sm cursor-pointer",
                         "hover:bg-green-700 hover:text-white",
                         "focus-visible:outline-none focus-visible:bg-green-700 focus-visible:text-white",
-                    ].join(" ")}
+                    )}
                 >
                     {opt.label}
                 </button>
@@ -194,11 +195,11 @@ export default function AddToLibraryButton({
                         setOpen(false);
                         triggerRef.current?.focus();
                     }}
-                    className={[
+                    className={cn(
                         "block w-full px-4 py-2 text-left text-sm text-red-600 cursor-pointer",
                         "hover:bg-red-700 hover:text-white",
                         "focus-visible:outline-none focus-visible:bg-red-700 focus-visible:text-white",
-                    ].join(" ")}
+                    )}
                 >
                     Remove from collection
                 </button>
