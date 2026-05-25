@@ -1,10 +1,20 @@
 // lib/axiosInstance.ts
 import axios, { AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE = "/api/proxy";
+function getApiBase() {
+  if (typeof window !== 'undefined') {
+    return '/api/proxy';
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/api/proxy`;
+  }
+
+  return 'http://localhost:3000/api/proxy';
+}
 
 const axiosInstance = axios.create({
-  baseURL: API_BASE,
+  baseURL: getApiBase(),
   headers: {
     'Content-Type': 'application/json',
   },
