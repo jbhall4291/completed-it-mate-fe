@@ -141,6 +141,29 @@ export const ManyPlatforms: Story = {
     },
 };
 
+export const LongTitle: Story = {
+    args: {
+        game: createGame({
+            slug: 'long-title',
+            id: 'long-title',
+            title: `Super Mega Ultimate Deluxe Remastered Collector’s Edition: The Final Reckoning Director’s Cut Chapter II`,
+            imageUrl: "/placeholder.webp"
+        }),
+    },
+};
+
+export const LongTitleManyPlatforms: Story = {
+    args: {
+        game: createGame({
+            slug: 'long-title-many-platforms',
+            id: 'long-title-many-platforms',
+            title: `Super Mega Ultimate Deluxe Remastered Collector’s Edition: The Final Reckoning Director’s Cut Chapter II`,
+            parentPlatforms: ['pc', 'playstation', 'xbox', 'nintendo', 'mac'],
+            imageUrl: "/placeholder.webp"
+        }),
+    },
+};
+
 export const WithoutPlatformChips: Story = {
     args: {
         hidePlatformChips: true,
