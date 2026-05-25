@@ -1,7 +1,7 @@
 // lib/axiosInstance.ts
 import axios, { AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL!  // 'http://localhost:5000/api';
+const API_BASE = "/api/proxy";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE,
@@ -21,8 +21,8 @@ axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   }
 
   const headers = config.headers as AxiosHeaders;
-  headers.set('x-api-key', process.env.NEXT_PUBLIC_API_KEY);
-  if (uid) headers.set('x-user-id', uid);
+
+  if (uid) { headers.set('x-user-id', uid); }
 
   return config;
 });
