@@ -1,10 +1,11 @@
 // components/game/AddToLibraryButton.tsx
 'use client';
 
-import { useEffect, useRef, useState, useLayoutEffect, useCallback } from 'react';
+import { useEffect, useRef, useState, useLayoutEffect, useCallback, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { Trophy, ChevronDown } from 'lucide-react';
 import type { LibraryStatus } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 type Props = {
     isAdded: boolean;
@@ -32,18 +33,35 @@ export default function AddToLibraryButton({
     const setOpen = onOpenChange ?? setInternalOpen;
 
     const rootRef = useRef<HTMLDivElement>(null);
+    const menuId = useId();
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
+    const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
     const [menuPos, setMenuPos] = useState<{ left: number; top: number; width: number } | null>(null);
+
+    useEffect(() => {
+        if (!isOpen || !menuPos) return;
+
+        requestAnimationFrame(() => {
+            itemRefs.current[0]?.focus();
+        });
+    }, [isOpen, menuPos]);
 
     // Close on outside click (works for both inline and portal)
     useEffect(() => {
         if (!isOpen) return;
-        const handler = (e: MouseEvent) => {
-            const root = rootRef.current;
-            if (!root) return setOpen(false);
-            if (!root.contains(e.target as Node)) setOpen(false);
+
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                setOpen(false);
+                triggerRef.current?.focus();
+            }
         };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
+
+        document.addEventListener("keydown", onKeyDown);
+        return () => document.removeEventListener("keydown", onKeyDown);
     }, [isOpen, setOpen]);
 
     // Recalculate menu position
@@ -54,6 +72,33 @@ export default function AddToLibraryButton({
         const gap = 6; // px below the trigger
         setMenuPos({ left: Math.round(rect.left), top: Math.round(rect.bottom + gap), width: Math.round(rect.width) });
     }, []);
+
+    const handleMenuKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        const items = itemRefs.current.filter(Boolean) as HTMLButtonElement[];
+        const currentIndex = items.findIndex((item) => item === document.activeElement);
+
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+            items[nextIndex]?.focus();
+        }
+
+        if (e.key === "ArrowUp") {
+            e.preventDefault();
+            const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+            items[prevIndex]?.focus();
+        }
+
+        if (e.key === "Home") {
+            e.preventDefault();
+            items[0]?.focus();
+        }
+
+        if (e.key === "End") {
+            e.preventDefault();
+            items[items.length - 1]?.focus();
+        }
+    };
 
     useLayoutEffect(() => {
         if (!isOpen) return;
@@ -86,9 +131,7 @@ export default function AddToLibraryButton({
         ? STATUS_LABEL[currentStatus ?? 'owned']
         : 'Add to collection';
 
-    const leftOnClick = isAdded
-        ? () => onUpdate?.(currentStatus ?? 'owned')
-        : () => onAdd?.('owned');
+    const leftOnClick = () => onAdd?.("owned");
 
     const bgClasses = isAdded
         ? 'bg-green-700'
@@ -103,37 +146,60 @@ export default function AddToLibraryButton({
 
     const Menu = (
         <div
-            className="bg-white border rounded shadow-lg z-[1000] text-background"
+            id={menuId}
+            ref={menuRef}
+            role="menu"
+            aria-label={isAdded ? "Change library status" : "Choose add status"}
+            className="bg-white border rounded shadow-lg z-[1000] text-background overflow-hidden"
             style={{
-                position: 'fixed',
+                position: "fixed",
                 left: menuPos?.left ?? 0,
                 top: menuPos?.top ?? 0,
-                width: menuPos?.width ?? 'auto',
+                width: menuPos?.width ?? "auto",
             }}
-            // prevent clicks inside menu from bubbling to document mousedown handler until button handlers run
+            onKeyDown={handleMenuKeyDown}
             onMouseDown={(e) => e.stopPropagation()}
         >
-            {options.map(opt => (
+            {options.map((opt, index) => (
                 <button
                     key={opt.status}
+                    ref={(el) => {
+                        itemRefs.current[index] = el;
+                    }}
                     type="button"
+                    role="menuitem"
                     onClick={() => {
                         (isAdded ? onUpdate : onAdd)?.(opt.status);
                         setOpen(false);
+                        triggerRef.current?.focus();
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm hover:bg-green-700 hover:text-white cursor-pointer"
+                    className={cn(
+                        "block w-full px-4 py-2 text-left text-sm cursor-pointer",
+                        "hover:bg-green-700 hover:text-white",
+                        "focus-visible:outline-none focus-visible:bg-green-700 focus-visible:text-white",
+                    )}
                 >
                     {opt.label}
                 </button>
             ))}
+
             {isAdded && onRemove && (
                 <button
                     type="button"
+                    role="menuitem"
+                    ref={(el) => {
+                        itemRefs.current[options.length] = el;
+                    }}
                     onClick={() => {
                         onRemove();
                         setOpen(false);
+                        triggerRef.current?.focus();
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-700 hover:text-white cursor-pointer"
+                    className={cn(
+                        "block w-full px-4 py-2 text-left text-sm text-red-600 cursor-pointer",
+                        "hover:bg-red-700 hover:text-white",
+                        "focus-visible:outline-none focus-visible:bg-red-700 focus-visible:text-white",
+                    )}
                 >
                     Remove from collection
                 </button>
@@ -144,29 +210,50 @@ export default function AddToLibraryButton({
     return (
         <div ref={rootRef} className="relative inline-block w-[200px]">
             <div className={containerClasses}>
-                <button
-                    type="button"
-                    onClick={!isAdded && !disabled ? leftOnClick : undefined}
-                    className={[
-                        'flex-1 py-2 px-4 font-semibold text-left focus:outline-none flex-row flex items-center',
-                        isAdded ? 'cursor-default' : 'cursor-pointer',
-                    ].join(' ')}
-                >
-                    {currentStatus === 'completed' && (
-                        <Trophy strokeWidth={3} className="-ml-1 mr-2 h-4.5 w-4.5 text-yellow-500" />
-                    )}
-                    {leftLabel}
-                </button>
+                {isAdded ? (
+                    <div className="flex flex-1 flex-row items-center px-4 py-2 text-left font-semibold">
+                        {currentStatus === "completed" && (
+                            <Trophy
+                                strokeWidth={3}
+                                className="-ml-1 mr-2 h-4.5 w-4.5 text-yellow-500"
+                                aria-hidden="true"
+                            />
+                        )}
+                        {leftLabel}
+                    </div>
+                ) : (
+                    <button
+                        type="button"
+                        onClick={!disabled ? leftOnClick : undefined}
+                        disabled={disabled}
+                        className={[
+                            "flex flex-1 flex-row items-center px-4 py-2 text-left font-semibold cursor-pointer",
+                            "focus-visible:outline-none",
+                            "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green-400",
+                            "disabled:cursor-not-allowed",
+                        ].join(" ")}
+                    >
+                        {leftLabel}
+                    </button>
+                )}
 
-
                 <button
+                    ref={triggerRef}
                     type="button"
-                    aria-label={isAdded ? 'Change status' : 'Choose add status'}
+                    aria-label={isAdded ? "Change library status" : "Choose add status"}
+                    aria-haspopup="menu"
                     aria-expanded={isOpen}
+                    aria-controls={isOpen ? menuId : undefined}
                     onClick={disabled ? undefined : () => setOpen(!isOpen)}
-                    className="shrink-0 px-3 border-l border-white/20 focus:outline-none cursor-pointer"
+                    disabled={disabled}
+                    className={[
+                        "shrink-0 px-3 border-l border-white/20 cursor-pointer",
+                        "focus-visible:outline-none",
+                        "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green-400",
+                        "disabled:cursor-not-allowed",
+                    ].join(" ")}
                 >
-                    <ChevronDown className="w-4 h-4 " />
+                    <ChevronDown className="w-4 h-4" aria-hidden="true" />
                 </button>
             </div>
 

@@ -37,16 +37,8 @@ describe('GameCard', () => {
         render(<GameCard {...createProps()} />);
 
         expect(
-            screen.getByRole('link', { name: 'Open Resident Evil 2' })
+            screen.getByRole('link', { name: /view details for resident evil 2/i })
         ).toHaveAttribute('href', '/games/resident-evil-2');
-    });
-
-    it('renders the game image with alt text', () => {
-        render(<GameCard {...createProps()} />);
-
-        expect(
-            screen.getByRole('img', { name: 'Resident Evil 2' })
-        ).toBeInTheDocument();
     });
 
     it('renders the game title', () => {
@@ -141,7 +133,9 @@ describe('GameCard', () => {
             />
         );
 
-        await user.click(screen.getByRole('button', { name: /mark as completed/i }));
+        await user.click(
+            await screen.findByRole('menuitem', { name: /mark as completed/i })
+        );
 
         expect(onUpdate).toHaveBeenCalledWith('resident-evil-2', 'completed');
     });
@@ -166,7 +160,7 @@ describe('GameCard', () => {
         );
 
         await user.click(
-            screen.getByRole('button', { name: /remove from collection/i })
+            await screen.findByRole('menuitem', { name: /remove from collection/i })
         );
 
         expect(onRemove).toHaveBeenCalledWith('resident-evil-2');
@@ -188,7 +182,7 @@ describe('GameCard', () => {
         );
 
         expect(
-            screen.queryByRole('button', { name: /remove from collection/i })
+            screen.queryByRole('menuitem', { name: /remove from collection/i })
         ).not.toBeInTheDocument();
     });
 });

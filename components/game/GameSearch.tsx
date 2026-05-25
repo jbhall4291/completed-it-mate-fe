@@ -89,7 +89,7 @@ export default function GameSearch() {
                 onChange={(e) => setQ(e.target.value)}
                 onFocus={() => setOpen(true)}
                 placeholder="Start typing to find your first game..."
-                className="bg-blur-2xl bg-black/15 text-left placeholder:text-base placeholder:text-white placeholder:text-center w-full rounded-lg border px-3 py-3 shadow-sm outline-none focus:border-brand/60 focus:ring-2 focus:ring-green-500/60"
+                className="bg-blur-2xl bg-black/15 text-left placeholder:text-base placeholder:text-white placeholder:text-center w-full rounded-lg border px-3 py-3 shadow-sm outline-none focus:border-brand/60 focus:ring-2 focus:ring-green-400"
                 aria-label="Search games"
             />
 

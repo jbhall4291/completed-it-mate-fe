@@ -23,6 +23,7 @@ import BrandLogo from '@/components/layout/BrandLogo';
 import DeveloperUpdateCard from '@/components/DeveloperUpdateCard';
 import { toGameCardViewModel } from '@/lib/gameCard';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 
 export default function HomePage() {
@@ -193,7 +194,12 @@ export default function HomePage() {
               </div>
               <Link
                 href="/game-library"
-                className="underline underline-offset-2 hover:text-brand transition duration-300 w-fit text-base mt-2 font-normal"
+                className={cn(
+                  "inline-flex w-fit rounded-md px-2 py-2 text-base font-normal mt-0.5",
+                  "underline underline-offset-4 hover:text-brand transition-colors duration-300",
+                  "focus-visible:outline-none",
+                  "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green-400"
+                )}
               >
                 or browse the full library
               </Link>

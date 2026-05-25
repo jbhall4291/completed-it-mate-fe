@@ -26,6 +26,7 @@ import {
 } from "recharts";
 import Link from "next/link";
 import SkeletonStatCard from "../layout/SkeletonStatCard";
+import { cn } from "@/lib/utils";
 
 
 
@@ -275,20 +276,29 @@ function MostCompletedGamesCard({
                                 return (
                                     <foreignObject
                                         x={x - 180}
-                                        y={y - 14}
-                                        width={170}
-                                        height={40}
+                                        y={y - 18}
+                                        width={176}
+                                        height={44}
                                     >
                                         <Link
                                             href={`/games/${game.gameId}`}
                                             title={game.title}
-                                            className="block text-sm leading-snug text-white/90 hover:underline line-clamp-2"
+                                            className={cn(
+                                                "flex h-full items-center rounded-md px-1.5 text-sm leading-snug text-white/90",
+                                                "hover:bg-white/10 hover:text-white",
+                                                "focus-visible:outline-none",
+                                                "focus-visible:ring-2 focus-visible:ring-green-400",
+                                                "focus-visible:ring-inset"
+                                            )}
                                         >
-                                            {game.title}
+                                            <span className="line-clamp-2">
+                                                {game.title}
+                                            </span>
                                         </Link>
                                     </foreignObject>
-                                )
-                            }}
+                                );
+                            }
+                            }
                         />
 
                         <Bar
