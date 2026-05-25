@@ -8,11 +8,18 @@ export default function DeveloperUpdateCard() {
     return (
         <section
             aria-label="Development update"
-            className="relative w-fit overflow-hidden    transition-colors flex flex-col gap-y-4"
+            className="relative w-fit    transition-colors flex flex-col gap-y-4"
         >
             <Link
                 href="/updates/"
-                className="block px-5 md:px-8 py-5 bg-[#242528] rounded-lg  "
+                className="
+                    block px-5 md:px-8 py-5 bg-[#242528] rounded-lg
+                    transition-colors hover:bg-[#2c2d31]
+                    outline-none
+                    focus-visible:bg-[#2c2d31]
+                    focus-visible:ring-2 focus-visible:ring-green-400
+                    focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]
+                "
             >
                 <div className=" max-w-3xl">
 

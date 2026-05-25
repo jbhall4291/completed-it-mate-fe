@@ -59,24 +59,27 @@ export default function Navbar() {
 
                     {/* default always visible nav */}
                     <div className="relative z-10 h-12 flex items-center font-semibold ">
-                        <Link href="/"
+                        <Link
+                            href="/"
                             onClick={() => setOpen(false)}
-                            aria-label="Completed It Mate – Home"
-                            className="inline-flex items-center gap-1.5   hover:opacity-80 transition-opacity duration-300  ">
-
-                            <div className="flex h-10 w-10 aspect-square items-center justify-center rounded-full bg-brand ">
-                                <svg
-                                    className={cn(
-                                        "text-yellow-500 h-6",
-
-                                    )}
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                >
-                                    <path d="m18,4v-2H6v2H1v5h1v2h1v1h1v1h1v1h1v1h3v1h2v3h-4v3h10v-3h-4v-3h2v-1h3v-1h1v-1h1v-1h1v-1h1v-2h1v-5h-5ZM5,12v-1h-1v-2h-1v-3h2v1h1v2h1v3h1v1h-2v-1h-1Zm16-3h-1v2h-1v1h-1v1h-2v-1h1v-2h1v-3h1v-1h2v3Z" />
-                                </svg>
-                            </div>
+                            aria-label="Completed It Mate - Home"
+                            className={cn(
+                                "inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand",
+                                "hover:opacity-80 transition-opacity duration-300",
+                                "focus-visible:outline-none",
+                                "focus-visible:ring-2 focus-visible:ring-green-400",
+                                "focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]"
+                            )}
+                        >
+                            <svg
+                                className="text-yellow-500 h-6"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                aria-hidden="true"
+                            >
+                                <path d="m18,4v-2H6v2H1v5h1v2h1v1h1v1h1v1h1v1h3v1h2v3h-4v3h10v-3h-4v-3h2v-1h3v-1h1v-1h1v-1h1v-1h1v-2h1v-5h-5ZM5,12v-1h-1v-2h-1v-3h2v1h1v2h1v3h1v1h-2v-1h-1Zm16-3h-1v2h-1v1h-1v1h-2v-1h1v-2h1v-3h1v-1h2v3Z" />
+                            </svg>
                         </Link>
 
                         {/* Desktop links */}
@@ -87,13 +90,15 @@ export default function Navbar() {
                                     <Link
                                         href={item.href}
                                         onClick={() => setOpen(false)}
+                                        aria-current={isActive(pathname, item.href) ? "page" : undefined}
                                         className={cn(
-                                            "inline-block  text-base font-normal hover:opacity-70 ",
-                                            // reserve space, solid border so it renders even if preflight is off
-                                            " border-b-2 border-solid",
+                                            "relative inline-flex items-center rounded-xl px-3 py-2 text-base font-normal transition-colors",
+                                            "hover:bg-white/10 hover:text-white",
+                                            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-green-400",
+                                            "focus-visible:outline-offset-0",
                                             isActive(pathname, item.href)
-                                                ? "border-b-foreground"
-                                                : "border-b-transparent"
+                                                ? "bg-white/10 text-white"
+                                                : "text-white/75"
                                         )}
                                     >
                                         {item.label}
@@ -101,20 +106,24 @@ export default function Navbar() {
                                 </li>
                             ))}
 
-                            <li className="h-10 w-10 flex items-center justify-center hover:opacity-70">
-                                <Link href="/profile" aria-label="profile">
-                                    <div
-                                        className={cn(
-                                            "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
-                                            hasUsername ? "bg-brand text-white" : "bg-[#3a3b3e] text-white"
-                                        )}
-                                    >
-                                        {avatarLabel ? (
-                                            <span>{avatarLabel}</span>
-                                        ) : (
-                                            <UserRound strokeWidth={2.5} />
-                                        )}
-                                    </div>
+                            <li className="h-10 w-10 flex items-center justify-center">
+                                <Link
+                                    href="/profile"
+                                    aria-label="Profile"
+                                    className={cn(
+                                        "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
+                                        "transition-opacity hover:opacity-70",
+                                        "focus-visible:outline-none",
+                                        "focus-visible:ring-2 focus-visible:ring-green-400",
+                                        "focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]",
+                                        hasUsername ? "bg-brand text-white" : "bg-[#3a3b3e] text-white"
+                                    )}
+                                >
+                                    {avatarLabel ? (
+                                        <span>{avatarLabel}</span>
+                                    ) : (
+                                        <UserRound strokeWidth={2.5} aria-hidden="true" />
+                                    )}
                                 </Link>
                             </li>
 
@@ -130,30 +139,37 @@ export default function Navbar() {
                             </div> */}
 
                             <li className="h-10 w-10 flex items-center justify-center hover:opacity-70">
-                                <Link href="/profile" aria-label="profile">
-                                    <div
-                                        className={cn(
-                                            "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
-                                            hasUsername ? "bg-brand text-white" : "bg-[#3a3b3e] text-white"
-                                        )}
-                                    >
-                                        {avatarLabel ? (
-                                            <span>{avatarLabel}</span>
-                                        ) : (
-                                            <UserRound strokeWidth={2.5} />
-                                        )}
-                                    </div>
+                                <Link href="/profile" aria-label="profile" className={cn(
+                                    "h-10 w-10 rounded-full flex items-center justify-center font-semibold text-xl",
+                                    "focus-visible:outline-none",
+                                    "focus-visible:ring-2 focus-visible:ring-green-400",
+                                    "focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]",
+                                    hasUsername ? "bg-brand text-white" : "bg-[#3a3b3e] text-white"
+                                )}>
+                                    {avatarLabel ? (
+                                        <span>{avatarLabel}</span>
+                                    ) : (
+                                        <UserRound strokeWidth={2.5} />
+                                    )}
                                 </Link>
                             </li>
 
                             {/* Mobile toggle control aka burger */}
                             <li>
                                 <button
+                                    type="button"
                                     onClick={() => setOpen((v) => !v)}
                                     aria-label={open ? "Close menu" : "Open menu"}
                                     aria-expanded={open}
                                     aria-controls="navbar-mobile-content"
-                                    className="inline-flex h-11 w-11 items-center justify-center relative z-10 cursor-pointer"
+                                    className={cn(
+                                        "inline-flex h-10 w-10 items-center justify-center rounded-full",
+                                        "relative z-10 cursor-pointer transition-colors",
+                                        "bg-white/10 hover:bg-white/20",
+                                        "focus-visible:outline-none",
+                                        "focus-visible:ring-2 focus-visible:ring-green-400",
+                                        "focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]"
+                                    )}
                                 >
                                     <motion.span
                                         initial={false}
@@ -194,13 +210,18 @@ export default function Navbar() {
                                 className="md:hidden relative z-10 "
                             >
 
-                                <ul className="">
+                                <ul className="py-2">
                                     {nav.slice(0, -1).map((item) => (
                                         <li key={item.label}>
                                             <Link
                                                 href={item.href}
                                                 onClick={() => setOpen(false)}
-                                                className="block  w-fit pr-10 py-3 text-lg font-semibold leading-tight"
+                                                className={cn(
+                                                    "block w-fit rounded-lg px-3 py-3 text-lg font-semibold leading-tight",
+                                                    "hover:bg-white/10",
+                                                    "focus-visible:outline-none",
+                                                    "focus-visible:ring-2 focus-visible:ring-green-400"
+                                                )}
                                             >
                                                 {item.label}
                                             </Link>

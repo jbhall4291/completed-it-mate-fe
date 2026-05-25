@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaOptionsType, EmblaCarouselType } from "embla-carousel";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Props<T extends { _id?: string }> = {
     title: string;
@@ -49,6 +50,17 @@ export default function EmblaRow<T extends { _id?: string }>({
         ? Array.from({ length: skeletonCount }, () => null)
         : items;
 
+    const carouselButtonClass = cn(
+        "h-8 w-8 rounded-full border bg-background/80",
+        "flex items-center justify-center cursor-pointer",
+        "transition-colors duration-300",
+        "hover:bg-brand hover:border-brand",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2 focus-visible:ring-green-400",
+        "focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]",
+        "disabled:opacity-40 disabled:pointer-events-none disabled:cursor-not-allowed"
+    );
+
     return (
         <section className="relative">
             <div className="mb-2 flex items-center justify-between">
@@ -58,7 +70,7 @@ export default function EmblaRow<T extends { _id?: string }>({
                         onClick={() => emblaApi?.scrollPrev()}
                         data-disabled={prevDisabled}
                         disabled={prevDisabled}
-                        className="h-8 w-8 rounded-full border bg-background/80 data-[disabled=true]:opacity-40 data-[disabled=true]:pointer-events-none flex items-center justify-center cursor-pointer hover:bg-brand hover:border-brand duration-300"
+                        className={carouselButtonClass}
                         aria-label="Previous"
                     >
                         <ChevronLeft className="h-4 w-4" />
@@ -67,7 +79,7 @@ export default function EmblaRow<T extends { _id?: string }>({
                         onClick={() => emblaApi?.scrollNext()}
                         data-disabled={nextDisabled}
                         disabled={nextDisabled}
-                        className="h-8 w-8 rounded-full border bg-background/80 data-[disabled=true]:opacity-40 data-[disabled=true]:pointer-events-none flex items-center justify-center cursor-pointer hover:bg-brand hover:border-brand duration-300"
+                        className={carouselButtonClass}
                         aria-label="Next"
                     >
                         <ChevronRight className="h-4 w-4" />
@@ -75,7 +87,7 @@ export default function EmblaRow<T extends { _id?: string }>({
                 </div>
             </div>
 
-            <div ref={emblaRef} className="overflow-hidden">
+            <div ref={emblaRef} className="-m-2 overflow-hidden p-2">
                 <div className="-ml-6 flex">
                     {itemsToRender.map((item, i) => (
                         <div key={item?._id ?? i} className={`pl-6 shrink-0 ${basisClass}`}>

@@ -7,16 +7,19 @@ import Link from 'next/link';
 import { Trophy } from 'lucide-react';
 import GameImage from './GameImage';
 import { GameCardViewModel } from '@/types/gameCard';
+import { cn } from '@/lib/utils';
 
 function PlatformBadges({ slugs }: { slugs: string[] }) {
     if (!slugs?.length) return null;
+
     const names = slugs.join(', ');
+
     return (
         <div
             className="flex items-center gap-1 text-xs text-gray-200"
             title={names}
         >
-            {slugs.slice(0, 3).map(s => (
+            {slugs.slice(0, 3).map((s) => (
                 <span
                     key={s}
                     className="px-1.5 py-0.5 rounded bg-background/70 backdrop-blur uppercase"
@@ -24,6 +27,7 @@ function PlatformBadges({ slugs }: { slugs: string[] }) {
                     {s}
                 </span>
             ))}
+
             {slugs.length > 3 && (
                 <span className="px-1.5 py-0.5 rounded bg-background/70 backdrop-blur">
                     +{slugs.length - 3}
@@ -50,7 +54,7 @@ function GameCard({
     onRemove,
     open,
     onOpenChange,
-    hidePlatformChips = false
+    hidePlatformChips = false,
 }: Props) {
     const platforms = useMemo(() => game.parentPlatforms ?? [], [game]);
     const cc = game.completedCount ?? 0;
@@ -59,92 +63,73 @@ function GameCard({
 
     return (
         <div
-            className={`relative rounded-lg shadow-lg group w-full overflow-visible cursor-pointer ${open ? 'z-50 isolate' : ''
-                }`}
+            className={cn(
+                'relative w-full rounded-lg shadow-lg group overflow-visible',
+                open ? 'z-50 isolate' : ''
+            )}
         >
-            {/* Full-card clickable layer */}
             <Link
                 href={`/games/${game.id}`}
-                aria-label={`Open ${game.title}`}
-                className="absolute inset-0 z-0"
-            />
+                aria-label={`View details for ${game.title}`}
+                className={cn(
+                    'block rounded-lg focus-visible:outline-none',
+                    'focus-visible:ring-4 focus-visible:ring-green-400',
+                    'focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]'
+                )}
+            >
+                <div className="relative overflow-hidden rounded-lg bg-muted">
+                    <div className="relative h-60">
+                        <GameImage
+                            src={game.imageUrl ?? '/placeholder.webp'}
+                            alt=""
+                        />
 
-            {/* Card content */}
-            <div className="relative z-10 pointer-events-none">
-                {/* Media */}
-                <div className="h-60 rounded-lg overflow-hidden relative bg-muted">
-                    <GameImage
-                        src={game.imageUrl ?? '/placeholder.webp'}
-                        alt={game.title}
-                    />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/30 to-transparent" />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/30 to-transparent" />
-
-                    {cc > 0 && (
-                        <div className="absolute top-2 right-2 z-10 pointer-events-none">
-                            <span
-                                className="bg-background/70 backdrop-blur
-                                           text-xs font-medium
-                                           px-2 py-0.5 rounded
-                                           flex items-center"
-                            >
-                                <Trophy
-                                    strokeWidth={3}
-                                    className="-ml-0.5 mr-1.5 h-3.5 w-3.5 text-yellow-500"
-                                />
-                                {cc} {cc === 1 ? 'COMPLETION' : 'COMPLETIONS'}
-                            </span>
-                        </div>
-                    )}
-                </div>
-
-                {/* Footer overlay */}
-                <div className="absolute bottom-0 left-0 right-0 pl-3 pb-3 pr-2 pointer-events-none">
-                    <h2 className="font-bold text-xl leading-tight line-clamp-2 mb-1">
-                        {game.title}
-                    </h2>
-
-                    {!hidePlatformChips && <PlatformBadges slugs={platforms} />}
-
-                    {/* Actions – opt out of card navigation */}
-                    <div
-                        className="mt-1.5 pointer-events-auto cursor-default w-fit "
-                        onClick={(e) => e.stopPropagation()}
-                    >
-
-                        {!isAdded ? (
-                            <AddToLibraryButton
-                                isAdded={false}
-                                onAdd={
-                                    onAdd
-                                        ? status => onAdd(game.id, status)
-                                        : undefined
-                                }
-                                open={open}
-                                onOpenChange={onOpenChange}
-                            />
-                        ) : (
-                            <AddToLibraryButton
-                                isAdded
-                                currentStatus={currentStatus}
-                                onUpdate={
-                                    onUpdate
-                                        ? status => onUpdate(game.id, status)
-                                        : undefined
-                                }
-                                onRemove={
-                                    onRemove
-                                        ? () => onRemove(game.id)
-                                        : undefined
-                                }
-                                open={open}
-                                onOpenChange={onOpenChange}
-                            />
+                        {cc > 0 && (
+                            <div className="absolute top-2 right-2 z-10 pointer-events-none">
+                                <span className="bg-background/70 backdrop-blur text-xs font-medium px-2 py-0.5 rounded flex items-center">
+                                    <Trophy
+                                        strokeWidth={3}
+                                        className="-ml-0.5 mr-1.5 h-3.5 w-3.5 text-yellow-500"
+                                        aria-hidden="true"
+                                    />
+                                    {cc} {cc === 1 ? 'COMPLETION' : 'COMPLETIONS'}
+                                </span>
+                            </div>
                         )}
+
+                        <div className="absolute bottom-0 left-0 right-0 pl-3 pb-16 pr-2">
+                            <h2 className="font-bold text-xl leading-tight line-clamp-2 mb-1">
+                                {game.title}
+                            </h2>
+
+                            {!hidePlatformChips && <PlatformBadges slugs={platforms} />}
+                        </div>
                     </div>
                 </div>
+            </Link>
+
+            <div className="absolute bottom-3 left-3 right-3 z-20">
+                {!isAdded ? (
+                    <AddToLibraryButton
+                        isAdded={false}
+                        onAdd={onAdd ? (status) => onAdd(game.id, status) : undefined}
+                        open={open}
+                        onOpenChange={onOpenChange}
+                    />
+                ) : (
+                    <AddToLibraryButton
+                        isAdded
+                        currentStatus={currentStatus}
+                        onUpdate={onUpdate ? (status) => onUpdate(game.id, status) : undefined}
+                        onRemove={onRemove ? () => onRemove(game.id) : undefined}
+                        open={open}
+                        onOpenChange={onOpenChange}
+                    />
+                )}
             </div>
-        </div >
+        </div>
     );
 }
 

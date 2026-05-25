@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/popover"
 import { Info } from 'lucide-react';
 import { toGameCardViewModel } from '@/lib/gameCard';
+import { cn } from '@/lib/utils';
 
 const USER_READY_EVENT = 'clm:user-ready';
 
@@ -73,6 +74,17 @@ export default function GamesPage() {
         yearMax: "",
         sort: "metacritic-desc" as const,
     };
+
+    const inputFocusClass =
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#242528]";
+
+    const controlClass = cn(
+        "h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm",
+        inputFocusClass
+    );
+
+    const buttonFocusClass =
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]";
 
     function clearAll() {
         setQ(INITIALS.q);
@@ -258,10 +270,14 @@ export default function GamesPage() {
                     <Popover>
                         <PopoverTrigger asChild>
                             <button
-                                className="inline-flex items-center rounded-full p-1 hover:bg-muted focus:outline-none cursor-pointer"
+                                type="button"
+                                className={cn(
+                                    "inline-flex items-center rounded-full p-1 hover:bg-muted cursor-pointer",
+                                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]"
+                                )}
                                 aria-label="Library filtering info"
                             >
-                                <Info className="h-4.5 w-4.5" />
+                                <Info className="h-4.5 w-4.5" aria-hidden="true" />
                             </button>
                         </PopoverTrigger>
 
@@ -279,21 +295,26 @@ export default function GamesPage() {
             <section className=" z-10  mb-4 bg-[#242528] rounded-2xl">
                 <div className=" w-full  p-4 grid  space-y-3.5">
                     <div className="flex items-center gap-2">
-
                         <input
                             value={q}
-                            onChange={(e) => { setQ(e.target.value); setPage(1); }}
+                            onChange={(e) => {
+                                setQ(e.target.value);
+                                setPage(1);
+                            }}
                             placeholder="Search titles..."
-                            className="h-9 w-full md:max-w-[580px] rounded-md border border-white/10 bg-transparent px-3 text-sm"
+                            aria-label="Search titles"
+                            className={cn(
+                                "h-9 w-full md:max-w-[580px] rounded-md border border-white/10 bg-transparent px-3 text-sm",
+                                inputFocusClass
+                            )}
                         />
-
                     </div>
 
                     <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ">
 
                         <select
                             aria-label="Filter by platform"
-                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            className={controlClass}
                             value={platform}
                             onChange={(e) => { setPlatform(e.target.value); setPage(1); }}
                         >
@@ -306,7 +327,7 @@ export default function GamesPage() {
                         {/* Genre */}
                         <select
                             aria-label="Filter by genre"
-                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            className={controlClass}
                             value={genre}
                             onChange={(e) => { setGenre(e.target.value); setPage(1); }}
                         >
@@ -319,7 +340,7 @@ export default function GamesPage() {
                         {/* Year preset */}
                         <select
                             aria-label="Filter by year"
-                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            className={controlClass}
                             value={yearPreset} onChange={(e) => applyPreset(e.target.value as YearPreset)}
                         >
                             <option value="any">Any time</option>
@@ -335,7 +356,7 @@ export default function GamesPage() {
 
                         <select
                             aria-label="Sort results"
-                            className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
+                            className={controlClass}
                             value={sort}
                             onChange={e => {
                                 setSort(e.target.value as 'metacritic-desc' | 'released-desc' | 'title-asc' | 'title-desc');
@@ -355,7 +376,12 @@ export default function GamesPage() {
 
                         {/* Clear filters (active/inactive already wired) */}
                         <button
-                            className="h-9 rounded-md border border-white/10 px-3 text-sm disabled:opacity-20 bg-red-400"
+                            type="button"
+                            className={cn(
+                                "h-9 rounded-md border border-white/10 px-3 text-sm bg-red-400 cursor-pointer",
+                                "disabled:opacity-20 disabled:cursor-not-allowed",
+                                buttonFocusClass
+                            )}
                             onClick={clearAll}
                             disabled={!isDirty}
                         >
@@ -409,9 +435,19 @@ export default function GamesPage() {
 
                 <label className="flex items-center gap-2 text-sm">
                     <span>Games Per Page</span>
-                    <select className="h-9 rounded-md border border-white/10 bg-transparent px-2 text-sm"
-                        value={pageSize} onChange={e => { setPageSize(+e.target.value); setPage(1); }}>
-                        {[12, 24, 36, 48].map(v => <option key={v} value={v}>{v}</option>)}
+                    <select
+                        className={controlClass}
+                        value={pageSize}
+                        onChange={(e) => {
+                            setPageSize(+e.target.value);
+                            setPage(1);
+                        }}
+                    >
+                        {[12, 24, 36, 48].map((v) => (
+                            <option key={v} value={v}>
+                                {v}
+                            </option>
+                        ))}
                     </select>
                 </label>
             </div>
@@ -435,10 +471,13 @@ function Pagination({
     if (totalPages <= 1) return null;
     const range = calcRange(page, totalPages);
 
+    const paginationButtonClass =
+        "px-3 py-1.5 rounded-md cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1b1c1f]";
+
     return (
         <nav className="flex items-center justify-center gap-1.5 text-white mx-auto flex-row flex-wrap max-w-[380px] md:max-w-[700px]  md:w-full" aria-label="Pagination">
             <button
-                className="px-3 py-1.5 rounded-md bg-[#242528] disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                className={paginationButtonClass}
                 onClick={onPrev}
                 disabled={page <= 1}
             >
@@ -452,8 +491,10 @@ function Pagination({
                     <button
                         key={item}
                         aria-current={item === page ? 'page' : undefined}
-                        className={` px-3 py-1.5 rounded-md cursor-pointer disabled:cursor-not-allowed  ${item === page ? 'bg-green-700  text-white' : 'bg-[#242528]'
-                            }`}
+                        className={cn(
+                            paginationButtonClass,
+                            item === page ? "bg-green-700 text-white" : "bg-[#242528]"
+                        )}
                         onClick={() => onJump(item)}
                     >
                         {item}
@@ -462,7 +503,7 @@ function Pagination({
             )}
 
             <button
-                className="px-3 py-1.5 rounded-md bg-[#242528]  disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                className={cn(paginationButtonClass, "bg-[#242528]")}
                 onClick={onNext}
                 disabled={page >= totalPages}
             >
