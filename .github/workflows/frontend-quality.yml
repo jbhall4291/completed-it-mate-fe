@@ -2,9 +2,9 @@ name: Frontend Quality
 
 on:
   push:
-    branches: [master, DEV]
+    branches: [master, develop]
   pull_request:
-    branches: [master, DEV]
+    branches: [master, develop]
 
 jobs:
   quality:
